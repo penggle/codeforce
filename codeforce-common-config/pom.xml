@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.penglecode</groupId>
+        <artifactId>codeforce-parent</artifactId>
+        <version>2.4.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>codeforce-common-config</artifactId>
+    <name>codeforce-common-config</name>
+    <description>公共SpringBoot自动配置部分</description>
+
+    <dependencies>
+        <!-- codeforce-common-core -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-core</artifactId>
+        </dependency>
+
+        <!-- codeforce-common-mybatis-dal -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-mybatis-dal</artifactId>
+        </dependency>
+
+        <!-- spring-boot-starter-web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- spring-boot-starter-validation -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- springdoc -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

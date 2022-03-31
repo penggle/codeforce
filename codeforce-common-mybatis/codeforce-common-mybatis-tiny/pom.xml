@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.penglecode</groupId>
+        <artifactId>codeforce-common-mybatis</artifactId>
+        <version>2.4.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>codeforce-common-mybatis-tiny</artifactId>
+    <name>codeforce-common-mybatis-tiny</name>
+    <description>一个类似于Mybatis-Plus的轻量级扩展</description>
+
+    <dependencies>
+        <!-- codeforce-common-mybatis-dal -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-mybatis-dal</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
