@@ -1,4 +1,4 @@
-package org.mybatis.spring.extensions;
+package org.apache.ibatis.executor.extensions;
 
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;

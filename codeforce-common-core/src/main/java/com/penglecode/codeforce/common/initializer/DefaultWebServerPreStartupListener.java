@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import java.util.Map;
  * @author pengpeng
  * @version 1.0
  */
-@Component
 public class DefaultWebServerPreStartupListener implements BeanPostProcessor, ApplicationContextAware {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWebServerPreStartupListener.class);

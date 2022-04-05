@@ -123,7 +123,7 @@ public abstract class QueryCriteria<E extends DomainObject> implements DomainObj
             Criterion criterion = iterator.next();
             if(criterion instanceof NestedCriterion) {
                 Set<? extends Criterion> nestedCriteria = ((NestedCriterion) criterion).getCriteria2();
-                trimEmptyCriterion(nestedCriteria);
+                trimEmptyCriterion(nestedCriteria); //递归剔除
                 if(nestedCriteria.isEmpty()) { //通过对嵌套逻辑条件的过滤,如果当前嵌套逻辑组为空,则删除之
                     iterator.remove();
                 }

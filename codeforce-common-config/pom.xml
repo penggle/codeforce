@@ -19,12 +19,6 @@
             <artifactId>codeforce-common-core</artifactId>
         </dependency>
 
-        <!-- codeforce-common-mybatis-dal -->
-        <dependency>
-            <groupId>com.penglecode</groupId>
-            <artifactId>codeforce-common-mybatis-dal</artifactId>
-        </dependency>
-
         <!-- spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

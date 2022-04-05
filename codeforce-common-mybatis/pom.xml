@@ -34,5 +34,6 @@
     <modules>
         <module>codeforce-common-mybatis-dal</module>
         <module>codeforce-common-mybatis-tiny</module>
+        <module>codeforce-common-mybatis-ext</module>
     </modules>
 </project>

@@ -1,4 +1,4 @@
-package org.mybatis.spring.extensions;
+package org.apache.ibatis.executor.extensions;
 
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import org.apache.ibatis.binding.MapperRegistry;
@@ -36,7 +36,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import java.util.*;
 
 /**
- * 自定义的Configuration
+ * DynamicExecutor的配套自定义Configuration
  *
  * @author pengpeng
  * @version 1.0

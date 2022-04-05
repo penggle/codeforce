@@ -75,7 +75,7 @@ public interface BaseMybatisMapper<T extends DomainObject> {
      * 根据ID查询单个结果集
      *
      * @param id		- 主键ID
-     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]最为参数
+     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]为参数
      * @return 返回单个结果集
      */
     T selectById(@Param("id") Serializable id, @Param("columns") QueryColumns... columns);
@@ -85,7 +85,7 @@ public interface BaseMybatisMapper<T extends DomainObject> {
      * (注意：如果匹配到多个结果集将报错)
      *
      * @param criteria	- 查询条件(不能为null)
-     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]最为参数
+     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]为参数
      * @return 返回单个结果集
      */
     T selectByCriteria(@Param("criteria") QueryCriteria<T> criteria, @Param("columns") QueryColumns... columns);
@@ -102,7 +102,7 @@ public interface BaseMybatisMapper<T extends DomainObject> {
      * 根据多个ID查询结果集
      *
      * @param ids		- 主键ID列表
-     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]最为参数
+     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]为参数
      * @return 返回结果集
      */
     List<T> selectListByIds(@Param("ids") List<? extends Serializable> ids, @Param("columns") QueryColumns... columns);
@@ -110,7 +110,7 @@ public interface BaseMybatisMapper<T extends DomainObject> {
     /**
      * 查询所有结果集(数据量大时慎用)
      *
-     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]最为参数
+     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]为参数
      * @return 返回所有结果集
      */
     Cursor<T> selectAllList(@Param("columns") QueryColumns... columns);
@@ -125,7 +125,7 @@ public interface BaseMybatisMapper<T extends DomainObject> {
      * 根据条件查询结果集
      *
      * @param criteria	- 查询条件(为null则查询所有)
-     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]最为参数
+     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]为参数
      * @return 返回结果集
      */
     List<T> selectListByCriteria(@Param("criteria") QueryCriteria<T> criteria, @Param("columns") QueryColumns... columns);
@@ -135,7 +135,7 @@ public interface BaseMybatisMapper<T extends DomainObject> {
      *
      * @param criteria	- 查询条件(为null则查询所有)
      * @param rowBounds	- 分页参数
-     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]最为参数
+     * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]为参数
      * @return 返回结果集
      */
     List<T> selectPageListByCriteria(@Param("criteria") QueryCriteria<T> criteria, RowBounds rowBounds, @Param("columns") QueryColumns... columns);

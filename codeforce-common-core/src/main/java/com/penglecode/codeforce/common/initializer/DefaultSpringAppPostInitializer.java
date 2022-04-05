@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 /**
  * Spring应用启动完成时的初始化程序
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
  * @author pengpeng
  * @version 1.0
  */
-@Component
 public class DefaultSpringAppPostInitializer implements ApplicationContextAware, EnvironmentAware {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpringAppPostInitializer.class);

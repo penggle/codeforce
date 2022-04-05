@@ -1,9 +1,6 @@
 package com.penglecode.codeforce.mybatistiny.interceptor;
 
-import com.penglecode.codeforce.mybatistiny.support.DatabaseType;
-import com.penglecode.codeforce.mybatistiny.support.MySQLDialect;
-import com.penglecode.codeforce.mybatistiny.support.OracleDialect;
-import com.penglecode.codeforce.mybatistiny.support.SqlDialect;
+import com.penglecode.codeforce.mybatistiny.support.DatabaseDialect;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -14,6 +11,7 @@ import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.util.Assert;
 
 import java.sql.Connection;
 import java.util.Map;
@@ -32,13 +30,13 @@ public class PageLimitInterceptor implements Interceptor {
 	 */
 	private static final String DEFAULT_QUERY_CRITERIA_PARAM_NAME = "criteria";
 
-	private volatile SqlDialect sqlDialect;
+	private volatile DatabaseDialect databaseDialect;
 
 	public Object intercept(Invocation invocation) throws Throwable {
 		StatementHandler statementHandler = (StatementHandler)invocation.getTarget();
 		BoundSql boundSql = statementHandler.getBoundSql(); //获取绑定sql
 		MetaObject metaObject = MetaObject.forObject(statementHandler, new DefaultObjectFactory(), new DefaultObjectWrapperFactory(), new DefaultReflectorFactory());
-		SqlDialect dialect = getSqlDialect(metaObject);
+		DatabaseDialect dialect = getDatabaseDialect(metaObject);
 		RowBounds rowBounds = (RowBounds) metaObject.getValue("delegate.rowBounds");
 		if(rowBounds == null || rowBounds == RowBounds.DEFAULT) { //如果当前不分页则需要处理QueryCriteria#limit(int)条件
 			//开始处理QueryCriteria.limit(xx)逻辑
@@ -79,28 +77,23 @@ public class PageLimitInterceptor implements Interceptor {
 		return null;
 	}
 
-	protected SqlDialect getSqlDialect(MetaObject metaObject) {
-		if(sqlDialect == null) {
+	protected DatabaseDialect getDatabaseDialect(MetaObject metaObject) {
+		if(databaseDialect == null) {
 			synchronized (this) {
-				if(sqlDialect == null) {
-					sqlDialect = initSqlDialect(metaObject);
+				if(databaseDialect == null) {
+					databaseDialect = initDatabaseDialect(metaObject);
 				}
 			}
 		}
-		return sqlDialect;
+		return databaseDialect;
 	}
 
-	protected SqlDialect initSqlDialect(MetaObject metaObject) {
+	protected DatabaseDialect initDatabaseDialect(MetaObject metaObject) {
 		Configuration configuration = (Configuration) metaObject.getValue("delegate.configuration");
-		String dialect = configuration.getVariables().getProperty("dialect");
-		DatabaseType databaseType = DatabaseType.of(dialect);
-		if (DatabaseType.MYSQL.equals(databaseType)) { // MySQL分页
-			return new MySQLDialect();
-		} else if(DatabaseType.ORACLE.equals(databaseType)) { // Oracle分页
-			return new OracleDialect();
-		} else {
-			throw new IllegalStateException("No 'dialect' property found in Mybatis Configuration!");
-		}
+		String databaseId = configuration.getDatabaseId();
+		DatabaseDialect databaseDialect = DatabaseDialect.of(databaseId);
+		Assert.notNull(databaseDialect, String.format("No DatabaseDialect found for databaseId(%s) in Mybatis Configuration!", databaseId));
+		return databaseDialect;
 	}
 
 	@Override

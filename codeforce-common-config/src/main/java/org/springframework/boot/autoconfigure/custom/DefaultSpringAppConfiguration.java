@@ -2,6 +2,8 @@ package org.springframework.boot.autoconfigure.custom;
 
 import com.penglecode.codeforce.common.consts.ApplicationConstants;
 import com.penglecode.codeforce.common.consts.GlobalConstants;
+import com.penglecode.codeforce.common.initializer.DefaultSpringAppPostInitializer;
+import com.penglecode.codeforce.common.initializer.DefaultWebServerPreStartupListener;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,25 @@ import org.springframework.format.FormatterRegistry;
 public class DefaultSpringAppConfiguration extends AbstractSpringConfiguration {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpringAppConfiguration.class);
-	
+
+	/**
+	 * Spring应用启动完成时的初始化程序
+	 */
+	@Bean
+	@ConditionalOnMissingBean(name="defaultSpringAppPostInitializer")
+	public DefaultSpringAppPostInitializer defaultSpringAppPostInitializer() {
+		return new DefaultSpringAppPostInitializer();
+	}
+
+	/**
+	 * 默认的Web应用启动时的初始化程序主类
+	 */
+	@Bean
+	@ConditionalOnMissingBean(name="defaultWebServerPreStartupListener")
+	public DefaultWebServerPreStartupListener defaultWebServerPreStartupListener() {
+		return new DefaultWebServerPreStartupListener();
+	}
+
 	/**
 	 * 全局默认的MessageSourceAccessor
 	 */

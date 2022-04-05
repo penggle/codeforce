@@ -1,8 +1,10 @@
-package org.mybatis.spring.extensions;
+package org.springframework.boot.autoconfigure.dal;
 
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
-import org.springframework.boot.autoconfigure.dal.DefaultDalMybatisComponentsBuilder;
+import org.apache.ibatis.executor.extensions.CustomSqlSessionFactoryBuilder;
+import org.apache.ibatis.executor.extensions.DynamicExecutor;
+import org.apache.ibatis.executor.extensions.ExecutorSynchronizationManager;
 
 import javax.sql.DataSource;
 

@@ -19,6 +19,12 @@
             <artifactId>codeforce-common-core</artifactId>
         </dependency>
 
+        <!-- codeforce-common-mybatis-ext -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-mybatis-ext</artifactId>
+        </dependency>
+
         <!-- mybatis-spring-boot-starter -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

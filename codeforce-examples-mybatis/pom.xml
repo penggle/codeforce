@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.penglecode</groupId>
+        <artifactId>codeforce-parent</artifactId>
+        <version>2.4.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>codeforce-examples-mybatis</artifactId>
+    <packaging>pom</packaging>
+    <name>codeforce-examples-mybatis</name>
+    <description>codeforce框架关于Mybatis模块的测试样例</description>
+
+    <modules>
+        <module>codeforce-examples-mybatis-tiny1</module>
+    </modules>
+
+    <profiles>
+        <!-- 开发环境 -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <!-- 集成测试环境 -->
+        <profile>
+            <id>uat</id>
+            <properties>
+                <spring.profiles.active>uat</spring.profiles.active>
+            </properties>
+        </profile>
+        <!-- 生产环境 -->
+        <profile>
+            <id>prd</id>
+            <properties>
+                <spring.profiles.active>prd</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+</project>

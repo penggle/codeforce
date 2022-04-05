@@ -23,7 +23,7 @@ public class DalMybatisComponentConfigurerConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public DalMybatisComponentsBuilder dalMybatisComponentsBuilder() {
-        return new DefaultDalMybatisComponentsBuilder();
+        return new CustomDalMybatisComponentsBuilder();
     }
 
     /**
