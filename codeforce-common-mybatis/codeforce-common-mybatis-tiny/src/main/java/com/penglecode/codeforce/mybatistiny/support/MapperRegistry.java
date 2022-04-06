@@ -77,7 +77,7 @@ public class MapperRegistry<E extends EntityObject> {
         MapperTemplateParameter templateParameter = getMapperTemplateParameterFactory().createTemplateParameter(entityMapperClass);
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        Class<?> resourceLoadClass = getClass();
+        Class<?> resourceLoadClass = BaseMybatisMapper.class;
         configuration.setClassForTemplateLoading(resourceLoadClass, "/" + resourceLoadClass.getPackage().getName().replace(".", "/"));
         try {
             Template xmlMapperTemplate = configuration.getTemplate("BaseMybatisMapper.ftl");

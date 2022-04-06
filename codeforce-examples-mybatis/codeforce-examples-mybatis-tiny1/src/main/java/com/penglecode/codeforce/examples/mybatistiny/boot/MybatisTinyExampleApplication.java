@@ -2,6 +2,7 @@ package com.penglecode.codeforce.examples.mybatistiny.boot;
 
 import com.penglecode.codeforce.examples.mybatistiny.BasePackage;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author pengpeng
  * @version 1.0
  */
+@AutoConfigurationPackage(basePackageClasses=BasePackage.class)
 @SpringBootApplication(scanBasePackageClasses=BasePackage.class)
 public class MybatisTinyExampleApplication {
 

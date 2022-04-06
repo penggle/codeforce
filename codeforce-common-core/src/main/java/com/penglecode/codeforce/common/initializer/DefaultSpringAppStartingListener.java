@@ -4,9 +4,11 @@ import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.common.util.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.ApplicationListener;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
@@ -22,8 +24,11 @@ public class DefaultSpringAppStartingListener implements ApplicationListener<App
 
     @Override
     public void onApplicationEvent(ApplicationStartingEvent event) {
-        LOGGER.info(">>> SpringBoot应用程序启动..., springApplication = {}", event.getSpringApplication());
-        ReflectionUtils.invokeMethod(Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setSpringApplication")), null, event.getSpringApplication());
+        SpringApplication springApplication = event.getSpringApplication();
+        LOGGER.info(">>> SpringBoot应用程序启动! springApplication = {}", springApplication);
+        Method method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setSpringApplication", SpringApplication.class));
+        method.setAccessible(true);
+        ReflectionUtils.invokeMethod(method, null, springApplication);
     }
 
 }

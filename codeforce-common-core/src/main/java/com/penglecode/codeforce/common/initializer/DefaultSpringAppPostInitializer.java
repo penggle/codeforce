@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
@@ -28,8 +29,9 @@ public class DefaultSpringAppPostInitializer implements ApplicationContextAware,
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		LOGGER.info(">>> 初始化Spring应用的应用上下文! applicationContext = {}", applicationContext);
-		ReflectionUtils.invokeMethod(Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setApplicationContext")), null, applicationContext);
-
+		Method method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setApplicationContext", ApplicationContext.class));
+		method.setAccessible(true);
+		ReflectionUtils.invokeMethod(method, null, applicationContext); //设置ApplicationContext
 	}
 
 	/**
@@ -38,8 +40,9 @@ public class DefaultSpringAppPostInitializer implements ApplicationContextAware,
 	@Override
 	public void setEnvironment(Environment environment) {
 		LOGGER.info(">>> 初始化Spring应用的环境变量! environment = {}", environment);
-		ReflectionUtils.invokeMethod(Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setEnvironment")), null, environment);
-
+		Method method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setEnvironment", Environment.class));
+		method.setAccessible(true);
+		ReflectionUtils.invokeMethod(method, null, environment); //设置Environment
 	}
 
 }

@@ -1,15 +1,19 @@
 package com.penglecode.codeforce.common.initializer;
 
 import com.penglecode.codeforce.common.consts.Constant;
+import com.penglecode.codeforce.common.consts.ConstantPool;
 import com.penglecode.codeforce.common.consts.SpringConstantPool;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.common.util.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
@@ -41,9 +45,17 @@ public class DefaultSpringAppPreInitializer extends AbstractSpringAppContextInit
 	@Override
 	public void doInitialize(ConfigurableApplicationContext applicationContext) {
 		LOGGER.info(">>> Spring 应用启动前置初始化程序! applicationContext = {}", applicationContext);
-		ReflectionUtils.invokeMethod(Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setApplicationContext")), null, applicationContext);
-		ReflectionUtils.invokeMethod(Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setEnvironment")), null, applicationContext.getEnvironment());
-		Constant.setConstantPool(new SpringConstantPool<>());
+		Method method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setApplicationContext", ApplicationContext.class));
+		method.setAccessible(true);
+		ReflectionUtils.invokeMethod(method, null, applicationContext); //设置ApplicationContext
+
+		method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setEnvironment", Environment.class));
+		method.setAccessible(true);
+		ReflectionUtils.invokeMethod(method, null, applicationContext.getEnvironment()); //设置Environment
+
+		method = Objects.requireNonNull(ReflectionUtils.findMethod(Constant.class, "setConstantPool", ConstantPool.class));
+		method.setAccessible(true);
+		ReflectionUtils.invokeMethod(method, null, new SpringConstantPool<>()); //设置ConstantPool
 	}
 
 }

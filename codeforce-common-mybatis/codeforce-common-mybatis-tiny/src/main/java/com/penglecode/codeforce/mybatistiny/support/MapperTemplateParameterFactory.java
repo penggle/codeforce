@@ -1,12 +1,12 @@
 package com.penglecode.codeforce.mybatistiny.support;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
-import com.penglecode.codeforce.common.util.ClassUtils;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.mybatistiny.annotations.*;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
 import com.penglecode.codeforce.mybatistiny.support.MapperTemplateParameter.ColumnParameter;
+import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -35,7 +35,8 @@ public class MapperTemplateParameterFactory<E extends EntityObject> {
     public MapperTemplateParameter createTemplateParameter(Class<BaseMybatisMapper<E>> entityMapperClass) {
         MapperTemplateParameter parameter = newTemplateParameter();
         parameter.setEntityMapperClass(entityMapperClass);
-        parameter.setEntityClass(ClassUtils.getSuperClassGenericType(entityMapperClass, BaseMybatisMapper.class, 0));
+        ResolvableType resolvableType = ResolvableType.forClass(BaseMybatisMapper.class, entityMapperClass);
+        parameter.setEntityClass(resolvableType.getGeneric(0).resolve());
         List<Field> entityFields = new ArrayList<>();
         ReflectionUtils.doWithFields(parameter.getEntityClass(), entityFields::add, this::isEntityField);
         parameter.setEntityFields(entityFields);
@@ -76,6 +77,7 @@ public class MapperTemplateParameterFactory<E extends EntityObject> {
         }
 
         parameter.setDeleteTargetAlias(databaseDialect.getDeleteTargetAlias());
+        parameter.setCursorFetchSize(String.valueOf(databaseDialect.getCursorFetchSize()));
         return parameter;
     }
 

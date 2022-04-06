@@ -44,7 +44,7 @@ public abstract class Constant<T> implements Supplier<T> {
      * 此处需要在应用启动时设置对应的ConstantPool
      * @param constantPool
      */
-    public static void setConstantPool(ConstantPool<Object> constantPool) {
+    protected static void setConstantPool(ConstantPool<Object> constantPool) {
         Constant.constantPool = constantPool;
     }
 

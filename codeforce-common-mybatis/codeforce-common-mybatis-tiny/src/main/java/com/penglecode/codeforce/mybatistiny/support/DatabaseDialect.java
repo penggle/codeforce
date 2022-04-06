@@ -103,6 +103,14 @@ public enum DatabaseDialect {
         return "";
     }
 
+    /**
+     * 获取基于游标获取的批次大小
+     * @return
+     */
+    public int getCursorFetchSize() {
+        return 10000;
+    }
+
     public static DatabaseDialect of(String databaseId) {
         for(DatabaseDialect dbDialect : values()) {
             if(dbDialect.name().equalsIgnoreCase(databaseId)) {

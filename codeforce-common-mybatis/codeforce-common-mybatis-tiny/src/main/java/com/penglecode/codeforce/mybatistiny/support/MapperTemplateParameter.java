@@ -64,6 +64,9 @@ public class MapperTemplateParameter {
     /** DELETE语句别名 */
     private String deleteTargetAlias;
 
+    /** 游标获取大小 */
+    private String cursorFetchSize;
+
     public Class<?> getEntityMapperClass() {
         return entityMapperClass;
     }
@@ -190,6 +193,14 @@ public class MapperTemplateParameter {
 
     public void setDeleteTargetAlias(String deleteTargetAlias) {
         this.deleteTargetAlias = deleteTargetAlias;
+    }
+
+    public String getCursorFetchSize() {
+        return cursorFetchSize;
+    }
+
+    public void setCursorFetchSize(String cursorFetchSize) {
+        this.cursorFetchSize = cursorFetchSize;
     }
 
     /**

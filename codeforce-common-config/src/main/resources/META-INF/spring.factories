@@ -1,2 +1,3 @@
 org.springframework.context.ApplicationContextInitializer=com.penglecode.codeforce.common.initializer.DefaultSpringAppPreInitializer
+org.springframework.context.ApplicationListener=com.penglecode.codeforce.common.initializer.DefaultSpringAppStartingListener
 org.springframework.boot.env.EnvironmentPostProcessor=com.penglecode.codeforce.common.initializer.DefaultSpringAppEnvInitializer

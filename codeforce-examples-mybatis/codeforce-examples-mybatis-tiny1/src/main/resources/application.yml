@@ -10,7 +10,7 @@ logging:
 
 #Servlet容器配置
 server:
-    port: 8181
+    port: 8123
     shutdown: graceful
 
 #SpringBoot应用的名称
@@ -50,3 +50,4 @@ spring:
 mybatis:
     config-location: classpath:config/mybatis/mybatis-config.xml
     mapper-locations: classpath*:com/penglecode/codeforce/examples/**/*Mapper.xml
+    type-aliases-package: com.penglecode.codeforce.examples.mybatis.domain.model
