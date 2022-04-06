@@ -1,6 +1,7 @@
 package com.penglecode.codeforce.common.consts;
 
 import com.penglecode.codeforce.common.util.SpringUtils;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +33,12 @@ public abstract class ApplicationConstants {
 	 * 应用默认的响应类型
 	 */
 	public static final MediaType DEFAULT_RESPONSE_CONTENT_TYPE = MediaType.APPLICATION_JSON;
-	
+
+	/**
+	 * SpringBoot全局SpringApplication实例
+	 */
+	public static final Supplier<SpringApplication> SPRING_APPLICATION = SpringUtils::getSpringApplication;
+
 	/**
 	 * Spring的ROOT上下文,由#ContextLoaderListener加载出来的spring上下文
 	 */

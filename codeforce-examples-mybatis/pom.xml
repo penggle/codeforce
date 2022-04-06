@@ -13,8 +13,20 @@
     <name>codeforce-examples-mybatis</name>
     <description>codeforce框架关于Mybatis模块的测试样例</description>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- codeforce-examples-mybatis-model -->
+            <dependency>
+                <groupId>com.penglecode</groupId>
+                <artifactId>codeforce-examples-mybatis-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <modules>
         <module>codeforce-examples-mybatis-tiny1</module>
+        <module>codeforce-examples-mybatis-model</module>
     </modules>
 
     <profiles>

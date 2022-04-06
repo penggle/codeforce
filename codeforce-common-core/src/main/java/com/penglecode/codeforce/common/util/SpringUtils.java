@@ -6,6 +6,7 @@ import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -14,7 +15,6 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -28,6 +28,8 @@ import java.util.Map;
  */
 @SuppressWarnings({"unchecked"})
 public class SpringUtils {
+
+	private static volatile SpringApplication springApplication;
 
 	private static volatile ApplicationContext applicationContext;
 	
@@ -99,21 +101,31 @@ public class SpringUtils {
 	public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) {
 		return getApplicationContext().getBeansWithAnnotation(annotationType);
 	}
-	
+
+	public static SpringApplication getSpringApplication() {
+		Assert.state(springApplication != null, "The SpringBoot springApplication has not been initialized yet!");
+		return springApplication;
+	}
+
+	protected static void setSpringApplication(SpringApplication springApplication) {
+		SpringUtils.springApplication = springApplication;
+	}
+
 	public static ApplicationContext getApplicationContext() {
 		Assert.state(applicationContext != null, "Global ROOT ApplicationContext has not been initialized yet!");
 		return applicationContext;
 	}
-	
-	public static void setApplicationContext(ApplicationContext applicationContext){
+
+	protected static void setApplicationContext(ApplicationContext applicationContext){
 		SpringUtils.applicationContext = applicationContext;
 	}
 	
 	public static Environment getEnvironment() {
+		Assert.state(environment != null, "Global Environment has not been initialized yet!");
 		return environment;
 	}
 
-	public static void setEnvironment(Environment environment) {
+	protected static void setEnvironment(Environment environment) {
 		SpringUtils.environment = environment;
 	}
 

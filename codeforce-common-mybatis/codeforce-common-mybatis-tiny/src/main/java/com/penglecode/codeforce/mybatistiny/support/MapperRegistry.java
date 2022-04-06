@@ -85,18 +85,23 @@ public class MapperRegistry<E extends EntityObject> {
             xmlMapperTemplate.process(templateParameter, xmlMapperWriter);
             String xmlMapperContent = xmlMapperWriter.toString();
             String xmlMapperLocation = entityMapperClass.getName().replace(".", "/") + ".xml";
-            System.out.printf("<-----------------------------【%s】----------------------------->%n", xmlMapperLocation);
+            String xmlMapperResourceName = registerXmlMapper(new ByteArrayResource(xmlMapperContent.getBytes(StandardCharsets.UTF_8), xmlMapperLocation));
+            System.out.printf("<-----------------------------【%s】----------------------------->%n", xmlMapperResourceName);
             System.out.println(xmlMapperContent);
-            registerXmlMapper(new ByteArrayResource(xmlMapperContent.getBytes(StandardCharsets.UTF_8), String.format("Auto-Generated XML-Mapper [%s]", xmlMapperLocation)));
         } catch (IOException | TemplateException e) {
             throw new XMLMapperParseException("Failed to parse 'BaseMybatisMapper.ftl'", e);
         }
     }
 
-    protected void registerXmlMapper(Resource xmlMapperResource) {
+    protected String registerXmlMapper(Resource xmlMapperResource) {
         try {
-            XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(xmlMapperResource.getInputStream(), configuration, xmlMapperResource.toString(), configuration.getSqlFragments());
+            String xmlMapperResourceName = xmlMapperResource.getDescription();
+            xmlMapperResourceName = xmlMapperResourceName.substring(xmlMapperResourceName.indexOf('[') + 1, xmlMapperResourceName.lastIndexOf(']'));
+            //考虑到开发者可以自定义XxxMapper.xml，所以必须要重命名，否则与mybatis-spring默认加载的有可能重名，导致MappedStatement加载不到Configuration中去
+            xmlMapperResourceName = String.format("Auto-Generated XML-Mapper [%s]", xmlMapperResourceName);
+            XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(xmlMapperResource.getInputStream(), configuration, xmlMapperResourceName, configuration.getSqlFragments());
             xmlMapperBuilder.parse();
+            return xmlMapperResourceName;
         } catch (IOException e) {
             throw new XMLMapperParseException("Failed to parse mapping resource: '" + xmlMapperResource + "'", e);
         } finally {

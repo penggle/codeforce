@@ -2,12 +2,15 @@ package com.penglecode.codeforce.common.initializer;
 
 import com.penglecode.codeforce.common.consts.Constant;
 import com.penglecode.codeforce.common.consts.SpringConstantPool;
+import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.common.util.SpringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+
+import java.util.Objects;
 
 /**
  * Spring应用启动之处初始化程序
@@ -38,8 +41,8 @@ public class DefaultSpringAppPreInitializer extends AbstractSpringAppContextInit
 	@Override
 	public void doInitialize(ConfigurableApplicationContext applicationContext) {
 		LOGGER.info(">>> Spring 应用启动前置初始化程序! applicationContext = {}", applicationContext);
-		SpringUtils.setApplicationContext(applicationContext);
-		SpringUtils.setEnvironment(applicationContext.getEnvironment());
+		ReflectionUtils.invokeMethod(Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setApplicationContext")), null, applicationContext);
+		ReflectionUtils.invokeMethod(Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setEnvironment")), null, applicationContext.getEnvironment());
 		Constant.setConstantPool(new SpringConstantPool<>());
 	}
 

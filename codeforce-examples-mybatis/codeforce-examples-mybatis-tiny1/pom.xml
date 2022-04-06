@@ -9,15 +9,20 @@
         <version>2.4.5-SNAPSHOT</version>
     </parent>
     <artifactId>codeforce-examples-mybatis-tiny1</artifactId>
-    <name>codeforce-examples-mybatis</name>
+    <name>codeforce-examples-mybatis-tiny1</name>
     <description>codeforce框架关于mybatis-tiny模块的测试样例1(该样例中未加入codeforce-common-mybatis-dal)</description>
 
     <dependencies>
+        <!-- codeforce-examples-mybatis-model -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-examples-mybatis-model</artifactId>
+        </dependency>
+
         <!-- codeforce-common-config -->
         <dependency>
             <groupId>com.penglecode</groupId>
             <artifactId>codeforce-common-config</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- codeforce-common-mybatis-tiny -->
