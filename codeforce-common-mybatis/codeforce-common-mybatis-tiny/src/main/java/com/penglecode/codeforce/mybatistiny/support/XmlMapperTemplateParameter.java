@@ -14,7 +14,7 @@ import java.util.List;
  * @author pengpeng
  * @version 1.0
  */
-public class MapperTemplateParameter {
+public class XmlMapperTemplateParameter {
 
     /** 实体Java-Mapper类 */
     private Class<?> entityMapperClass;

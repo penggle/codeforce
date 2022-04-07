@@ -50,4 +50,5 @@ spring:
 mybatis:
     config-location: classpath:config/mybatis/mybatis-config.xml
     mapper-locations: classpath*:com/penglecode/codeforce/examples/**/*Mapper.xml
-    type-aliases-package: com.penglecode.codeforce.examples.mybatis.domain.model
+    type-aliases-package: com.penglecode.codeforce.examples.mybatis
+    type-aliases-super-type: com.penglecode.codeforce.common.domain.DomainObject

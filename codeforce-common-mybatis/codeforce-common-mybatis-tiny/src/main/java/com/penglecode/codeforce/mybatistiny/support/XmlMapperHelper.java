@@ -11,18 +11,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Mybatis-Mapper辅助类
+ * Mybatis的XML-Mapper配置文件辅助类
  *
  * @author pengpeng
  * @version 1.0
  */
-public class MapperHelper {
+public class XmlMapperHelper {
 
-    private MapperHelper() {}
-
-    public static String getMapperKey(Class<?> domainClass, String key) {
-        return domainClass.getName() + "Mapper." + key;
-    }
+    private XmlMapperHelper() {}
 
     public static boolean isEmpty(Object paramObj) {
         return !isNotEmpty(paramObj);

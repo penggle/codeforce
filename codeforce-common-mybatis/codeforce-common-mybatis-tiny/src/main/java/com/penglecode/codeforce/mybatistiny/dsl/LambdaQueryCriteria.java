@@ -52,11 +52,11 @@ public class LambdaQueryCriteria<E extends DomainObject> extends NestedLambdaQue
 
     /**
      * 使用给定的Example实例来构造动态查询条件
-     * @param exampleSupplier   - Example样例的Supplier(也即一个空的Example样例)
+     * @param exampleSupplier   - Example样例的Supplier(例如XxxEntity::new)
      * @param <E>
      * @return
      */
-    public static <E extends DomainObject> LambdaQueryCriteria<E> ofEmpty(Supplier<E> exampleSupplier) {
+    public static <E extends DomainObject> LambdaQueryCriteria<E> ofSupplier(Supplier<E> exampleSupplier) {
         return new LambdaQueryCriteria<>(exampleSupplier.get());
     }
 

@@ -28,4 +28,9 @@ public @interface Id {
      */
     String generator() default "";
 
+    /**
+     * 当前被注释的字段是否包含在UPDATE列中? 默认true
+     */
+    boolean updatable() default false;
+
 }

@@ -5,7 +5,7 @@ import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.mybatistiny.annotations.*;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
-import com.penglecode.codeforce.mybatistiny.support.MapperTemplateParameter.ColumnParameter;
+import com.penglecode.codeforce.mybatistiny.support.XmlMapperTemplateParameter.ColumnParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -22,18 +22,18 @@ import java.util.stream.Collectors;
  * @author pengpeng
  * @version 1.0
  */
-public class MapperTemplateParameterFactory<E extends EntityObject> {
+public class XmlMapperTemplateParameterFactory<E extends EntityObject> {
 
     private final DatabaseDialect databaseDialect;
 
-    public MapperTemplateParameterFactory(String databaseId) {
+    public XmlMapperTemplateParameterFactory(String databaseId) {
         DatabaseDialect databaseDialect = DatabaseDialect.of(databaseId);
-        Assert.notNull(databaseDialect, String.format("No DatabaseDialect found for databaseId(%s) in Mybatis Configuration!", databaseId));
+        Assert.notNull(databaseDialect, String.format("Unsupported Database: No suitable DatabaseDialect found for databaseId(%s) in Mybatis Configuration!", databaseId));
         this.databaseDialect = databaseDialect;
     }
 
-    public MapperTemplateParameter createTemplateParameter(Class<BaseMybatisMapper<E>> entityMapperClass) {
-        MapperTemplateParameter parameter = newTemplateParameter();
+    public XmlMapperTemplateParameter createTemplateParameter(Class<BaseMybatisMapper<E>> entityMapperClass) {
+        XmlMapperTemplateParameter parameter = newTemplateParameter();
         parameter.setEntityMapperClass(entityMapperClass);
         ResolvableType resolvableType = ResolvableType.forClass(BaseMybatisMapper.class, entityMapperClass);
         parameter.setEntityClass(resolvableType.getGeneric(0).resolve());
@@ -43,13 +43,13 @@ public class MapperTemplateParameterFactory<E extends EntityObject> {
         return setTemplateCustomParameter(setTemplateCommonParameter(parameter));
     }
 
-    protected MapperTemplateParameter newTemplateParameter() {
-        return new MapperTemplateParameter();
+    protected XmlMapperTemplateParameter newTemplateParameter() {
+        return new XmlMapperTemplateParameter();
     }
 
-    protected MapperTemplateParameter setTemplateCommonParameter(MapperTemplateParameter parameter) {
+    protected XmlMapperTemplateParameter setTemplateCommonParameter(XmlMapperTemplateParameter parameter) {
         parameter.setMapperNamespace(parameter.getEntityMapperClass().getName());
-        parameter.setMapperHelperClass(MapperHelper.class.getName());
+        parameter.setMapperHelperClass(XmlMapperHelper.class.getName());
         parameter.setEntityName(parameter.getEntityClass().getSimpleName());
 
         Table tableAnnotation = parameter.getEntityClass().getAnnotation(Table.class);
@@ -60,7 +60,7 @@ public class MapperTemplateParameterFactory<E extends EntityObject> {
         List<ColumnParameter> allColumns = entityFields.stream().map(ColumnParameter::new).collect(Collectors.toList());
         parameter.setIdColumns(allColumns.stream().filter(this::isIdColumn).collect(Collectors.toList()));
         parameter.setInsertColumns(allColumns.stream().filter(this::isInsertColumn).collect(Collectors.toList()));
-        parameter.setUpdateColumns(allColumns.stream().filter(this::isInsertColumn).collect(Collectors.toList()));
+        parameter.setUpdateColumns(allColumns.stream().filter(this::isUpdateColumn).collect(Collectors.toList()));
         parameter.setSelectColumns(allColumns);
         parameter.setAllColumns(allColumns);
 
@@ -81,7 +81,7 @@ public class MapperTemplateParameterFactory<E extends EntityObject> {
         return parameter;
     }
 
-    protected MapperTemplateParameter setTemplateCustomParameter(MapperTemplateParameter parameter) {
+    protected XmlMapperTemplateParameter setTemplateCustomParameter(XmlMapperTemplateParameter parameter) {
         return parameter;
     }
 
@@ -102,8 +102,13 @@ public class MapperTemplateParameterFactory<E extends EntityObject> {
     }
 
     protected boolean isUpdateColumn(ColumnParameter columnParameter) {
-        Column columnAnnotation = columnParameter.getJavaField().getAnnotation(Column.class);
-        return columnAnnotation == null || columnAnnotation.updatable();
+        Id idAnnotation = columnParameter.getJavaField().getAnnotation(Id.class);
+        if(idAnnotation != null) {
+            return idAnnotation.updatable();
+        } else {
+            Column columnAnnotation = columnParameter.getJavaField().getAnnotation(Column.class);
+            return columnAnnotation == null || columnAnnotation.updatable();
+        }
     }
 
     protected DatabaseDialect getDatabaseDialect() {

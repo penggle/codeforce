@@ -4,7 +4,7 @@
 
     <!-- Auto-Generation Code Start -->
     <!--
-        每个继承BaseMybatisMapper的Java-Mapper接口都会自动生成对应的XML-Mapper
+        每个继承BaseMybatisMapper的Mybatis-Mapper接口都会自动生成对应的如下XML-Mapper
     -->
 
     <sql id="SelectBaseColumnsClause">
@@ -53,7 +53,7 @@
     <update id="updateByCriteria" parameterType="java.util.Map" statementType="PREPARED">
         UPDATE ${tableName} ${tableAlias}
            SET <include refid="UpdateDynamicColumnsClause"/>
-        <include refid="CommonMybatisMapper.UpdateWhereCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
     </update>
 
     <delete id="deleteById" parameterType="java.util.Map" statementType="PREPARED">
@@ -76,7 +76,7 @@
 
     <delete id="deleteByCriteria" parameterType="java.util.Map" statementType="PREPARED">
         DELETE ${deleteTargetAlias} FROM ${tableName} ${tableAlias}
-        <include refid="CommonMybatisMapper.DeleteWhereCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
     </delete>
 
     <select id="selectById" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
@@ -88,13 +88,13 @@
     <select id="selectByCriteria" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
-        <include refid="CommonMybatisMapper.SelectWhereCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
     </select>
 
     <select id="selectCountByCriteria" parameterType="java.util.Map" resultType="java.lang.Integer" statementType="PREPARED">
         SELECT COUNT(*)
           FROM ${tableName} ${tableAlias}
-        <include refid="CommonMybatisMapper.SelectWhereCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
     </select>
 
     <select id="selectListByIds" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
@@ -124,21 +124,21 @@
     <select id="selectListByCriteria" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
-        <include refid="CommonMybatisMapper.SelectWhereCriteriaClause"/>
-        <include refid="CommonMybatisMapper.SelectOrderByCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonOrderByCriteriaClause"/>
     </select>
 
     <select id="selectPageListByCriteria" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
-        <include refid="CommonMybatisMapper.SelectWhereCriteriaClause"/>
-        <include refid="CommonMybatisMapper.SelectOrderByCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonOrderByCriteriaClause"/>
     </select>
 
     <select id="selectPageCountByCriteria" parameterType="java.util.Map" resultType="java.lang.Integer" statementType="PREPARED">
         SELECT COUNT(*)
           FROM ${tableName} ${tableAlias}
-        <include refid="CommonMybatisMapper.SelectWhereCriteriaClause"/>
+        <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
     </select>
     <!-- Auto-Generation Code End -->
 
