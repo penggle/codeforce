@@ -112,7 +112,7 @@
     </#if>
     </select>
 
-    <select id="selectAllList" parameterType="java.util.Map" resultType="${entityName}" resultSetType="FORWARD_ONLY" fetchSize="${cursorFetchSize}" statementType="PREPARED">
+    <select id="selectAllList" parameterType="java.util.Map" resultType="${entityName}" resultSetType="FORWARD_ONLY" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
     </select>

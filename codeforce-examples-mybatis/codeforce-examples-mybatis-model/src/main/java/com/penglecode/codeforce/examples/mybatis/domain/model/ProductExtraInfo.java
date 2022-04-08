@@ -22,7 +22,7 @@ public class ProductExtraInfo implements EntityObject {
 
     /** 商品ID */
     @NotNull(message="商品ID不能为空!")
-    @Id(strategy=GenerationType.NONE)
+    @Id(strategy=GenerationType.NONE, updatable=true)
     private Long productId;
 
     /** 商品详情(HTML片段) */

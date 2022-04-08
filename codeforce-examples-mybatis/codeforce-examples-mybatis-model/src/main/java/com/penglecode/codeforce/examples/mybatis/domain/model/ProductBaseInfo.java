@@ -23,7 +23,7 @@ public class ProductBaseInfo implements EntityObject {
 
     /** 商品ID */
     @NotNull(message="商品ID不能为空!")
-    @Id(strategy=GenerationType.IDENTITY)
+    @Id(strategy=GenerationType.IDENTITY, updatable=true)
     private Long productId;
 
     /** 商品名称 */

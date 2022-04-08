@@ -103,7 +103,10 @@ public class XmlMapperRegistry<E extends EntityObject> {
     }
 
     public void registerEntityMapper(Class<BaseMybatisMapper<E>> entityMapperClass) {
-        XmlMapperTemplateParameter templateParameter = getMapperTemplateParameterFactory().createTemplateParameter(entityMapperClass);
+        EntityMeta<E> entityMeta = new EntityMeta<>(entityMapperClass);
+        GlobalConfig.setEntityMeta(entityMeta.getEntityClass(), entityMeta); //设置全局的
+
+        XmlMapperTemplateParameter templateParameter = getMapperTemplateParameterFactory().createTemplateParameter(entityMeta);
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
         Class<?> resourceLoadClass = BaseMybatisMapper.class;

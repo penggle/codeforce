@@ -23,7 +23,7 @@ public class ProductSaleStock implements EntityObject {
 
     /** 商品ID */
     @NotNull(message="商品ID不能为空!")
-    @Id(strategy=GenerationType.NONE)
+    @Id(strategy=GenerationType.NONE, updatable=true)
     private Long productId;
 
     /** 商品规格编号,多个t_product_spec.spec_no按顺序拼凑 */

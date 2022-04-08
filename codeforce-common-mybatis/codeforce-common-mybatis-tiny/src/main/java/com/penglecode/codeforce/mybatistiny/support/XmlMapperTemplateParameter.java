@@ -1,11 +1,8 @@
 package com.penglecode.codeforce.mybatistiny.support;
 
-import com.penglecode.codeforce.common.util.StringUtils;
-import com.penglecode.codeforce.mybatistiny.annotations.Column;
-import com.penglecode.codeforce.mybatistiny.annotations.Id;
-import org.apache.ibatis.type.JdbcType;
+import com.penglecode.codeforce.common.domain.EntityObject;
+import com.penglecode.codeforce.mybatistiny.support.EntityMeta.EntityField;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -16,14 +13,8 @@ import java.util.List;
  */
 public class XmlMapperTemplateParameter {
 
-    /** 实体Java-Mapper类 */
-    private Class<?> entityMapperClass;
-
-    /** 实体类 */
-    private Class<?> entityClass;
-
-    /** 实体类的字段列表 */
-    private List<Field> entityFields;
+    /** 实体元数据 */
+    private EntityMeta<? extends EntityObject> entityMeta;
 
     /** 实体XML-Mapper的namespace */
     private String mapperNamespace;
@@ -64,31 +55,12 @@ public class XmlMapperTemplateParameter {
     /** DELETE语句别名 */
     private String deleteTargetAlias;
 
-    /** 游标获取大小 */
-    private String cursorFetchSize;
-
-    public Class<?> getEntityMapperClass() {
-        return entityMapperClass;
+    public EntityMeta<? extends EntityObject> getEntityMeta() {
+        return entityMeta;
     }
 
-    public void setEntityMapperClass(Class<?> entityMapperClass) {
-        this.entityMapperClass = entityMapperClass;
-    }
-
-    public Class<?> getEntityClass() {
-        return entityClass;
-    }
-
-    public void setEntityClass(Class<?> entityClass) {
-        this.entityClass = entityClass;
-    }
-
-    public List<Field> getEntityFields() {
-        return entityFields;
-    }
-
-    public void setEntityFields(List<Field> entityFields) {
-        this.entityFields = entityFields;
+    public void setEntityMeta(EntityMeta<? extends EntityObject> entityMeta) {
+        this.entityMeta = entityMeta;
     }
 
     public String getMapperNamespace() {
@@ -195,14 +167,6 @@ public class XmlMapperTemplateParameter {
         this.deleteTargetAlias = deleteTargetAlias;
     }
 
-    public String getCursorFetchSize() {
-        return cursorFetchSize;
-    }
-
-    public void setCursorFetchSize(String cursorFetchSize) {
-        this.cursorFetchSize = cursorFetchSize;
-    }
-
     /**
      * 实体字段对应的数据库列参数
      */
@@ -227,29 +191,16 @@ public class XmlMapperTemplateParameter {
         private final boolean idColumn;
 
         /** 当前列对应的Java字段 */
-        private final Field javaField;
+        private final EntityField entityField;
 
-        public ColumnParameter(Field javaField) {
-            this.fieldName = javaField.getName();
-            this.fieldType = javaField.getType();
-            JdbcType jdbcType = JavaJdbcTypeEnum.getJdbcType(this.fieldType);
-            this.jdbcType = jdbcType.TYPE_CODE;
-            this.jdbcTypeName = jdbcType.name();
-            this.columnName = resolveColumnName(javaField);
-            this.idColumn = javaField.getAnnotation(Id.class) != null;
-            this.javaField = javaField;
-        }
-
-        protected String resolveColumnName(Field javaField) {
-            Column columnAnnotation = javaField.getAnnotation(Column.class);
-            String columnName = null;
-            if(columnAnnotation != null) {
-                columnName = columnAnnotation.name();
-            }
-            if(StringUtils.isBlank(columnName)) {
-                return StringUtils.camelNamingToSnake(javaField.getName());
-            }
-            return columnName;
+        public ColumnParameter(EntityField entityField) {
+            this.entityField = entityField;
+            this.fieldName = entityField.getFieldName();
+            this.fieldType = entityField.getFieldType();
+            this.jdbcType = entityField.getJdbcType().TYPE_CODE;
+            this.jdbcTypeName = entityField.getJdbcType().name();
+            this.columnName = entityField.getColumnName();
+            this.idColumn = entityField.getIdAnnotation() != null;
         }
 
         public String getColumnName() {
@@ -276,10 +227,9 @@ public class XmlMapperTemplateParameter {
             return idColumn;
         }
 
-        public Field getJavaField() {
-            return javaField;
+        public EntityField getEntityField() {
+            return entityField;
         }
-
     }
 
 }
