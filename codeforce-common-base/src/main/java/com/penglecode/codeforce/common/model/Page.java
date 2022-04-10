@@ -80,7 +80,7 @@ public class Page implements BaseDTO {
 	protected Page(Integer pageIndex, Integer pageSize, Integer totalRowCount) {
 		this(pageIndex, pageSize);
 		if(totalRowCount != null){
-			this.totalRowCount = totalRowCount;
+			this.setTotalRowCount(totalRowCount);
 		}
 	}
 
@@ -88,20 +88,20 @@ public class Page implements BaseDTO {
 		return new Page();
 	}
 
-	public static Page of(Integer currentPage, Integer pageSize) {
-		return new Page(currentPage, pageSize);
+	public static Page of(Integer pageIndex, Integer pageSize) {
+		return new Page(pageIndex, pageSize);
 	}
 	
-	public static Page of(Integer currentPage, Integer pageSize, Integer totalRowCount) {
-		return new Page(currentPage, pageSize, totalRowCount);
+	public static Page of(Integer pageIndex, Integer pageSize, Integer totalRowCount) {
+		return new Page(pageIndex, pageSize, totalRowCount);
 	}
 
-	public static Page of(Integer currentPage, Integer pageSize, OrderBy... orderBys) {
-		return new Page(currentPage, pageSize, Stream.of(orderBys).collect(Collectors.toList()));
+	public static Page of(Integer pageIndex, Integer pageSize, OrderBy... orderBys) {
+		return new Page(pageIndex, pageSize, Stream.of(orderBys).collect(Collectors.toList()));
 	}
 
-	public static Page of(Integer currentPage, Integer pageSize, List<OrderBy> orderBys) {
-		return new Page(currentPage, pageSize, orderBys);
+	public static Page of(Integer pageIndex, Integer pageSize, List<OrderBy> orderBys) {
+		return new Page(pageIndex, pageSize, orderBys);
 	}
 
 	public static Page copyOf(Page page) {

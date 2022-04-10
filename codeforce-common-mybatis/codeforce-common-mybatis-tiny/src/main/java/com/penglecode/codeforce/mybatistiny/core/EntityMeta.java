@@ -15,6 +15,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -52,7 +53,7 @@ public class EntityMeta<E extends EntityObject> {
     protected Map<String,EntityField> resolveEntityFields(Class<E> entityClass, Function<EntityField,String> keyFunction) {
         List<Field> entityFields = new ArrayList<>();
         ReflectionUtils.doWithFields(entityClass, entityFields::add, this::isEntityField);
-        return entityFields.stream().map(EntityField::new).collect(Collectors.toMap(keyFunction, Function.identity()));
+        return entityFields.stream().map(EntityField::new).collect(Collectors.toMap(keyFunction, Function.identity(), (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); }, LinkedHashMap::new));
     }
 
     protected boolean isEntityField(Field field) {

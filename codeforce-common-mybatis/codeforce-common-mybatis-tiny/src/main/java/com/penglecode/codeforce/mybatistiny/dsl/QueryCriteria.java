@@ -78,42 +78,6 @@ public abstract class QueryCriteria<E extends EntityObject> {
     }
 
     /**
-     * 解析example的类型
-     *
-     * @param example
-     * @return
-     */
-    protected Class<E> resolveExampleClass(E example) {
-        Class<E> exampleClass;
-        if(example != null) {
-            exampleClass = (Class<E>) example.getClass();
-        } else {
-            exampleClass = Utilities.getSuperGenericType(getClass(), QueryCriteria.class, 0);
-        }
-        Assert.notNull(exampleClass, "Parameter 'exampleClass' can not be null!");
-        return exampleClass;
-    }
-
-    /**
-     * 解析实体对象的类型
-     *
-     * @param exampleClass
-     * @return
-     */
-    protected Class<E> resolveEntityClass(Class<E> exampleClass) {
-        Class<E> entityClass = null;
-        while(exampleClass != null && !exampleClass.isInterface()) {
-            if(exampleClass.getAnnotation(Table.class) != null) {
-                entityClass = exampleClass;
-                break;
-            }
-            exampleClass = (Class<E>) exampleClass.getSuperclass();
-        }
-        Assert.notNull(entityClass, String.format("The example class[%s] is not an EntityObject, must be annotated with @%s", exampleClass, Table.class.getName()));
-        return entityClass;
-    }
-
-    /**
      * 动态过滤查询条件，即过滤掉value为空值(null,空串,空数组,空集合)的查询条件,
      * 即实现如下的动态语句：
      * &lt;if test="example.xxx != null && example.xxx != ''"&gt;
@@ -153,26 +117,6 @@ public abstract class QueryCriteria<E extends EntityObject> {
     }
 
     /**
-     * 检查OrderBy
-     *
-     * @param orderBy
-     */
-    protected OrderBy checkOrderBy(OrderBy orderBy) {
-        //根据客户端传来的排序字段名找实体字段元数据
-        EntityMeta.EntityField orderByField = entityMeta.getFieldNameKeyedFields().get(orderBy.getProperty());
-        if(orderByField == null) {
-            orderByField = entityMeta.getColumnNameKeyedFields().get(orderBy.getProperty());
-        }
-        if(orderByField != null) { //如果排序列确实存在
-            //考虑到在调用BaseEntityMapper中的查询方法时：指定了select列，指定了OrderBy排序字段，但是排序字段不在select列中的情况需要特殊处理，即处统一使用数据库列名来作为排序字段
-            orderBy.setProperty(TABLE_ALIAS_NAME + "." + orderByField.getColumnName());
-            return orderBy;
-        }
-        //字段不存在则返回null，即在程序层面规避SQL注入
-        return null;
-    }
-
-    /**
      * 应用指定的查询限制返回行数
      * 需要底层数据库支持：
      *  1、对于MySQL则使用limit字句实现
@@ -188,6 +132,45 @@ public abstract class QueryCriteria<E extends EntityObject> {
         return this;
     }
 
+    /**
+     * 解析example的类型
+     *
+     * @param example
+     * @return
+     */
+    protected Class<E> resolveExampleClass(E example) {
+        Class<E> exampleClass;
+        if(example != null) {
+            exampleClass = (Class<E>) example.getClass();
+        } else {
+            exampleClass = Utilities.getSuperGenericType(getClass(), QueryCriteria.class, 0);
+        }
+        Assert.notNull(exampleClass, "Parameter 'exampleClass' can not be null!");
+        return exampleClass;
+    }
+
+    /**
+     * 解析实体对象的类型
+     *
+     * @param exampleClass
+     * @return
+     */
+    protected Class<E> resolveEntityClass(Class<E> exampleClass) {
+        Class<E> entityClass = null;
+        while(exampleClass != null && !exampleClass.isInterface()) {
+            if(exampleClass.getAnnotation(Table.class) != null) {
+                entityClass = exampleClass;
+                break;
+            }
+            exampleClass = (Class<E>) exampleClass.getSuperclass();
+        }
+        Assert.notNull(entityClass, String.format("The example class[%s] is not an EntityObject, must be annotated with @%s", exampleClass, Table.class.getName()));
+        return entityClass;
+    }
+
+    /**
+     * 检测条件是否已经冻结
+     */
     protected void checkCriteriaFrozen() {
         Assert.state(!isFrozenCriteria(), "All query criteria is frozen, can not add new query criteria!");
     }
@@ -212,6 +195,26 @@ public abstract class QueryCriteria<E extends EntityObject> {
                 }
             }
         }
+    }
+
+    /**
+     * 检查OrderBy
+     *
+     * @param orderBy
+     */
+    protected OrderBy checkOrderBy(OrderBy orderBy) {
+        //根据客户端传来的排序字段名找实体字段元数据
+        EntityMeta.EntityField orderByField = entityMeta.getFieldNameKeyedFields().get(orderBy.getProperty());
+        if(orderByField == null) {
+            orderByField = entityMeta.getColumnNameKeyedFields().get(orderBy.getProperty());
+        }
+        if(orderByField != null) { //如果排序列确实存在
+            //考虑到在调用BaseEntityMapper中的查询方法时：指定了select列，指定了OrderBy排序字段，但是排序字段不在select列中的情况需要特殊处理，即处统一使用数据库列名来作为排序字段
+            orderBy.setProperty(TABLE_ALIAS_NAME + "." + orderByField.getColumnName());
+            return orderBy;
+        }
+        //字段不存在则返回null，即在程序层面规避SQL注入
+        return null;
     }
 
     protected void addCriterion(Criterion abstractCriterion) {

@@ -65,7 +65,7 @@
     <logger name="org.springframework.core.io.support.SpringFactoriesLoader" level="TRACE"/>
 
 	<logger name="com.penglecode" level="DEBUG"/>
-    <logger name="com.penglecode.codeforce.mybatistiny" level="INFO"/>
+    <logger name="com.penglecode.codeforce.mybatistiny" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>

@@ -2,6 +2,7 @@ package com.penglecode.codeforce.examples.product.mapper.test;
 
 import com.penglecode.codeforce.common.domain.ID;
 import com.penglecode.codeforce.common.model.OrderBy;
+import com.penglecode.codeforce.common.model.Page;
 import com.penglecode.codeforce.common.support.MapLambdaBuilder;
 import com.penglecode.codeforce.common.util.CollectionUtils;
 import com.penglecode.codeforce.common.util.DateTimeUtils;
@@ -148,7 +149,7 @@ public class ProductModuleMapperTest {
                 .eq(ProductBaseInfo::getProductType, 1)
                 .orderBy(OrderBy.desc(ProductBaseInfo::getCreateTime))
                 .limit(10);
-        productBases = productBaseInfoMapper.selectListByCriteria(criteria1, new QueryColumns(ProductSaleStock::getProductId));
+        productBases = productBaseInfoMapper.selectListByCriteria(criteria1, new QueryColumns(ProductBaseInfo::getProductId, ProductBaseInfo::getProductName, ProductBaseInfo::getProductType, ProductBaseInfo::getAuditStatus, ProductBaseInfo::getOnlineStatus));
         if(!CollectionUtils.isEmpty(productBases)) {
             productBases.forEach(item -> System.out.println(JsonUtils.object2Json(item)));
         }
@@ -200,19 +201,21 @@ public class ProductModuleMapperTest {
     public void queryProductByPage() {
         QueryCriteria<ProductBaseInfo> criteria = LambdaQueryCriteria.ofSupplier(ProductBaseInfo::new)
                 .eq(ProductBaseInfo::getProductType, 1)
-                .between(ProductBaseInfo::getCreateTime, "2022-01-01", "20220-01-31")
+                .between(ProductBaseInfo::getCreateTime, "2022-01-01", "2022-01-31")
                 .orderBy(OrderBy.desc(ProductBaseInfo::getCreateTime))
-                .limit(5); //limit与在分页查询(selectPageListByCriteria)时会失效
-        System.out.println("totalCount = " + productBaseInfoMapper.selectPageCountByCriteria(criteria));
-        System.out.println("--------------------------第1页------------------------");
-        List<ProductBaseInfo> productBases1 = productBaseInfoMapper.selectPageListByCriteria(criteria, new RowBounds(0, 10));
-        if(!CollectionUtils.isEmpty(productBases1)) {
-            productBases1.forEach(item -> System.out.println(JsonUtils.object2Json(item)));
-        }
-        System.out.println("--------------------------第2页------------------------");
-        List<ProductBaseInfo> productBases2 = productBaseInfoMapper.selectPageListByCriteria(criteria, new RowBounds(10, 10), new QueryColumns(ProductSaleStock::getProductId, ProductSaleStock::getSpecNo, ProductSaleStock::getSellPrice, ProductSaleStock::getStock));
-        if(!CollectionUtils.isEmpty(productBases2)) {
-            productBases2.forEach(item -> System.out.println(JsonUtils.object2Json(item)));
+                .limit(5); //limit遇到分页查询(selectPageListByCriteria)时会失效
+        int totalCount = productBaseInfoMapper.selectPageCountByCriteria(criteria);
+        System.out.println("totalCount = " + totalCount);
+        int pageSize = 10;
+        Page page = Page.of(1, pageSize, totalCount);
+        int totalPageCount = page.getTotalPageCount();
+        for(int pageIndex = 1; pageIndex <= totalPageCount; pageIndex++) {
+            page = Page.of(pageIndex, pageSize, totalCount);
+            System.out.println("--------------------------第" + pageIndex + "页------------------------");
+            List<ProductBaseInfo> productBases = productBaseInfoMapper.selectPageListByCriteria(criteria, new RowBounds(page.offset(), page.limit()));
+            if(!CollectionUtils.isEmpty(productBases)) {
+                productBases.forEach(item -> System.out.println(JsonUtils.object2Json(item)));
+            }
         }
     }
 

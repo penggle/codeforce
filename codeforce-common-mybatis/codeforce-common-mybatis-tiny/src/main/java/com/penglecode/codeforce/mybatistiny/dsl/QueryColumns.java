@@ -3,6 +3,7 @@ package com.penglecode.codeforce.mybatistiny.dsl;
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.support.BeanIntrospector;
 import com.penglecode.codeforce.common.support.SerializableFunction;
+import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -15,6 +16,10 @@ import java.util.function.Predicate;
  *
  *      1、只选择特定的列：userMapper.selectModelById(id, new QueryColumns<User>(User::getUserId, User::getUserName));
  *      2、根据条件选择列：orderMapper.selectModelById(id, new QueryColumns<Order>(column -> column.startWith("product")));
+ *
+ * 这个类的设计并不完美，即它不能增加与QueryCriteria<T>一样的泛型，
+ * 因为加了泛型后，与{@link BaseEntityMapper}中的selectXxx(.., @Param("columns") QueryColumns... columns)方法后面的可变参数
+ * 就形成了全局的[Unchecked generics array creation for varargs parameter]问题
  *
  * @author pengpeng
  * @version 1.0
