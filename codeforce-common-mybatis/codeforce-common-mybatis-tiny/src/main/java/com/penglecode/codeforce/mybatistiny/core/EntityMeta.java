@@ -1,4 +1,4 @@
-package com.penglecode.codeforce.mybatistiny.support;
+package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
@@ -8,6 +8,7 @@ import com.penglecode.codeforce.mybatistiny.annotations.Id;
 import com.penglecode.codeforce.mybatistiny.annotations.Table;
 import com.penglecode.codeforce.mybatistiny.annotations.Transient;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
+import com.penglecode.codeforce.mybatistiny.support.JavaJdbcTypeEnum;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;

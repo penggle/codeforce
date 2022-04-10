@@ -4,7 +4,7 @@ import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
 import com.penglecode.codeforce.mybatistiny.interceptor.DomainObjectQueryInterceptor;
 import com.penglecode.codeforce.mybatistiny.interceptor.PageLimitInterceptor;
-import com.penglecode.codeforce.mybatistiny.support.XmlMapperRegistry;
+import com.penglecode.codeforce.mybatistiny.core.XmlMapperRegistry;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperFactoryBean;

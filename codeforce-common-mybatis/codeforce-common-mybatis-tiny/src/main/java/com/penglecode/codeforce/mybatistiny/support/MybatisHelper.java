@@ -8,7 +8,7 @@ import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
 import com.penglecode.codeforce.common.util.ObjectUtils;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.executor.extensions.JdbcBatchOperation;
+import com.penglecode.codeforce.mybatistiny.executor.JdbcBatchOperation;
 
 import java.io.Serializable;
 import java.util.ArrayList;

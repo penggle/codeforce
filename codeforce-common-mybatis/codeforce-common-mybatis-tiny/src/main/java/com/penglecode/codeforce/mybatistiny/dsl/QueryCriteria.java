@@ -17,14 +17,19 @@ import java.util.stream.Stream;
  * @author pengpeng
  * @version 1.0
  */
-public abstract class QueryCriteria<E extends DomainObject> implements DomainObject {
+public abstract class QueryCriteria<E extends DomainObject> {
 
     private static final long serialVersionUID = 1L;
 
     public static final String TABLE_ALIAS_NAME = "t";
 
     /**
-     * 查询条件的example，它是一个对应数据库表的实体数据模型
+     * 查询条件绑定的example类型
+     */
+    private final Class<E> exampleType;
+
+    /**
+     * 查询条件绑定的example，它是一个对应数据库表的实体数据模型
      */
     private final E example;
 
@@ -49,9 +54,10 @@ public abstract class QueryCriteria<E extends DomainObject> implements DomainObj
      */
     private boolean frozenCriteria;
 
-    QueryCriteria(E example) {
+    QueryCriteria(E example, Class<E> exampleType) {
         Assert.notNull(example, "Parameter 'example' can not be null!");
         this.example = example;
+        this.exampleType = exampleType;
         this.criteria1 = new LinkedHashSet<>();
         this.orderBys = new ArrayList<>();
     }
@@ -140,15 +146,19 @@ public abstract class QueryCriteria<E extends DomainObject> implements DomainObj
         criteria1.add(abstractCriterion);
     }
 
-    protected E getExample() {
+    public E getExample() {
         return example;
+    }
+
+    public Class<E> getExampleType() {
+        return exampleType;
     }
 
     protected Set<Criterion> getCriteria1() {
         return criteria1;
     }
 
-    protected List<OrderBy> getOrders() {
+    public List<OrderBy> getOrders() {
         return orderBys;
     }
 

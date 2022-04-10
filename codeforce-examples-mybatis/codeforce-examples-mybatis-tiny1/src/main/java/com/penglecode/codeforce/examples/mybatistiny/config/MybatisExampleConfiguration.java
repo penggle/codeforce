@@ -1,6 +1,6 @@
 package com.penglecode.codeforce.examples.mybatistiny.config;
 
-import com.penglecode.codeforce.mybatistiny.config.MybatisTinyConfiguration;
+import com.penglecode.codeforce.mybatistiny.config.MybatistinyConfiguration;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
 import org.springframework.boot.autoconfigure.custom.*;
@@ -20,7 +20,7 @@ import java.util.Properties;
          DefaultServletWebErrorConfiguration.class,
          DefaultValidationConfiguration.class,
          DefaultSwaggerConfiguration.class,
-         MybatisTinyConfiguration.class})
+         MybatistinyConfiguration.class})
 public class MybatisExampleConfiguration {
 
     @Bean

@@ -1,4 +1,4 @@
-package com.penglecode.codeforce.mybatistiny.support;
+package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
@@ -10,7 +10,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.extensions.CustomConfiguration;
+import com.penglecode.codeforce.mybatistiny.CustomConfiguration;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -46,30 +46,34 @@ public class XmlMapperRegistry<E extends EntityObject> {
 
     private final SqlSessionFactory sqlSessionFactory;
 
+    private final CustomConfiguration configuration;
+
     private final XmlMapperTemplateParameterFactory<E> xmlMapperTemplateParameterFactory;
 
     public XmlMapperRegistry(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
-        this.tryDelegateConfiguration();
+        this.configuration = delegateConfiguration();
         this.xmlMapperTemplateParameterFactory = createTemplateParameterFactory();
         this.registerCommonPlugin();
         this.registerCommonMapper();
     }
 
     /**
-     * 尝试代理DefaultSqlSessionFactory中Configuration，以启用动态Executor
+     * 代理DefaultSqlSessionFactory中Configuration
      */
-    protected void tryDelegateConfiguration() {
+    protected CustomConfiguration delegateConfiguration() {
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
-        if(sqlSessionFactory instanceof DefaultSqlSessionFactory) {
-            Configuration configuration = sqlSessionFactory.getConfiguration();
-            if(!(configuration instanceof CustomConfiguration)) { //避免重复delegate
-                ReflectionUtils.setFinalFieldValue(sqlSessionFactory, "configuration", new CustomConfiguration(configuration));
-                LOGGER.info(">>> Successfully delegate 'configuration' of DefaultSqlSessionFactory[{}]", sqlSessionFactory);
-            }
+        Assert.state(sqlSessionFactory instanceof DefaultSqlSessionFactory, String.format("Can not delegate 'configuration' of SqlSessionFactory[%s], expected sqlSessionFactory is the type of %s!", sqlSessionFactory, DefaultSqlSessionFactory.class.getName()));
+        CustomConfiguration delegateConfiguration;
+        Configuration configuration = sqlSessionFactory.getConfiguration();
+        if(!(configuration instanceof CustomConfiguration)) { //避免可能出现的重复delegate
+            delegateConfiguration = new CustomConfiguration(configuration);
+            ReflectionUtils.setFinalFieldValue(sqlSessionFactory, "configuration", delegateConfiguration);
+            LOGGER.info(">>> Successfully delegate 'configuration' of DefaultSqlSessionFactory[{}]", sqlSessionFactory);
         } else {
-            LOGGER.warn(">>> Activate dynamic mybatis Executor failed, can only be applied to {}", DefaultSqlSessionFactory.class);
+            delegateConfiguration = (CustomConfiguration) configuration;
         }
+        return delegateConfiguration;
     }
 
     /**
@@ -103,10 +107,10 @@ public class XmlMapperRegistry<E extends EntityObject> {
     }
 
     public void registerEntityMapper(Class<BaseMybatisMapper<E>> entityMapperClass) {
-        EntityMeta<E> entityMeta = new EntityMeta<>(entityMapperClass);
-        GlobalConfig.setEntityMeta(entityMeta.getEntityClass(), entityMeta); //设置全局的
-
-        XmlMapperTemplateParameter templateParameter = getMapperTemplateParameterFactory().createTemplateParameter(entityMeta);
+        //创建实体元数据
+        EntityMeta<E> entityMeta = createEntityMeta(entityMapperClass);
+        //为动态生成的实体XxxMapper.xml创建所需的模板参数
+        XmlMapperTemplateParameter templateParameter = getXmlMapperTemplateParameterFactory().createTemplateParameter(entityMeta);
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
         Class<?> resourceLoadClass = BaseMybatisMapper.class;
@@ -124,6 +128,22 @@ public class XmlMapperRegistry<E extends EntityObject> {
         }
     }
 
+    /**
+     * 创建实体元数据
+     *
+     * @param entityMapperClass
+     * @return
+     */
+    protected EntityMeta<E> createEntityMeta(Class<BaseMybatisMapper<E>> entityMapperClass) {
+        return new EntityMeta<>(entityMapperClass);
+    }
+
+    /**
+     * 注册动态生成的实体XxxMapper.xml
+     *
+     * @param xmlMapperResource
+     * @return
+     */
     protected String registerXmlMapper(Resource xmlMapperResource) {
         Configuration configuration = getSqlSessionFactory().getConfiguration();
         try {
@@ -146,7 +166,11 @@ public class XmlMapperRegistry<E extends EntityObject> {
         return sqlSessionFactory;
     }
 
-    protected XmlMapperTemplateParameterFactory<E> getMapperTemplateParameterFactory() {
+    protected CustomConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    protected XmlMapperTemplateParameterFactory<E> getXmlMapperTemplateParameterFactory() {
         return xmlMapperTemplateParameterFactory;
     }
 

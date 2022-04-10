@@ -1,7 +1,7 @@
-package com.penglecode.codeforce.mybatistiny.support;
+package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
-import com.penglecode.codeforce.mybatistiny.support.EntityMeta.EntityField;
+import com.penglecode.codeforce.mybatistiny.core.EntityMeta.EntityField;
 
 import java.util.List;
 

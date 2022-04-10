@@ -4,6 +4,7 @@ import com.penglecode.codeforce.common.domain.DomainObject;
 import com.penglecode.codeforce.common.model.OrderBy;
 import com.penglecode.codeforce.common.support.BeanIntrospector;
 import com.penglecode.codeforce.common.support.SerializableFunction;
+import com.penglecode.codeforce.common.util.ClassUtils;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
@@ -36,8 +37,8 @@ public class LambdaQueryCriteria<E extends DomainObject> extends NestedLambdaQue
 
     private static final long serialVersionUID = 1L;
 
-    LambdaQueryCriteria(E example) {
-        super(example);
+    public LambdaQueryCriteria(E example) {
+        super(example, ClassUtils.getSuperClassGenericType(LambdaQueryCriteria.class, NestedLambdaQueryCriteria.class, 0));
     }
 
     /**

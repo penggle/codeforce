@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0
  */
 @Configuration
-public class MybatisTinyConfiguration {
+public class MybatistinyConfiguration {
 
     @Bean
     public <E extends EntityObject> MapperBeanPostProcessor<E> mapperBeanPostProcessor() {

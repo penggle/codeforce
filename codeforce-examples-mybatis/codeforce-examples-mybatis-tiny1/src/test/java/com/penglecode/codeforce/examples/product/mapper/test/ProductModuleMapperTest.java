@@ -18,7 +18,7 @@ import com.penglecode.codeforce.examples.product.ProductTestHelper;
 import com.penglecode.codeforce.mybatistiny.dsl.LambdaQueryCriteria;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryColumns;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
-import org.apache.ibatis.executor.extensions.JdbcBatchOperation;
+import com.penglecode.codeforce.mybatistiny.executor.JdbcBatchOperation;
 import org.apache.ibatis.session.RowBounds;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

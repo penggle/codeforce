@@ -15,13 +15,6 @@
 	
 	<dependencyManagement>
         <dependencies>
-            <!-- codeforce-common-mybatis-ext -->
-            <dependency>
-                <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-common-mybatis-ext</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
             <!-- codeforce-common-mybatis-dal -->
             <dependency>
                 <groupId>com.penglecode</groupId>
@@ -39,7 +32,6 @@
 	</dependencyManagement>
 
     <modules>
-        <module>codeforce-common-mybatis-ext</module>
         <module>codeforce-common-mybatis-dal</module>
         <module>codeforce-common-mybatis-tiny</module>
     </modules>

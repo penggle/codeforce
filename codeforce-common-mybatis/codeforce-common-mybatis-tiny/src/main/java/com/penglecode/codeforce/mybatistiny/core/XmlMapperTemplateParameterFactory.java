@@ -1,4 +1,4 @@
-package com.penglecode.codeforce.mybatistiny.support;
+package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.mybatistiny.annotations.Column;
@@ -6,8 +6,9 @@ import com.penglecode.codeforce.mybatistiny.annotations.GenerationType;
 import com.penglecode.codeforce.mybatistiny.annotations.Id;
 import com.penglecode.codeforce.mybatistiny.annotations.Table;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
-import com.penglecode.codeforce.mybatistiny.support.EntityMeta.EntityField;
-import com.penglecode.codeforce.mybatistiny.support.XmlMapperTemplateParameter.ColumnParameter;
+import com.penglecode.codeforce.mybatistiny.core.EntityMeta.EntityField;
+import com.penglecode.codeforce.mybatistiny.core.XmlMapperTemplateParameter.ColumnParameter;
+import com.penglecode.codeforce.mybatistiny.support.XmlMapperHelper;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 

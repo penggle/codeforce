@@ -40,8 +40,8 @@ public abstract class NestedLambdaQueryCriteria<E extends DomainObject> extends 
      */
     private LogicOperator currentLogicOperator = LogicOperator.AND;
 
-    NestedLambdaQueryCriteria(E example) {
-        super(example);
+    NestedLambdaQueryCriteria(E example, Class<E> exampleType) {
+        super(example, exampleType);
     }
 
     public NestedLambdaQueryCriteria<E> and() {

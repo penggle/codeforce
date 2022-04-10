@@ -1,6 +1,9 @@
-package org.apache.ibatis.executor.extensions;
+package com.penglecode.codeforce.mybatistiny;
 
+import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
+import com.penglecode.codeforce.mybatistiny.core.EntityMeta;
+import com.penglecode.codeforce.mybatistiny.executor.DynamicExecutor;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -41,8 +44,17 @@ import java.util.*;
  * @author pengpeng
  * @version 1.0
  */
+@SuppressWarnings("unchecked")
 public class CustomConfiguration extends Configuration {
 
+    /**
+     * 当前Configuration上下文下的所有实体元数据信息
+     */
+    private final Map<Class<? extends EntityObject>, EntityMeta<? extends EntityObject>> allEntityMetas = new HashMap<>();
+
+    /**
+     * 被代理的Mybatis配置
+     */
     private final Configuration delegate;
 
     public CustomConfiguration(Configuration delegate) {
@@ -696,6 +708,14 @@ public class CustomConfiguration extends Configuration {
     @Override
     public void addCacheRef(String namespace, String referencedNamespace) {
         delegate.addCacheRef(namespace, referencedNamespace);
+    }
+
+    public <E extends EntityObject> EntityMeta<E> getEntityMeta(Class<E> entityType) {
+        return (EntityMeta<E>) allEntityMetas.get(entityType);
+    }
+
+    public <E extends EntityObject> void setEntityMeta(Class<E> entityType, EntityMeta<E> entityMeta) {
+        allEntityMetas.put(entityType, entityMeta);
     }
 
 }

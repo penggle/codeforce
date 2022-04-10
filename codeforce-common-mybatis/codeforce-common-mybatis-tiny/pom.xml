@@ -13,10 +13,22 @@
     <description>一个类似于Mybatis-Plus的轻量级扩展</description>
 
     <dependencies>
-        <!-- codeforce-common-mybatis-ext -->
+        <!-- codeforce-common-core -->
         <dependency>
             <groupId>com.penglecode</groupId>
-            <artifactId>codeforce-common-mybatis-ext</artifactId>
+            <artifactId>codeforce-common-core</artifactId>
+        </dependency>
+
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+
+        <!-- mybatis-spring -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
         </dependency>
 
         <!-- freemarker -->

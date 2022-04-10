@@ -1,4 +1,4 @@
-package com.penglecode.codeforce.mybatistiny.support;
+package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 

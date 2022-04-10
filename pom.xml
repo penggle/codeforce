@@ -103,13 +103,6 @@
                 <artifactId>codeforce-common-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <!-- codeforce-common-mybatis-ext -->
-            <dependency>
-                <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-common-mybatis-ext</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 			
 			<!-- codeforce-common-mybatis-dal -->
             <dependency>

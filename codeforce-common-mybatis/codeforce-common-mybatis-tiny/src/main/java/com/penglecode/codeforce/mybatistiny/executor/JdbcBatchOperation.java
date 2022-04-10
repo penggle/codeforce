@@ -1,4 +1,4 @@
-package org.apache.ibatis.executor.extensions;
+package com.penglecode.codeforce.mybatistiny.executor;
 
 import org.apache.ibatis.session.ExecutorType;
 

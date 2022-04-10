@@ -1,4 +1,4 @@
-package org.apache.ibatis.executor.extensions;
+package com.penglecode.codeforce.mybatistiny;
 
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;

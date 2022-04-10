@@ -1,4 +1,4 @@
-package org.apache.ibatis.executor.extensions;
+package com.penglecode.codeforce.mybatistiny.executor;
 
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.cursor.Cursor;
