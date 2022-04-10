@@ -1,9 +1,9 @@
 package com.penglecode.codeforce.mybatistiny;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
-import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.mybatistiny.core.EntityMeta;
 import com.penglecode.codeforce.mybatistiny.executor.DynamicExecutor;
+import com.penglecode.codeforce.mybatistiny.support.Utilities;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -61,8 +61,8 @@ public class CustomConfiguration extends Configuration {
         this.delegate = delegate;
         //将delegate.interceptorChain设置到当前对象上来,在下面newExecutor(..)时要用到
         String fieldName = "interceptorChain";
-        InterceptorChain interceptorChain = ReflectionUtils.getFieldValue(delegate, fieldName);
-        ReflectionUtils.setFinalFieldValue(this, fieldName, interceptorChain);
+        InterceptorChain interceptorChain = Utilities.getFieldValue(delegate, fieldName);
+        Utilities.setFinalFieldValue(this, fieldName, interceptorChain);
     }
 
     @Override

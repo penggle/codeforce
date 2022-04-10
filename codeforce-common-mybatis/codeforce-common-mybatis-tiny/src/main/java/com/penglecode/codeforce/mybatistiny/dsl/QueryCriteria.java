@@ -1,23 +1,26 @@
 package com.penglecode.codeforce.mybatistiny.dsl;
 
-import com.penglecode.codeforce.common.domain.DomainObject;
+import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.model.OrderBy;
-import com.penglecode.codeforce.common.util.StringUtils;
+import com.penglecode.codeforce.mybatistiny.annotations.Table;
+import com.penglecode.codeforce.mybatistiny.core.EntityMeta;
+import com.penglecode.codeforce.mybatistiny.core.EntityMetaFactory;
+import com.penglecode.codeforce.mybatistiny.support.Utilities;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * 查询、更新、删除等SQL查询条件
+ * 实体对象的查询、更新、删除等SQL查询条件
  *
  * @author pengpeng
  * @version 1.0
  */
-public abstract class QueryCriteria<E extends DomainObject> {
+@SuppressWarnings("unchecked")
+public abstract class QueryCriteria<E extends EntityObject> {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,7 +29,17 @@ public abstract class QueryCriteria<E extends DomainObject> {
     /**
      * 查询条件绑定的example类型
      */
-    private final Class<E> exampleType;
+    private final Class<E> exampleClass;
+
+    /**
+     * 查询条件绑定的实体类型
+     */
+    private final Class<E> entityClass;
+
+    /**
+     * 查询条件绑定的实体元数据
+     */
+    private final EntityMeta<E> entityMeta;
 
     /**
      * 查询条件绑定的example，它是一个对应数据库表的实体数据模型
@@ -34,7 +47,7 @@ public abstract class QueryCriteria<E extends DomainObject> {
     private final E example;
 
     /**
-     * 查询条件列表
+     * 最外层(第一层)查询条件列表
      */
     private final Set<Criterion> criteria1;
 
@@ -54,12 +67,50 @@ public abstract class QueryCriteria<E extends DomainObject> {
      */
     private boolean frozenCriteria;
 
-    QueryCriteria(E example, Class<E> exampleType) {
+    QueryCriteria(E example) {
         Assert.notNull(example, "Parameter 'example' can not be null!");
         this.example = example;
-        this.exampleType = exampleType;
+        this.exampleClass = resolveExampleClass(example);
+        this.entityClass = resolveEntityClass(this.exampleClass);
+        this.entityMeta = EntityMetaFactory.getEntityMeta(this.entityClass);
         this.criteria1 = new LinkedHashSet<>();
         this.orderBys = new ArrayList<>();
+    }
+
+    /**
+     * 解析example的类型
+     *
+     * @param example
+     * @return
+     */
+    protected Class<E> resolveExampleClass(E example) {
+        Class<E> exampleClass;
+        if(example != null) {
+            exampleClass = (Class<E>) example.getClass();
+        } else {
+            exampleClass = Utilities.getSuperGenericType(getClass(), QueryCriteria.class, 0);
+        }
+        Assert.notNull(exampleClass, "Parameter 'exampleClass' can not be null!");
+        return exampleClass;
+    }
+
+    /**
+     * 解析实体对象的类型
+     *
+     * @param exampleClass
+     * @return
+     */
+    protected Class<E> resolveEntityClass(Class<E> exampleClass) {
+        Class<E> entityClass = null;
+        while(exampleClass != null && !exampleClass.isInterface()) {
+            if(exampleClass.getAnnotation(Table.class) != null) {
+                entityClass = exampleClass;
+                break;
+            }
+            exampleClass = (Class<E>) exampleClass.getSuperclass();
+        }
+        Assert.notNull(entityClass, String.format("The example class[%s] is not an EntityObject, must be annotated with @%s", exampleClass, Table.class.getName()));
+        return entityClass;
     }
 
     /**
@@ -84,8 +135,7 @@ public abstract class QueryCriteria<E extends DomainObject> {
      */
     protected QueryCriteria<E> orderBy(OrderBy... orderBys) {
         Assert.notEmpty(orderBys, "Parameter 'orderBys' can not be null!");
-        this.orderBys.addAll(Stream.of(orderBys).collect(Collectors.toList()));
-        return this;
+        return orderBy(Arrays.asList(orderBys));
     }
 
     /**
@@ -94,10 +144,32 @@ public abstract class QueryCriteria<E extends DomainObject> {
      * @return
      */
     protected QueryCriteria<E> orderBy(List<OrderBy> orderBys) {
-        if(orderBys != null) {
-            this.orderBys.addAll(orderBys);
+        if(!CollectionUtils.isEmpty(orderBys)) {
+            for(OrderBy orderBy : orderBys) {
+                Optional.ofNullable(checkOrderBy(orderBy)).ifPresent(this.orderBys::add);
+            }
         }
         return this;
+    }
+
+    /**
+     * 检查OrderBy
+     *
+     * @param orderBy
+     */
+    protected OrderBy checkOrderBy(OrderBy orderBy) {
+        //根据客户端传来的排序字段名找实体字段元数据
+        EntityMeta.EntityField orderByField = entityMeta.getFieldNameKeyedFields().get(orderBy.getProperty());
+        if(orderByField == null) {
+            orderByField = entityMeta.getColumnNameKeyedFields().get(orderBy.getProperty());
+        }
+        if(orderByField != null) { //如果排序列确实存在
+            //考虑到在调用BaseEntityMapper中的查询方法时：指定了select列，指定了OrderBy排序字段，但是排序字段不在select列中的情况需要特殊处理，即处统一使用数据库列名来作为排序字段
+            orderBy.setProperty(TABLE_ALIAS_NAME + "." + orderByField.getColumnName());
+            return orderBy;
+        }
+        //字段不存在则返回null，即在程序层面规避SQL注入
+        return null;
     }
 
     /**
@@ -150,15 +222,19 @@ public abstract class QueryCriteria<E extends DomainObject> {
         return example;
     }
 
-    public Class<E> getExampleType() {
-        return exampleType;
+    public Class<E> getExampleClass() {
+        return exampleClass;
+    }
+
+    public Class<E> getEntityClass() {
+        return entityClass;
     }
 
     protected Set<Criterion> getCriteria1() {
         return criteria1;
     }
 
-    public List<OrderBy> getOrders() {
+    public List<OrderBy> getOrderBys() {
         return orderBys;
     }
 
@@ -170,12 +246,8 @@ public abstract class QueryCriteria<E extends DomainObject> {
         return frozenCriteria;
     }
 
-    protected String getColumnName(Field field) {
-        return getColumnName(field.getName());
-    }
-
-    protected String getColumnName(String property) {
-        return StringUtils.camelNamingToSnake(property);
+    public String getColumnName(Field field) {
+        return entityMeta.getFieldNameKeyedFields().get(field.getName()).getColumnName();
     }
 
 }

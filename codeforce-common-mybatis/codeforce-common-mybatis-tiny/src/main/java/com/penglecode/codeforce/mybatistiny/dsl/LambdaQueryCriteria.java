@@ -1,10 +1,9 @@
 package com.penglecode.codeforce.mybatistiny.dsl;
 
-import com.penglecode.codeforce.common.domain.DomainObject;
+import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.model.OrderBy;
 import com.penglecode.codeforce.common.support.BeanIntrospector;
 import com.penglecode.codeforce.common.support.SerializableFunction;
-import com.penglecode.codeforce.common.util.ClassUtils;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
@@ -33,12 +32,12 @@ import java.util.function.Supplier;
  * @version 1.0
  */
 @SuppressWarnings("unchecked")
-public class LambdaQueryCriteria<E extends DomainObject> extends NestedLambdaQueryCriteria<E> {
+public class LambdaQueryCriteria<E extends EntityObject> extends NestedLambdaQueryCriteria<E> {
 
     private static final long serialVersionUID = 1L;
 
     public LambdaQueryCriteria(E example) {
-        super(example, ClassUtils.getSuperClassGenericType(LambdaQueryCriteria.class, NestedLambdaQueryCriteria.class, 0));
+        super(example);
     }
 
     /**
@@ -47,7 +46,7 @@ public class LambdaQueryCriteria<E extends DomainObject> extends NestedLambdaQue
      * @param <E>
      * @return
      */
-    public static <E extends DomainObject> LambdaQueryCriteria<E> of(E example) {
+    public static <E extends EntityObject> LambdaQueryCriteria<E> of(E example) {
         return new LambdaQueryCriteria<>(example);
     }
 
@@ -57,7 +56,7 @@ public class LambdaQueryCriteria<E extends DomainObject> extends NestedLambdaQue
      * @param <E>
      * @return
      */
-    public static <E extends DomainObject> LambdaQueryCriteria<E> ofSupplier(Supplier<E> exampleSupplier) {
+    public static <E extends EntityObject> LambdaQueryCriteria<E> ofSupplier(Supplier<E> exampleSupplier) {
         return new LambdaQueryCriteria<>(exampleSupplier.get());
     }
 
@@ -146,7 +145,7 @@ public class LambdaQueryCriteria<E extends DomainObject> extends NestedLambdaQue
     protected LambdaQueryCriteria<E> orderBy(String property, OrderBy.Direction direction) {
         Assert.hasText(property, "Parameter 'property' can not be null!");
         Assert.notNull(direction, "Parameter 'direction' can not be null!");
-        getOrders().add(OrderBy.by(property, direction));
+        getOrderBys().add(OrderBy.by(property, direction));
         return this;
     }
 
@@ -162,7 +161,7 @@ public class LambdaQueryCriteria<E extends DomainObject> extends NestedLambdaQue
         Assert.notNull(column, "Parameter 'column' can not be null!");
         Assert.notNull(direction, "Parameter 'direction' can not be null!");
         Field field = BeanIntrospector.introspectField(column);
-        getOrders().add(OrderBy.by(field.getName(), direction));
+        getOrderBys().add(OrderBy.by(field.getName(), direction));
         return this;
     }
 

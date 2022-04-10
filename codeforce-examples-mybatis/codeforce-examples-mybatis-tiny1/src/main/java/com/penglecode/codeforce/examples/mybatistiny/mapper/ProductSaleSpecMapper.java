@@ -1,7 +1,7 @@
 package com.penglecode.codeforce.examples.mybatistiny.mapper;
 
 import com.penglecode.codeforce.examples.mybatis.domain.model.ProductSaleSpec;
-import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
+import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @version 1.0
  */
 @Mapper
-public interface ProductSaleSpecMapper extends BaseMybatisMapper<ProductSaleSpec> {
+public interface ProductSaleSpecMapper extends BaseEntityMapper<ProductSaleSpec> {
 }

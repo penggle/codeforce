@@ -13,10 +13,10 @@
     <description>一个类似于Mybatis-Plus的轻量级扩展</description>
 
     <dependencies>
-        <!-- codeforce-common-core -->
+        <!-- codeforce-common-domain -->
         <dependency>
             <groupId>com.penglecode</groupId>
-            <artifactId>codeforce-common-core</artifactId>
+            <artifactId>codeforce-common-domain</artifactId>
         </dependency>
 
         <!-- mybatis -->
@@ -29,6 +29,30 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
+        </dependency>
+
+        <!-- spring-context -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <!-- spring-tx -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <!-- slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- freemarker -->

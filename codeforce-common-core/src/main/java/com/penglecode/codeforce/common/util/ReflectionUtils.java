@@ -53,7 +53,6 @@ public class ReflectionUtils extends org.springframework.util.ReflectionUtils {
     	return getFieldGenricType(field, 0);
     }
     
-    @SuppressWarnings("rawtypes")
 	public static Class getFieldGenricType(final Field field, final int index) {
     	Assert.notNull(field, "Parameter 'field' must be not null!");
     	Assert.state(index > -1, "Parameter 'index' must be > -1!");
@@ -100,7 +99,7 @@ public class ReflectionUtils extends org.springframework.util.ReflectionUtils {
 			field.setAccessible(true);
 			field.set(target, value);
 		} catch (Exception e) {
-			throw new ReflectionException(String.format("setting field's value failed by reflection! error message is: %s", e.getMessage()), e);
+			handleReflectionException(e);
 		}
 	}
 	
@@ -144,8 +143,8 @@ public class ReflectionUtils extends org.springframework.util.ReflectionUtils {
 			modifiersField.setAccessible(false);
 			field.setAccessible(false);
 		} catch (Exception e) {
-			throw new ReflectionException(String.format("modify the value of final field failed by reflection! error message is: %s", e.getMessage()), e);
-		}  
+			handleReflectionException(e);
+		}
     }
 	
 	/**
@@ -161,7 +160,8 @@ public class ReflectionUtils extends org.springframework.util.ReflectionUtils {
 			field.setAccessible(true);
 			return (T) field.get(target);
 		} catch (Exception e) {
-			throw new ReflectionException(String.format("getting field's value failed by reflection! error message is: %s", e.getMessage()), e);
+			handleReflectionException(e);
+			return null;
 		}
 	}
 	
@@ -235,24 +235,6 @@ public class ReflectionUtils extends org.springframework.util.ReflectionUtils {
 	 */
 	public static boolean isFinalizeMethod(@Nullable Method method) {
 		return (method != null && "finalize".equals(method.getName()) && method.getParameterCount() == 0);
-	}
-	
-	public static class ReflectionException extends RuntimeException {
-
-		private static final long serialVersionUID = 1L;
-
-		public ReflectionException(String message, Throwable cause) {
-			super(message, cause);
-		}
-
-		public ReflectionException(String message) {
-			super(message);
-		}
-
-		public ReflectionException(Throwable cause) {
-			super(cause);
-		}
-		
 	}
 	
 }

@@ -148,7 +148,7 @@ public class ProductModuleMapperTest {
                 .eq(ProductBaseInfo::getProductType, 1)
                 .orderBy(OrderBy.desc(ProductBaseInfo::getCreateTime))
                 .limit(10);
-        productBases = productBaseInfoMapper.selectListByCriteria(criteria1);
+        productBases = productBaseInfoMapper.selectListByCriteria(criteria1, new QueryColumns(ProductSaleStock::getProductId));
         if(!CollectionUtils.isEmpty(productBases)) {
             productBases.forEach(item -> System.out.println(JsonUtils.object2Json(item)));
         }
@@ -217,7 +217,21 @@ public class ProductModuleMapperTest {
     }
 
     @Test
-    public void deleteProduct() {
+    public void deleteProduct1() {
+        Long productId = 1L;
+        productBaseInfoMapper.deleteById(productId);
+        productExtraInfoMapper.deleteById(productId);
+        QueryCriteria<ProductSaleSpec> queryCriteria1 = LambdaQueryCriteria.ofSupplier(ProductSaleSpec::new)
+                .eq(ProductSaleSpec::getProductId, productId);
+        productSaleSpecMapper.deleteByCriteria(queryCriteria1);
+
+        QueryCriteria<ProductSaleStock> queryCriteria2 = LambdaQueryCriteria.ofSupplier(ProductSaleStock::new)
+                .eq(ProductSaleStock::getProductId, productId);
+        productSaleStockMapper.deleteByCriteria(queryCriteria2);
+    }
+
+        @Test
+    public void deleteProduct2() {
         Long productId = 1L;
         productSaleStockMapper.deleteById(new ID().addKey("productId", productId).addKey("specNo", "00:10:20"));
 

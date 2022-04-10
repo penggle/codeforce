@@ -1,10 +1,10 @@
 package com.penglecode.codeforce.mybatistiny.spring;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
-import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
+import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 import com.penglecode.codeforce.mybatistiny.interceptor.DomainObjectQueryInterceptor;
 import com.penglecode.codeforce.mybatistiny.interceptor.PageLimitInterceptor;
-import com.penglecode.codeforce.mybatistiny.core.XmlMapperRegistry;
+import com.penglecode.codeforce.mybatistiny.core.EntityMapperRegistry;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 /**
  * Mybatis基于Spring框架的相关配置Bean(SqlSessionFactory、XxxMapper)的Bean后置处理程序，用于向Configuration中动态注册MappedStatement。
- * 该BeanPostProcessor拦截刚创建好的{@link BaseMybatisMapper}子类(XxxMapper)的代理实例，做四件事情：
+ * 该BeanPostProcessor拦截刚创建好的{@link BaseEntityMapper}子类(XxxMapper)的代理实例，做四件事情：
  *
  *  1、代理SqlSessionFactory中的configuration属性，如果可能的话
  *  2、向{@link Configuration}中注册{@link DomainObjectQueryInterceptor}和{@link PageLimitInterceptor}
@@ -30,15 +30,15 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class MapperBeanPostProcessor<E extends EntityObject> implements BeanPostProcessor {
 
-    private final Map<SqlSessionFactory, XmlMapperRegistry<E>> xmlMapperRegistries = new HashMap<>();
+    private final Map<SqlSessionFactory, EntityMapperRegistry<E>> entityMapperRegistries = new HashMap<>();
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if(bean instanceof MapperFactoryBean) {
             MapperFactoryBean<?> mapperFactoryBean = (MapperFactoryBean<?>) bean;
             Class<?> mapperInterface = mapperFactoryBean.getMapperInterface();
-            if(BaseMybatisMapper.class.isAssignableFrom(mapperInterface)) {
-                processEntityMapper((MapperFactoryBean<BaseMybatisMapper<E>>)mapperFactoryBean);
+            if(BaseEntityMapper.class.isAssignableFrom(mapperInterface)) {
+                processEntityMapper((MapperFactoryBean<BaseEntityMapper<E>>)mapperFactoryBean);
             }
         }
         return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
@@ -49,15 +49,15 @@ public class MapperBeanPostProcessor<E extends EntityObject> implements BeanPost
      *
      * @param mapperFactoryBean
      */
-    protected void processEntityMapper(MapperFactoryBean<BaseMybatisMapper<E>> mapperFactoryBean) {
+    protected void processEntityMapper(MapperFactoryBean<BaseEntityMapper<E>> mapperFactoryBean) {
         SqlSessionFactory sqlSessionFactory = mapperFactoryBean.getSqlSessionFactory();
         Assert.state(sqlSessionFactory != null, String.format("SqlSessionFactory can not be obtained in '%s'", MapperFactoryBean.class.getName()));
-        XmlMapperRegistry<E> xmlMapperRegistry = xmlMapperRegistries.computeIfAbsent(sqlSessionFactory, XmlMapperRegistry::new);
-        xmlMapperRegistry.registerEntityMapper(mapperFactoryBean.getMapperInterface());
+        EntityMapperRegistry<E> entityMapperRegistry = entityMapperRegistries.computeIfAbsent(sqlSessionFactory, EntityMapperRegistry::new);
+        entityMapperRegistry.registerEntityMapper(mapperFactoryBean.getMapperInterface());
     }
 
-    protected Map<SqlSessionFactory, XmlMapperRegistry<E>> getXmlMapperRegistries() {
-        return xmlMapperRegistries;
+    protected Map<SqlSessionFactory, EntityMapperRegistry<E>> getEntityMapperRegistries() {
+        return entityMapperRegistries;
     }
 
 }

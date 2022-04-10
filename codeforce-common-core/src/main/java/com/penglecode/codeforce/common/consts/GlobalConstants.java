@@ -31,11 +31,6 @@ public class GlobalConstants {
 	public static final Integer DEFAULT_NO_FALSE_FLAG = 0;
 
 	/**
-	 * 默认的JDBC-Batch操作批量大小
-	 */
-	public static final Integer DEFAULT_JDBC_BATCH_SIZE = 5000;
-
-	/**
 	 * 全局应用代码
 	 */
 	public static final Constant<String> APP_CODE = new SpringEnvConstant<String>("spring.application.code") {};

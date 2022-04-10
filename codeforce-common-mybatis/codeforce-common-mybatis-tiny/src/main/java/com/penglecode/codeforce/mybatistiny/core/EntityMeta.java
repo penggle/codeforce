@@ -1,17 +1,16 @@
 package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
-import com.penglecode.codeforce.common.util.ReflectionUtils;
-import com.penglecode.codeforce.common.util.StringUtils;
 import com.penglecode.codeforce.mybatistiny.annotations.Column;
 import com.penglecode.codeforce.mybatistiny.annotations.Id;
 import com.penglecode.codeforce.mybatistiny.annotations.Table;
 import com.penglecode.codeforce.mybatistiny.annotations.Transient;
-import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
 import com.penglecode.codeforce.mybatistiny.support.JavaJdbcTypeEnum;
+import com.penglecode.codeforce.mybatistiny.support.Utilities;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
-import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -27,35 +26,33 @@ import java.util.stream.Collectors;
  * @author pengpeng
  * @version 1.0
  */
-@SuppressWarnings("unchecked")
 public class EntityMeta<E extends EntityObject> {
-
-    /** 实体的Mybatis-Mapper接口类Class */
-    private final Class<BaseMybatisMapper<E>> entityMapperClass;
 
     /** 实体类Class */
     private final Class<E> entityClass;
 
-    /** 实体字段名 */
-    private final Map<String,EntityField> entityFields;
+    /** 以fieldName为key的实体字段名映射 */
+    private final Map<String,EntityField> fieldNameKeyedFields;
+
+    /** 以columnName为key的实体字段名映射 */
+    private final Map<String,EntityField> columnNameKeyedFields;
 
     /** 实体类上的@Table注解 */
     private final Table tableAnnotation;
 
-    public EntityMeta(Class<BaseMybatisMapper<E>> entityMapperClass) {
-        this.entityMapperClass = entityMapperClass;
-        ResolvableType resolvableType = ResolvableType.forClass(BaseMybatisMapper.class, entityMapperClass);
-        Class<E> entityClass = (Class<E>) resolvableType.getGeneric(0).resolve();
-        Assert.notNull(entityClass, String.format("Can not resolve parameterized entity type from entity mapper: %s", entityMapperClass));
+    protected EntityMeta(Class<E> entityClass) {
         this.entityClass = entityClass;
-        this.entityFields = resolveEntityFields(entityClass);
+        this.fieldNameKeyedFields = resolveEntityFields(entityClass, EntityField::getFieldName);
+        this.columnNameKeyedFields = resolveEntityFields(entityClass, EntityField::getColumnName);
         this.tableAnnotation = entityClass.getAnnotation(Table.class);
+        Assert.state(tableAnnotation != null, String.format("EntityObject[%s] must be annotated with @%s", entityClass.getName(), Table.class.getName()));
+        Assert.state(fieldNameKeyedFields.values().stream().anyMatch(field -> field.getIdAnnotation() != null), String.format("EntityObject[%s] must specify an id which annotated with @%s", entityClass.getName(), Id.class.getName()));
     }
 
-    protected Map<String,EntityField> resolveEntityFields(Class<E> entityClass) {
+    protected Map<String,EntityField> resolveEntityFields(Class<E> entityClass, Function<EntityField,String> keyFunction) {
         List<Field> entityFields = new ArrayList<>();
         ReflectionUtils.doWithFields(entityClass, entityFields::add, this::isEntityField);
-        return entityFields.stream().map(EntityField::new).collect(Collectors.toMap(EntityField::getFieldName, Function.identity()));
+        return entityFields.stream().map(EntityField::new).collect(Collectors.toMap(keyFunction, Function.identity()));
     }
 
     protected boolean isEntityField(Field field) {
@@ -65,16 +62,16 @@ public class EntityMeta<E extends EntityObject> {
         return false;
     }
 
-    public Class<BaseMybatisMapper<E>> getEntityMapperClass() {
-        return entityMapperClass;
-    }
-
     public Class<E> getEntityClass() {
         return entityClass;
     }
 
-    public Map<String,EntityField> getEntityFields() {
-        return entityFields;
+    public Map<String, EntityField> getFieldNameKeyedFields() {
+        return fieldNameKeyedFields;
+    }
+
+    public Map<String, EntityField> getColumnNameKeyedFields() {
+        return columnNameKeyedFields;
     }
 
     public Table getTableAnnotation() {
@@ -121,7 +118,7 @@ public class EntityMeta<E extends EntityObject> {
                 columnName = columnAnnotation.name();
             }
             if(StringUtils.isBlank(columnName)) {
-                return StringUtils.camelNamingToSnake(javaField.getName());
+                return Utilities.camelNamingToSnake(javaField.getName());
             }
             return columnName;
         }

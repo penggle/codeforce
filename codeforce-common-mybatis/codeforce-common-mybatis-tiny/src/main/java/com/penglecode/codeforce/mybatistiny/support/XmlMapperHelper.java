@@ -2,10 +2,9 @@ package com.penglecode.codeforce.mybatistiny.support;
 
 
 import com.penglecode.codeforce.mybatistiny.dsl.QueryColumns;
-import com.penglecode.codeforce.common.util.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
-import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -25,25 +24,7 @@ public class XmlMapperHelper {
     }
 
     public static boolean isNotEmpty(Object paramObj) {
-        if (paramObj == null) {
-            return false;
-        }
-        if (paramObj instanceof String) {
-            String str = (String) paramObj;
-            return StringUtils.isNotEmpty(str);
-        }
-        if (paramObj.getClass().isArray()) {
-            return Array.getLength(paramObj) > 0;
-        }
-        if (paramObj instanceof Map) {
-            Map<?, ?> map = (Map<?, ?>) paramObj;
-            return !map.isEmpty();
-        }
-        if (paramObj instanceof Collection) {
-            Collection<?> collection = (Collection<?>) paramObj;
-            return !collection.isEmpty();
-        }
-        return true;
+        return ObjectUtils.isEmpty(paramObj);
     }
 
     public static boolean isArrayOrCollection(Object paramObj) {

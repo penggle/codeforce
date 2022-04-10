@@ -4,7 +4,7 @@
 
     <!-- Auto-Generation Code Start -->
     <!--
-        每个继承BaseMybatisMapper的Mybatis-Mapper接口都会自动生成对应的如下XML-Mapper
+        每个继承BaseEntityMapper的Mybatis-Mapper接口都会自动生成对应的如下XML-Mapper
     -->
 
     <sql id="SelectBaseColumnsClause">

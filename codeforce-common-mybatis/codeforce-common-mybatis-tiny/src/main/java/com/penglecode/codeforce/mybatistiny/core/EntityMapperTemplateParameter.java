@@ -2,19 +2,23 @@ package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.mybatistiny.core.EntityMeta.EntityField;
+import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 
 import java.util.List;
 
 /**
- * BaseMybatisMapper.ftl模板参数
+ * BaseEntityMapper.ftl模板参数
  *
  * @author pengpeng
  * @version 1.0
  */
-public class XmlMapperTemplateParameter {
+public class EntityMapperTemplateParameter<E extends EntityObject> {
+
+    /** 实体对象的Mybatis-Mapper接口类型 */
+    private Class<BaseEntityMapper<E>> entityMapperClass;
 
     /** 实体元数据 */
-    private EntityMeta<? extends EntityObject> entityMeta;
+    private EntityMeta<E> entityMeta;
 
     /** 实体XML-Mapper的namespace */
     private String mapperNamespace;
@@ -55,11 +59,19 @@ public class XmlMapperTemplateParameter {
     /** DELETE语句别名 */
     private String deleteTargetAlias;
 
-    public EntityMeta<? extends EntityObject> getEntityMeta() {
+    public Class<BaseEntityMapper<E>> getEntityMapperClass() {
+        return entityMapperClass;
+    }
+
+    public void setEntityMapperClass(Class<BaseEntityMapper<E>> entityMapperClass) {
+        this.entityMapperClass = entityMapperClass;
+    }
+
+    public EntityMeta<E> getEntityMeta() {
         return entityMeta;
     }
 
-    public void setEntityMeta(EntityMeta<? extends EntityObject> entityMeta) {
+    public void setEntityMeta(EntityMeta<E> entityMeta) {
         this.entityMeta = entityMeta;
     }
 

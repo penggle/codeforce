@@ -1,6 +1,6 @@
 package com.penglecode.codeforce.mybatistiny.dsl;
 
-import com.penglecode.codeforce.common.domain.DomainObject;
+import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.support.BeanIntrospector;
 import com.penglecode.codeforce.common.support.SerializableFunction;
 
@@ -32,7 +32,7 @@ public class QueryColumns {
     private final Predicate<String> predicate;
 
     @SafeVarargs
-    public <T extends DomainObject> QueryColumns(SerializableFunction<T,?>... columns) {
+    public <T extends EntityObject> QueryColumns(SerializableFunction<T,?>... columns) {
         Set<String> propertyNames = new LinkedHashSet<>();
         if(columns != null && columns.length > 0) {
             for(SerializableFunction<T,?> selectColumn : columns) {

@@ -7,7 +7,8 @@ import com.penglecode.codeforce.mybatistiny.annotations.Id;
 import com.penglecode.codeforce.mybatistiny.annotations.Table;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import com.penglecode.codeforce.mybatistiny.core.EntityMeta.EntityField;
-import com.penglecode.codeforce.mybatistiny.core.XmlMapperTemplateParameter.ColumnParameter;
+import com.penglecode.codeforce.mybatistiny.core.EntityMapperTemplateParameter.ColumnParameter;
+import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 import com.penglecode.codeforce.mybatistiny.support.XmlMapperHelper;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -17,33 +18,34 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * BaseMybatisMapper.ftl模板参数Factory
+ * BaseEntityMapper.ftl模板参数Factory
  *
  * @author pengpeng
  * @version 1.0
  */
-public class XmlMapperTemplateParameterFactory<E extends EntityObject> {
+public class EntityMapperTemplateParameterFactory<E extends EntityObject> {
 
     private final DatabaseDialect databaseDialect;
 
-    public XmlMapperTemplateParameterFactory(String databaseId) {
+    public EntityMapperTemplateParameterFactory(String databaseId) {
         DatabaseDialect databaseDialect = DatabaseDialect.of(databaseId);
         Assert.notNull(databaseDialect, String.format("Unsupported Database: No suitable DatabaseDialect found for databaseId(%s) in Mybatis Configuration!", databaseId));
         this.databaseDialect = databaseDialect;
     }
 
-    public XmlMapperTemplateParameter createTemplateParameter(EntityMeta<E> entityMeta) {
-        XmlMapperTemplateParameter parameter = newTemplateParameter();
+    public EntityMapperTemplateParameter<E> createTemplateParameter(Class<BaseEntityMapper<E>> entityMapperClass, EntityMeta<E> entityMeta) {
+        EntityMapperTemplateParameter<E> parameter = newTemplateParameter();
+        parameter.setEntityMapperClass(entityMapperClass);
         parameter.setEntityMeta(entityMeta);
         return setTemplateCustomParameter(setTemplateCommonParameter(parameter));
     }
 
-    protected XmlMapperTemplateParameter newTemplateParameter() {
-        return new XmlMapperTemplateParameter();
+    protected EntityMapperTemplateParameter<E> newTemplateParameter() {
+        return new EntityMapperTemplateParameter<>();
     }
 
-    protected XmlMapperTemplateParameter setTemplateCommonParameter(XmlMapperTemplateParameter parameter) {
-        parameter.setMapperNamespace(parameter.getEntityMeta().getEntityMapperClass().getName());
+    protected EntityMapperTemplateParameter<E> setTemplateCommonParameter(EntityMapperTemplateParameter<E> parameter) {
+        parameter.setMapperNamespace(parameter.getEntityMapperClass().getName());
         parameter.setMapperHelperClass(XmlMapperHelper.class.getName());
         parameter.setEntityName(parameter.getEntityMeta().getEntityClass().getSimpleName());
 
@@ -51,7 +53,7 @@ public class XmlMapperTemplateParameterFactory<E extends EntityObject> {
         parameter.setTableName(tableAnnotation.value());
         parameter.setTableAlias(QueryCriteria.TABLE_ALIAS_NAME);
 
-        Map<String,EntityField> entityFields = parameter.getEntityMeta().getEntityFields();
+        Map<String,EntityField> entityFields = parameter.getEntityMeta().getFieldNameKeyedFields();
         List<ColumnParameter> allColumns = entityFields.values().stream().map(ColumnParameter::new).collect(Collectors.toList());
         parameter.setIdColumns(allColumns.stream().filter(this::isIdColumn).collect(Collectors.toList()));
         parameter.setInsertColumns(allColumns.stream().filter(this::isInsertColumn).collect(Collectors.toList()));
@@ -75,7 +77,7 @@ public class XmlMapperTemplateParameterFactory<E extends EntityObject> {
         return parameter;
     }
 
-    protected XmlMapperTemplateParameter setTemplateCustomParameter(XmlMapperTemplateParameter parameter) {
+    protected EntityMapperTemplateParameter<E> setTemplateCustomParameter(EntityMapperTemplateParameter<E> parameter) {
         return parameter;
     }
 

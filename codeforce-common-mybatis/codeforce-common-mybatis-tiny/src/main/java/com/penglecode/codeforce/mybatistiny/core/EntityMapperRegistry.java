@@ -1,11 +1,12 @@
 package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
-import com.penglecode.codeforce.common.util.ReflectionUtils;
+import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import com.penglecode.codeforce.mybatistiny.exception.XMLMapperParseException;
 import com.penglecode.codeforce.mybatistiny.interceptor.DomainObjectQueryInterceptor;
 import com.penglecode.codeforce.mybatistiny.interceptor.PageLimitInterceptor;
-import com.penglecode.codeforce.mybatistiny.mapper.BaseMybatisMapper;
+import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
+import com.penglecode.codeforce.mybatistiny.support.Utilities;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -39,21 +40,23 @@ import java.util.List;
  *
  * @author pengpeng
  * @version 1.0
+ * @param <E> 实体对象(EntityObject)，它对应着数据库中的一张表；而领域对象(DomainObject)则是包含了实体对象，不一定对应着数据库中的一张表
  */
-public class XmlMapperRegistry<E extends EntityObject> {
+public class EntityMapperRegistry<E extends EntityObject> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(XmlMapperRegistry.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EntityMapperRegistry.class);
 
     private final SqlSessionFactory sqlSessionFactory;
 
     private final CustomConfiguration configuration;
 
-    private final XmlMapperTemplateParameterFactory<E> xmlMapperTemplateParameterFactory;
+    private final EntityMapperTemplateParameterFactory<E> entityMapperTemplateParameterFactory;
 
-    public XmlMapperRegistry(SqlSessionFactory sqlSessionFactory) {
+    public EntityMapperRegistry(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
         this.configuration = delegateConfiguration();
-        this.xmlMapperTemplateParameterFactory = createTemplateParameterFactory();
+        this.entityMapperTemplateParameterFactory = createTemplateParameterFactory();
+        this.registerCommonTypeAlias();
         this.registerCommonPlugin();
         this.registerCommonMapper();
     }
@@ -68,7 +71,7 @@ public class XmlMapperRegistry<E extends EntityObject> {
         Configuration configuration = sqlSessionFactory.getConfiguration();
         if(!(configuration instanceof CustomConfiguration)) { //避免可能出现的重复delegate
             delegateConfiguration = new CustomConfiguration(configuration);
-            ReflectionUtils.setFinalFieldValue(sqlSessionFactory, "configuration", delegateConfiguration);
+            Utilities.setFinalFieldValue(sqlSessionFactory, "configuration", delegateConfiguration);
             LOGGER.info(">>> Successfully delegate 'configuration' of DefaultSqlSessionFactory[{}]", sqlSessionFactory);
         } else {
             delegateConfiguration = (CustomConfiguration) configuration;
@@ -81,14 +84,20 @@ public class XmlMapperRegistry<E extends EntityObject> {
      * 该公共XML-Mapper每个Configuration仅需注册一次即可
      */
     protected void registerCommonMapper() {
-        registerXmlMapper(new ClassPathResource(BaseMybatisMapper.class.getPackage().getName().replace(".", "/") + "/CommonMybatisMapper.xml"));
+        registerXmlMapper(new ClassPathResource(BaseEntityMapper.class.getPackage().getName().replace(".", "/") + "/CommonMybatisMapper.xml"));
+    }
+
+    /**
+     * 注册公共的类型别名
+     */
+    protected void registerCommonTypeAlias() {
+        configuration.getTypeAliasRegistry().registerAlias(QueryCriteria.class);
     }
 
     /**
      * 注册公共的插件
      */
     protected void registerCommonPlugin() {
-        Configuration configuration = getSqlSessionFactory().getConfiguration();
         List<Interceptor> interceptors = configuration.getInterceptors();
         if(CollectionUtils.isEmpty(interceptors) || interceptors.stream().noneMatch(interceptor -> interceptor instanceof DomainObjectQueryInterceptor)) {
             configuration.addInterceptor(new DomainObjectQueryInterceptor());
@@ -100,23 +109,28 @@ public class XmlMapperRegistry<E extends EntityObject> {
         }
     }
 
-    protected XmlMapperTemplateParameterFactory<E> createTemplateParameterFactory() {
-        Configuration configuration = getSqlSessionFactory().getConfiguration();
+    protected EntityMapperTemplateParameterFactory<E> createTemplateParameterFactory() {
         Assert.hasText(configuration.getDatabaseId(), "Property 'databaseId' must be required in Mybatis Configuration!");
-        return new XmlMapperTemplateParameterFactory<>(configuration.getDatabaseId());
+        return new EntityMapperTemplateParameterFactory<>(configuration.getDatabaseId());
     }
 
-    public void registerEntityMapper(Class<BaseMybatisMapper<E>> entityMapperClass) {
+    /**
+     * 注册实体对象的Mybatis-Mapper
+     *
+     * @param entityMapperClass
+     */
+    public void registerEntityMapper(Class<BaseEntityMapper<E>> entityMapperClass) {
         //创建实体元数据
         EntityMeta<E> entityMeta = createEntityMeta(entityMapperClass);
         //为动态生成的实体XxxMapper.xml创建所需的模板参数
-        XmlMapperTemplateParameter templateParameter = getXmlMapperTemplateParameterFactory().createTemplateParameter(entityMeta);
+        EntityMapperTemplateParameter<E> templateParameter = getXmlMapperTemplateParameterFactory().createTemplateParameter(entityMapperClass, entityMeta);
+
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         configuration.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        Class<?> resourceLoadClass = BaseMybatisMapper.class;
+        Class<?> resourceLoadClass = BaseEntityMapper.class;
         configuration.setClassForTemplateLoading(resourceLoadClass, "/" + resourceLoadClass.getPackage().getName().replace(".", "/"));
         try {
-            Template xmlMapperTemplate = configuration.getTemplate("BaseMybatisMapper.ftl");
+            Template xmlMapperTemplate = configuration.getTemplate("BaseEntityMapper.ftl");
             StringWriter xmlMapperWriter = new StringWriter();
             xmlMapperTemplate.process(templateParameter, xmlMapperWriter);
             String xmlMapperContent = xmlMapperWriter.toString();
@@ -124,7 +138,7 @@ public class XmlMapperRegistry<E extends EntityObject> {
             String xmlMapperResourceName = registerXmlMapper(new ByteArrayResource(xmlMapperContent.getBytes(StandardCharsets.UTF_8), xmlMapperLocation));
             LOGGER.debug("<-----------------------------【{}】----------------------------->\n{}", xmlMapperResourceName, xmlMapperContent);
         } catch (IOException | TemplateException e) {
-            throw new XMLMapperParseException("Failed to parse 'BaseMybatisMapper.ftl'", e);
+            throw new XMLMapperParseException("Failed to parse 'BaseEntityMapper.ftl'", e);
         }
     }
 
@@ -134,8 +148,10 @@ public class XmlMapperRegistry<E extends EntityObject> {
      * @param entityMapperClass
      * @return
      */
-    protected EntityMeta<E> createEntityMeta(Class<BaseMybatisMapper<E>> entityMapperClass) {
-        return new EntityMeta<>(entityMapperClass);
+    protected EntityMeta<E> createEntityMeta(Class<BaseEntityMapper<E>> entityMapperClass) {
+        Class<E> entityClass = Utilities.getSuperGenericType(entityMapperClass, BaseEntityMapper.class, 0);
+        Assert.notNull(entityClass, String.format("Can not resolve parameterized entity class from entity mapper: %s", entityMapperClass));
+        return EntityMetaFactory.getEntityMeta(entityClass);
     }
 
     /**
@@ -145,7 +161,6 @@ public class XmlMapperRegistry<E extends EntityObject> {
      * @return
      */
     protected String registerXmlMapper(Resource xmlMapperResource) {
-        Configuration configuration = getSqlSessionFactory().getConfiguration();
         try {
             String xmlMapperResourceName = xmlMapperResource.getDescription();
             xmlMapperResourceName = xmlMapperResourceName.substring(xmlMapperResourceName.indexOf('[') + 1, xmlMapperResourceName.lastIndexOf(']'));
@@ -170,8 +185,8 @@ public class XmlMapperRegistry<E extends EntityObject> {
         return configuration;
     }
 
-    protected XmlMapperTemplateParameterFactory<E> getXmlMapperTemplateParameterFactory() {
-        return xmlMapperTemplateParameterFactory;
+    protected EntityMapperTemplateParameterFactory<E> getXmlMapperTemplateParameterFactory() {
+        return entityMapperTemplateParameterFactory;
     }
 
 }

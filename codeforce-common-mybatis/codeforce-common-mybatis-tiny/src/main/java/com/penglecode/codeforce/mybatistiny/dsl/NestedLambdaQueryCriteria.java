@@ -1,6 +1,6 @@
 package com.penglecode.codeforce.mybatistiny.dsl;
 
-import com.penglecode.codeforce.common.domain.DomainObject;
+import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.model.OrderBy;
 import com.penglecode.codeforce.common.support.BeanIntrospector;
 import com.penglecode.codeforce.common.support.SerializableFunction;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * @version 1.0
  */
 @SuppressWarnings("unchecked")
-public abstract class NestedLambdaQueryCriteria<E extends DomainObject> extends QueryCriteria<E> {
+public abstract class NestedLambdaQueryCriteria<E extends EntityObject> extends QueryCriteria<E> {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,8 +40,8 @@ public abstract class NestedLambdaQueryCriteria<E extends DomainObject> extends 
      */
     private LogicOperator currentLogicOperator = LogicOperator.AND;
 
-    NestedLambdaQueryCriteria(E example, Class<E> exampleType) {
-        super(example, exampleType);
+    NestedLambdaQueryCriteria(E example) {
+        super(example);
     }
 
     public NestedLambdaQueryCriteria<E> and() {

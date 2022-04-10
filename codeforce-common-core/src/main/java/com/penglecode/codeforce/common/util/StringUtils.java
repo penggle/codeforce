@@ -75,6 +75,26 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
+     * mobilePhone 转 mobile-phone
+     *
+     * @param paramName
+     * @return
+     */
+    public static String camelNamingToKebab(String paramName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Character.toLowerCase(paramName.charAt(0)));
+        for(int i = 1, len = paramName.length(); i < len; i++) {
+            char ch = paramName.charAt(i);
+            if(Character.isUpperCase(ch)) {
+                ch = Character.toLowerCase(ch);
+                sb.append("-");
+            }
+            sb.append(ch);
+        }
+        return sb.toString();
+    }
+
+    /**
      * mobile_phone 转 mobilePhone
      *
      * @param paramName
@@ -105,26 +125,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             if(Character.isUpperCase(ch)) {
                 ch = Character.toLowerCase(ch);
                 sb.append("_");
-            }
-            sb.append(ch);
-        }
-        return sb.toString();
-    }
-
-    /**
-     * mobilePhone 转 mobile-phone
-     *
-     * @param paramName
-     * @return
-     */
-    public static String camelNamingToKebab(String paramName) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Character.toLowerCase(paramName.charAt(0)));
-        for(int i = 1, len = paramName.length(); i < len; i++) {
-            char ch = paramName.charAt(i);
-            if(Character.isUpperCase(ch)) {
-                ch = Character.toLowerCase(ch);
-                sb.append("-");
             }
             sb.append(ch);
         }

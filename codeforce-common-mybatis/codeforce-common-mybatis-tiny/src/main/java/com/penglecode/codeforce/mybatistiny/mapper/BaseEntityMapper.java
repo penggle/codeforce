@@ -1,6 +1,6 @@
 package com.penglecode.codeforce.mybatistiny.mapper;
 
-import com.penglecode.codeforce.common.domain.DomainObject;
+import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryColumns;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import org.apache.ibatis.annotations.Flush;
@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * CRUD类操作Mybatis-Mapper基类
+ * 实体对象(EntityObject)的基本CRUD类操作Mybatis-Mapper基类
  *
  * @author pengpeng
  * @version 1.0
  */
-public interface BaseMybatisMapper<T extends DomainObject> {
+public interface BaseEntityMapper<T extends EntityObject> {
 
     /**
      * 这里需要保持与BaseXxxMapper中的@Param参数名一致
