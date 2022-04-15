@@ -3,6 +3,9 @@ package com.penglecode.codeforce.mybatistiny.core;
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.mybatistiny.core.EntityMeta.EntityField;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
+import com.penglecode.codeforce.mybatistiny.support.Utilities;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.util.List;
 
@@ -34,6 +37,9 @@ public class EntityMapperTemplateParameter<E extends EntityObject> {
 
     /** 实体名称 */
     private String entityName;
+
+    /** 实体类名 */
+    private String entityClass;
 
     /** ID生成策略(SEQUENCE,IDENTITY,NONE) */
     private String idStrategy;
@@ -113,6 +119,14 @@ public class EntityMapperTemplateParameter<E extends EntityObject> {
 
     public void setEntityName(String entityName) {
         this.entityName = entityName;
+    }
+
+    public String getEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(String entityClass) {
+        this.entityClass = entityClass;
     }
 
     public String getIdStrategy() {
@@ -197,7 +211,13 @@ public class EntityMapperTemplateParameter<E extends EntityObject> {
         private final String fieldName;
 
         /** 列对应的Java字段类型 */
-        private final Class<?> fieldType;
+        private final String fieldType;
+
+        /** 列对应的TypeHandler */
+        private final String typeHandler;
+
+        /** 列对应的select字句，例如：DATE_FORMAT(t.create_time, '%Y-%m-%d %T') */
+        private final String selectClause;
 
         /** 是否是ID列 */
         private final boolean idColumn;
@@ -208,11 +228,13 @@ public class EntityMapperTemplateParameter<E extends EntityObject> {
         public ColumnParameter(EntityField entityField) {
             this.entityField = entityField;
             this.fieldName = entityField.getFieldName();
-            this.fieldType = entityField.getFieldType();
+            this.fieldType = entityField.getFieldType().getName();
             this.jdbcType = entityField.getJdbcType().TYPE_CODE;
             this.jdbcTypeName = entityField.getJdbcType().name();
             this.columnName = entityField.getColumnName();
             this.idColumn = entityField.getIdAnnotation() != null;
+            this.typeHandler = resolveTypeHandler(entityField).getName();
+            this.selectClause = resolveSelectClause(entityField);
         }
 
         public String getColumnName() {
@@ -231,8 +253,16 @@ public class EntityMapperTemplateParameter<E extends EntityObject> {
             return fieldName;
         }
 
-        public Class<?> getFieldType() {
+        public String getFieldType() {
             return fieldType;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
+        public String getSelectClause() {
+            return selectClause;
         }
 
         public boolean isIdColumn() {
@@ -242,6 +272,18 @@ public class EntityMapperTemplateParameter<E extends EntityObject> {
         public EntityField getEntityField() {
             return entityField;
         }
+
+        @SuppressWarnings({"rawtypes"})
+        protected Class<? extends TypeHandler> resolveTypeHandler(EntityField entityField) {
+            Class<? extends TypeHandler> typeHandler = entityField.getColumnAnnotation() != null ? entityField.getColumnAnnotation().typeHandler() : null;
+            return typeHandler == null ? UnknownTypeHandler.class : typeHandler;
+        }
+
+        protected String resolveSelectClause(EntityField entityField) {
+            String selectClause = entityField.getColumnAnnotation() != null ? entityField.getColumnAnnotation().select() : null;
+            return Utilities.parseSelectClause(selectClause, getColumnName());
+        }
+
     }
 
 }

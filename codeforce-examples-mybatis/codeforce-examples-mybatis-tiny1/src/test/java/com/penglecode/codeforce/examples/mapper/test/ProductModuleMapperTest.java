@@ -1,4 +1,4 @@
-package com.penglecode.codeforce.examples.product.mapper.test;
+package com.penglecode.codeforce.examples.mapper.test;
 
 import com.penglecode.codeforce.common.domain.ID;
 import com.penglecode.codeforce.common.model.OrderBy;
@@ -7,6 +7,7 @@ import com.penglecode.codeforce.common.support.MapLambdaBuilder;
 import com.penglecode.codeforce.common.util.CollectionUtils;
 import com.penglecode.codeforce.common.util.DateTimeUtils;
 import com.penglecode.codeforce.common.util.JsonUtils;
+import com.penglecode.codeforce.examples.ProductTestHelper;
 import com.penglecode.codeforce.examples.mybatis.domain.enums.ProductAuditStatusEnum;
 import com.penglecode.codeforce.examples.mybatis.domain.enums.ProductOnlineStatusEnum;
 import com.penglecode.codeforce.examples.mybatis.domain.model.*;
@@ -15,7 +16,6 @@ import com.penglecode.codeforce.examples.mybatistiny.mapper.ProductBaseInfoMappe
 import com.penglecode.codeforce.examples.mybatistiny.mapper.ProductExtraInfoMapper;
 import com.penglecode.codeforce.examples.mybatistiny.mapper.ProductSaleSpecMapper;
 import com.penglecode.codeforce.examples.mybatistiny.mapper.ProductSaleStockMapper;
-import com.penglecode.codeforce.examples.product.ProductTestHelper;
 import com.penglecode.codeforce.mybatistiny.dsl.LambdaQueryCriteria;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryColumns;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
@@ -28,17 +28,14 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author pengpeng
  * @version 1.0
  * @created 2021/7/24 14:33
  */
-@SpringBootTest(classes= MybatisTinyExampleApplication.class)
+@SpringBootTest(classes=MybatisTinyExampleApplication.class)
 public class ProductModuleMapperTest {
 
     @Autowired
@@ -233,7 +230,7 @@ public class ProductModuleMapperTest {
         productSaleStockMapper.deleteByCriteria(queryCriteria2);
     }
 
-        @Test
+    @Test
     public void deleteProduct2() {
         Long productId = 1L;
         productSaleStockMapper.deleteById(new ID().addKey("productId", productId).addKey("specNo", "00:10:20"));

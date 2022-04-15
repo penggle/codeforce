@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.penglecode.codeforce.common.support.CustomObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.core.convert.ConversionService;
@@ -316,7 +315,7 @@ public class JsonUtils {
 	 * @return
 	 */
 	public static ObjectMapper createDefaultObjectMapper() {
-		ObjectMapper objectMapper = new CustomObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 		//去掉默认的时间戳格式
 		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		//设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性

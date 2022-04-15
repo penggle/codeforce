@@ -44,3 +44,14 @@ CREATE TABLE t_product_sale_stock (
     update_time DATETIME NOT NULL COMMENT '最近修改时间',
     PRIMARY KEY (product_id, spec_no)
 ) COMMENT='商品销售库存表' ENGINE=InnoDB;
+
+CREATE TABLE t_component_meta(
+     component_code	VARCHAR(32) NOT NULL COMMENT '组件代码',
+     component_name VARCHAR(64) NOT NULL COMMENT '组件名称',
+     component_type VARCHAR(32) NOT NULL COMMENT '组件类型',
+     component_props VARCHAR(2000) NOT NULL DEFAULT '{}' COMMENT '组件属性配置',
+     component_apis VARCHAR(2000) NOT NULL DEFAULT '[]' COMMENT '组件接口列表',
+     create_time DATETIME NOT NULL COMMENT '创建时间',
+     update_time DATETIME NOT NULL COMMENT '最近更新时间',
+     PRIMARY KEY(component_code)
+) COMMENT='组件元数据表' ENGINE=InnoDB;

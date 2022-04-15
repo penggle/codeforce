@@ -1,11 +1,14 @@
 package com.penglecode.codeforce.mybatistiny.support;
 
+import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import org.springframework.core.ResolvableType;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * 通用工具集合
@@ -15,6 +18,15 @@ import java.lang.reflect.Modifier;
  */
 @SuppressWarnings("unchecked")
 public class Utilities {
+
+    private static final Set<String> SELECT_CLAUSE_PATTERNS = new LinkedHashSet<>();
+
+    static {
+        SELECT_CLAUSE_PATTERNS.add(QueryCriteria.TABLE_ALIAS_NAME + ".{name}");
+        SELECT_CLAUSE_PATTERNS.add(QueryCriteria.TABLE_ALIAS_NAME + ".{columnName}");
+        SELECT_CLAUSE_PATTERNS.add("{name}");
+        SELECT_CLAUSE_PATTERNS.add("{columnName}");
+    }
 
     private Utilities() {}
 
@@ -150,6 +162,24 @@ public class Utilities {
         } catch (Exception e) {
             ReflectionUtils.handleReflectionException(e);
         }
+    }
+
+    /**
+     * 解析SELECT列字句，例如：DATE_FORMAT({name}, '%Y-%m-%d %T')
+     *
+     * @param selectClause  - SELECT列字句
+     * @param columnName    - 列名
+     * @return
+     */
+    public static String parseSelectClause(String selectClause, String columnName) {
+        if(selectClause != null) {
+            for(String pattern : SELECT_CLAUSE_PATTERNS) {
+                if(selectClause.contains(pattern)) {
+                    return selectClause.replace(pattern, QueryCriteria.TABLE_ALIAS_NAME + "." + columnName);
+                }
+            }
+        }
+        return QueryCriteria.TABLE_ALIAS_NAME + "." + columnName;
     }
 
 }

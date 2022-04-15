@@ -7,11 +7,21 @@
         每个继承BaseEntityMapper的Mybatis-Mapper接口都会自动生成对应的如下XML-Mapper
     -->
 
+    <resultMap id="SelectBaseResultMap" type="${entityClass}">
+    <#list selectColumns as column>
+        <#if column.idColumn>
+        <id column="${column.fieldName}" jdbcType="${column.jdbcTypeName}" property="${column.fieldName}"/>
+        <#else>
+        <result column="${column.fieldName}" jdbcType="${column.jdbcTypeName}" property="${column.fieldName}" <#if column.typeHandler != "org.apache.ibatis.type.UnknownTypeHandler">typeHandler="${column.typeHandler}"</#if>/>
+        </#if>
+    </#list>
+    </resultMap>
+
     <sql id="SelectBaseColumnsClause">
         <trim suffixOverrides=",">
         <#list selectColumns as column>
             <if test="@${mapperHelperClass}@containsColumn(columns, '${column.fieldName}')">
-                ${tableAlias}.${column.columnName}   ${column.fieldName},
+                ${column.selectClause}   ${column.fieldName},
             </if>
         </#list>
         </trim>
@@ -21,7 +31,7 @@
         <trim suffixOverrides=",">
         <#list updateColumns as column>
             <if test="@${mapperHelperClass}@containsColumn(columns, '${column.fieldName}')">
-                ${tableAlias}.${column.columnName} = <#noparse>#{</#noparse>columns.${column.fieldName}, jdbcType=${column.jdbcTypeName}<#noparse>}</#noparse>,
+                ${tableAlias}.${column.columnName} = <#noparse>#{</#noparse>columns.${column.fieldName}, <#if column.typeHandler != "org.apache.ibatis.type.UnknownTypeHandler">javaType=${column.fieldType}, typeHandler=${column.typeHandler}<#else>jdbcType=${column.jdbcTypeName}</#if><#noparse>}</#noparse>,
             </if>
         </#list>
         </trim>
@@ -39,7 +49,7 @@
         </#list>
         ) VALUES (
         <#list insertColumns as column>
-            <#noparse>#{</#noparse>${column.fieldName}, jdbcType=${column.jdbcTypeName}<#noparse>}</#noparse><#if column_has_next>,</#if>
+            <#noparse>#{</#noparse>${column.fieldName}, <#if column.typeHandler != "org.apache.ibatis.type.UnknownTypeHandler">javaType=${column.fieldType}, typeHandler=${column.typeHandler}<#else>jdbcType=${column.jdbcTypeName}</#if><#noparse>}</#noparse><#if column_has_next>,</#if>
         </#list>
         )
     </insert>
@@ -79,13 +89,13 @@
         <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
     </delete>
 
-    <select id="selectById" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
+    <select id="selectById" parameterType="java.util.Map" resultMap="SelectBaseResultMap" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
          WHERE <#list idColumns as column>${tableAlias}.${column.columnName} = <#noparse>#{</#noparse><#if (idColumns?size == 1)>id<#else>id.${column.fieldName}</#if>, jdbcType=${column.jdbcTypeName}<#noparse>}</#noparse><#if column_has_next> AND </#if></#list>
     </select>
 
-    <select id="selectByCriteria" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
+    <select id="selectByCriteria" parameterType="java.util.Map" resultMap="SelectBaseResultMap" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
         <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
@@ -97,7 +107,7 @@
         <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
     </select>
 
-    <select id="selectListByIds" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
+    <select id="selectListByIds" parameterType="java.util.Map" resultMap="SelectBaseResultMap" statementType="PREPARED">
     <#if (idColumns?size == 1)>
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
@@ -112,7 +122,7 @@
     </#if>
     </select>
 
-    <select id="selectAllList" parameterType="java.util.Map" resultType="${entityName}" resultSetType="FORWARD_ONLY" statementType="PREPARED">
+    <select id="selectAllList" parameterType="java.util.Map" resultMap="SelectBaseResultMap" resultSetType="FORWARD_ONLY" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
     </select>
@@ -121,14 +131,14 @@
         SELECT COUNT(*) FROM ${tableName} ${tableAlias}
     </select>
 
-    <select id="selectListByCriteria" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
+    <select id="selectListByCriteria" parameterType="java.util.Map" resultMap="SelectBaseResultMap" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
         <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>
         <include refid="CommonMybatisMapper.CommonOrderByCriteriaClause"/>
     </select>
 
-    <select id="selectPageListByCriteria" parameterType="java.util.Map" resultType="${entityName}" statementType="PREPARED">
+    <select id="selectPageListByCriteria" parameterType="java.util.Map" resultMap="SelectBaseResultMap" statementType="PREPARED">
         SELECT <include refid="SelectBaseColumnsClause"/>
           FROM ${tableName} ${tableAlias}
         <include refid="CommonMybatisMapper.CommonWhereCriteriaClause"/>

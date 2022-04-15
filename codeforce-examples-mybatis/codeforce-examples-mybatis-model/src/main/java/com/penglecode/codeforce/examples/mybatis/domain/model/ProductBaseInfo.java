@@ -23,7 +23,7 @@ public class ProductBaseInfo implements EntityObject {
 
     /** 商品ID */
     @NotNull(message="商品ID不能为空!")
-    @Id(strategy=GenerationType.IDENTITY, updatable=true)
+    @Id(strategy=GenerationType.IDENTITY)
     private Long productId;
 
     /** 商品名称 */
@@ -60,11 +60,12 @@ public class ProductBaseInfo implements EntityObject {
 
     /** 创建时间 */
     @NotBlank(message="创建时间不能为空!")
-    @Column(updatable=false)
+    @Column(updatable=false, select="DATE_FORMAT({name}, '%Y-%m-%d %T')")
     private String createTime;
 
     /** 最近修改时间 */
     @NotBlank(message="最近更新时间不能为空!")
+    @Column(select="DATE_FORMAT({name}, '%Y-%m-%d %T')")
     private String updateTime;
 
     //以下属于辅助字段

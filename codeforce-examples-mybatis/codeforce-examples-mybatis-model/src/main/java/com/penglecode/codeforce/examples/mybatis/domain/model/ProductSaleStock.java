@@ -23,7 +23,7 @@ public class ProductSaleStock implements EntityObject {
 
     /** 商品ID */
     @NotNull(message="商品ID不能为空!")
-    @Id(strategy=GenerationType.NONE, updatable=true)
+    @Id(strategy=GenerationType.NONE)
     private Long productId;
 
     /** 商品规格编号,多个t_product_spec.spec_no按顺序拼凑 */
@@ -45,11 +45,12 @@ public class ProductSaleStock implements EntityObject {
 
     /** 创建时间 */
     @NotBlank(message="创建时间不能为空!")
-    @Column(updatable=false)
+    @Column(updatable=false, select="DATE_FORMAT({name}, '%Y-%m-%d %T')")
     private String createTime;
 
     /** 最近修改时间 */
     @NotBlank(message="最近更新时间不能为空!")
+    @Column(select="DATE_FORMAT({name}, '%Y-%m-%d %T')")
     private String updateTime;
 
     public Long getProductId() {

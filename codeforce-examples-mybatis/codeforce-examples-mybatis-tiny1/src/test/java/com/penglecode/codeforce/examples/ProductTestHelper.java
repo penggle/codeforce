@@ -1,4 +1,4 @@
-package com.penglecode.codeforce.examples.product;
+package com.penglecode.codeforce.examples;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;

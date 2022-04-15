@@ -48,6 +48,7 @@ public class EntityMapperTemplateParameterFactory<E extends EntityObject> {
         parameter.setMapperNamespace(parameter.getEntityMapperClass().getName());
         parameter.setMapperHelperClass(XmlMapperHelper.class.getName());
         parameter.setEntityName(parameter.getEntityMeta().getEntityClass().getSimpleName());
+        parameter.setEntityClass(parameter.getEntityMeta().getEntityClass().getName());
 
         Table tableAnnotation = parameter.getEntityMeta().getTableAnnotation();
         parameter.setTableName(tableAnnotation.value());

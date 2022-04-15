@@ -25,5 +25,11 @@
             <artifactId>codeforce-common-mybatis-tiny</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- spring-boot-starter-json -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
     </dependencies>
 </project>
