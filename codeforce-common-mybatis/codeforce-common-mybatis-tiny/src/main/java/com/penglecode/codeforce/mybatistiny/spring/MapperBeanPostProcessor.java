@@ -1,6 +1,7 @@
 package com.penglecode.codeforce.mybatistiny.spring;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
+import com.penglecode.codeforce.mybatistiny.core.EntityMeta;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 import com.penglecode.codeforce.mybatistiny.interceptor.DomainObjectQueryInterceptor;
 import com.penglecode.codeforce.mybatistiny.interceptor.PageLimitInterceptor;
@@ -19,10 +20,11 @@ import java.util.Map;
  * Mybatis基于Spring框架的相关配置Bean(SqlSessionFactory、XxxMapper)的Bean后置处理程序，用于向Configuration中动态注册MappedStatement。
  * 该BeanPostProcessor拦截刚创建好的{@link BaseEntityMapper}子类(XxxMapper)的代理实例，做四件事情：
  *
- *  1、代理SqlSessionFactory中的configuration属性，如果可能的话
+ *  1、代理SqlSessionFactory中的configuration属性
  *  2、向{@link Configuration}中注册{@link DomainObjectQueryInterceptor}和{@link PageLimitInterceptor}
  *  3、向{@link Configuration}中注册CommonMybatisMapper.xml
- *  4、向{@link Configuration}中注册自动生成的XxxMapper.xml
+ *  4、向{@link Configuration}中注册实体对象的元数据信息{@link EntityMeta}
+ *  5、向{@link Configuration}中注册自动生成的XxxMapper.xml
  *
  * @author pengpeng
  * @version 1.0

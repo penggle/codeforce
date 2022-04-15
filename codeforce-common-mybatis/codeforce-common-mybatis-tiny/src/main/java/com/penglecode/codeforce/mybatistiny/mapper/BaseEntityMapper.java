@@ -3,6 +3,7 @@ package com.penglecode.codeforce.mybatistiny.mapper;
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryColumns;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
+import com.penglecode.codeforce.mybatistiny.support.EntityMapperHelper;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.cursor.Cursor;
@@ -12,6 +13,7 @@ import org.apache.ibatis.session.RowBounds;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 实体对象(EntityObject)的基本CRUD类操作Mybatis-Mapper基类
@@ -29,10 +31,10 @@ public interface BaseEntityMapper<T extends EntityObject> {
     /**
      * 插入实体
      *
-     * @param model	- 实体对象
+     * @param entity	- 实体对象
      * @return 返回被更新条数
      */
-    int insert(T model);
+    int insert(T entity);
 
     /**
      * 根据ID更新指定的实体字段
@@ -75,6 +77,46 @@ public interface BaseEntityMapper<T extends EntityObject> {
      * @return 返回被删除条数
      */
     int deleteByCriteria(@Param("criteria") QueryCriteria<T> criteria);
+
+    /**
+     * 根据指定的updateOperation来批量操作(新增、更新、删除)entityList, 例如：
+     *
+     * List<Account> accountList = ...;
+     *
+     * 1、批量新增
+     * accountMapper.batchUpdate(accountList, accountMapper::insert);
+     *
+     * 2、根据ID来批量更新
+     * accountMapper.batchUpdate(accountList, (account) -> {
+     *      Map<String,Object> updateColumns = MapLambdaBuilder.of(account)
+     *              .with(Account::getBalance)
+     *              .with(Account::getStatus)
+     *              .with(Account::getUpdateTime)
+     *              .build();
+     *      accountMapper.updateById(account.identity(), updateColumns);
+     * });
+     *
+     * 3、根据自定义条件来批量更新
+     * accountMapper.batchUpdate(accountList, (account) -> {
+     *      Map<String,Object> updateColumns = MapLambdaBuilder.of(account)
+     *              .with(Account::getBalance)
+     *              .with(Account::getStatus)
+     *              .with(Account::getUpdateTime)
+     *              .build();
+     *      QueryCriteria<Account> queryCriteria = LambdaQueryCriteria.of(account)
+     *              .eq(Account::getIdCard);
+     *      accountMapper.updateByCriteria(queryCriteria, updateColumns);
+     * });
+     *
+     * 4、根据ID来批量删除
+     * (大批量删除走原生JDBC-Batch)
+     * accountMapper.batchUpdate(accountList, account -> accountMapper.deleteById(account.identity()));
+     *
+     * @return
+     */
+    default int batchUpdate(List<T> entityList, Consumer<T> updateOperation) {
+        return EntityMapperHelper.batchUpdateEntityObjects(entityList, updateOperation, this);
+    }
 
     /**
      * 根据ID查询单个结果集

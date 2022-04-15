@@ -163,7 +163,7 @@ public class MapLambdaBuilder<T> {
         final Map<String,Object> map = instantiator.get();
         mapEntries.forEach((fieldName, contexts) -> {
             String command = (String) contexts[1];
-            Object fieldValue = null;
+            Object fieldValue;
             if("override".equals(command)) { //如果是覆盖操作则直接决定了value值
                 fieldValue = contexts[2];
             } else { //否则需要尝试从example对象实例中获取

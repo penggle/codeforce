@@ -12,9 +12,9 @@ import java.io.Serializable;
 public interface EntityObject extends DomainObject {
 
     /**
-     * 实体对象的唯一标识
+     * 实体对象的唯一标识(Id)
      *
-     * @return 返回实体对象的唯一标识
+     * @return 返回实体对象的唯一标识(Id)
      */
     default Serializable identity() {
         return null;

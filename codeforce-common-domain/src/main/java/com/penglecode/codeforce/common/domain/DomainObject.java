@@ -19,7 +19,7 @@ public interface DomainObject extends Convertible {
      *
      * @return 返回处理过得实体对象
      */
-    default DomainObject beforeOutbound() {
+    default DomainObject processOutbound() {
         return this;
     }
 
@@ -28,7 +28,7 @@ public interface DomainObject extends Convertible {
      *
      * @return 返回处理过得实体对象
      */
-    default DomainObject afterInbound() {
+    default DomainObject processInbound() {
         return this;
     }
 

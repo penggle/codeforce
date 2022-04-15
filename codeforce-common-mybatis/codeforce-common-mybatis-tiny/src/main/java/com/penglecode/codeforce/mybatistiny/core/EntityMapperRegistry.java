@@ -84,7 +84,8 @@ public class EntityMapperRegistry<E extends EntityObject> {
      * 该公共XML-Mapper每个Configuration仅需注册一次即可
      */
     protected void registerCommonMapper() {
-        registerXmlMapper(new ClassPathResource(BaseEntityMapper.class.getPackage().getName().replace(".", "/") + "/CommonMybatisMapper.xml"));
+        String baseMapperLocation = BaseEntityMapper.class.getPackage().getName().replace(".", "/") + "/CommonMybatisMapper.xml";
+        registerXmlMapper(new ClassPathResource(baseMapperLocation), baseMapperLocation);
     }
 
     /**
@@ -135,8 +136,8 @@ public class EntityMapperRegistry<E extends EntityObject> {
             xmlMapperTemplate.process(templateParameter, xmlMapperWriter);
             String xmlMapperContent = xmlMapperWriter.toString();
             String xmlMapperLocation = entityMapperClass.getName().replace(".", "/") + ".xml";
-            String xmlMapperResourceName = registerXmlMapper(new ByteArrayResource(xmlMapperContent.getBytes(StandardCharsets.UTF_8), xmlMapperLocation));
-            LOGGER.debug("<-----------------------------【{}】----------------------------->\n{}", xmlMapperResourceName, xmlMapperContent);
+            LOGGER.debug("<-----------------------------【{}】----------------------------->\n{}", xmlMapperLocation, xmlMapperContent);
+            registerXmlMapper(new ByteArrayResource(xmlMapperContent.getBytes(StandardCharsets.UTF_8), xmlMapperLocation), xmlMapperLocation);
         } catch (IOException | TemplateException e) {
             throw new XMLMapperParseException("Failed to parse 'BaseEntityMapper.ftl'", e);
         }
@@ -158,18 +159,16 @@ public class EntityMapperRegistry<E extends EntityObject> {
      * 注册动态生成的实体XxxMapper.xml
      *
      * @param xmlMapperResource
+     * @param xmlMapperLocation     - XxxMapper.xml的classpath路径，例如：com/xxx/xxx/XxxMapper.xml
      * @return
      */
-    protected String registerXmlMapper(Resource xmlMapperResource) {
+    protected void registerXmlMapper(Resource xmlMapperResource, String xmlMapperLocation) {
         try {
-            String xmlMapperResourceName = xmlMapperResource.getDescription();
-            xmlMapperResourceName = xmlMapperResourceName.substring(xmlMapperResourceName.indexOf('[') + 1, xmlMapperResourceName.lastIndexOf(']'));
             //考虑到开发者可以自定义XxxMapper.xml，所以必须要重命名，否则与mybatis-spring默认加载的有可能重名，导致MappedStatement加载不到Configuration中去
-            xmlMapperResourceName = String.format("Auto-Generated XML-Mapper [%s]", xmlMapperResourceName);
+            String xmlMapperResourceName = String.format("Auto-Generated XML-Mapper [%s]", xmlMapperLocation);
             XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(xmlMapperResource.getInputStream(), configuration, xmlMapperResourceName, configuration.getSqlFragments());
             xmlMapperBuilder.parse();
             LOGGER.info(">>> Dynamically registered {} into {}", xmlMapperResourceName, configuration);
-            return xmlMapperResourceName;
         } catch (IOException e) {
             throw new XMLMapperParseException("Failed to parse mapping resource: '" + xmlMapperResource + "'", e);
         } finally {

@@ -2,7 +2,6 @@ package com.penglecode.codeforce.examples.mapper.test;
 
 import com.penglecode.codeforce.common.support.MapLambdaBuilder;
 import com.penglecode.codeforce.common.util.DateTimeUtils;
-import com.penglecode.codeforce.common.util.JsonUtils;
 import com.penglecode.codeforce.examples.mybatis.domain.model.ComponentMeta;
 import com.penglecode.codeforce.examples.mybatis.domain.model.ComponentMeta.ComponentApiMeta;
 import com.penglecode.codeforce.examples.mybatistiny.boot.MybatisTinyExampleApplication;
@@ -19,11 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Jackson2TypeHandler测试
+ *
  * @author pengpeng
  * @version 1.0
  */
 @SpringBootTest(classes=MybatisTinyExampleApplication.class)
-public class ComponentMetaMapperTest {
+public class Jackson2TypeHandlerTest {
 
     @Autowired
     private ComponentMetaMapper componentMetaMapper;
@@ -89,7 +90,7 @@ public class ComponentMetaMapperTest {
                 .eq(ComponentMeta::getComponentCode, "StaffSelector");
         List<ComponentMeta> componentList = componentMetaMapper.selectListByCriteria(queryCriteria);
         if(componentList != null) {
-            componentList.forEach(item -> System.out.println(JsonUtils.object2Json(item)));
+            componentList.forEach(System.out::println);
         }
     }
 

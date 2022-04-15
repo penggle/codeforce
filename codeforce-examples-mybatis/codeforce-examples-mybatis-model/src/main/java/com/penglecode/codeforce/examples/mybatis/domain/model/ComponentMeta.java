@@ -115,6 +115,19 @@ public class ComponentMeta implements EntityObject {
         return componentCode;
     }
 
+    @Override
+    public String toString() {
+        return "ComponentMeta{" +
+                "componentCode='" + componentCode + '\'' +
+                ", componentName='" + componentName + '\'' +
+                ", componentType='" + componentType + '\'' +
+                ", componentProps=" + componentProps +
+                ", componentApis=" + componentApis +
+                ", createTime='" + createTime + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                '}';
+    }
+
     public static class ComponentPropsTypeHandler extends Jackson2TypeHandler<Map<String,Object>> {
 
         public ComponentPropsTypeHandler(Class<Map<String, Object>> javaType) {

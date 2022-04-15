@@ -19,7 +19,6 @@ import com.penglecode.codeforce.examples.mybatistiny.mapper.ProductSaleStockMapp
 import com.penglecode.codeforce.mybatistiny.dsl.LambdaQueryCriteria;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryColumns;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
-import com.penglecode.codeforce.mybatistiny.executor.JdbcBatchOperation;
 import org.apache.ibatis.session.RowBounds;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,22 +69,14 @@ public class ProductModuleMapperTest {
         productExtraInfoMapper.insert(productExtra);
 
         List<ProductSaleSpec> productSaleSpecs = testProduct.getProductSaleSpecs();
-        try(JdbcBatchOperation batchOperation = new JdbcBatchOperation()) {
-            for(ProductSaleSpec productSaleSpec : productSaleSpecs) {
-                productSaleSpec.setProductId(testProduct.getProductId());
-                productSaleSpecMapper.insert(productSaleSpec);
-            }
-            productSaleSpecMapper.flushStatements(); //批量提交
-        }
+        productSaleSpecs.forEach(item -> item.setProductId(testProduct.getProductId()));
+        //批量插入
+        productSaleSpecMapper.batchUpdate(productSaleSpecs, productSaleSpecMapper::insert);
 
         List<ProductSaleStock> productSaleStocks = testProduct.getProductSaleStocks();
-        try(JdbcBatchOperation batchOperation = new JdbcBatchOperation()) {
-            for(ProductSaleStock productSaleStock : productSaleStocks) {
-                productSaleStock.setProductId(testProduct.getProductId());
-                productSaleStockMapper.insert(productSaleStock);
-            }
-            productSaleStockMapper.flushStatements(); //批量提交
-        }
+        productSaleStocks.forEach(item -> item.setProductId(testProduct.getProductId()));
+        //批量插入
+        productSaleStockMapper.batchUpdate(productSaleStocks, productSaleStockMapper::insert);
         return null;
     }
 
