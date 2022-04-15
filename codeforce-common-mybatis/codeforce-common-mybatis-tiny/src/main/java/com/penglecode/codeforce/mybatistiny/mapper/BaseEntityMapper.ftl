@@ -12,7 +12,7 @@
         <#if column.idColumn>
         <id column="${column.fieldName}" jdbcType="${column.jdbcTypeName}" property="${column.fieldName}"/>
         <#else>
-        <result column="${column.fieldName}" jdbcType="${column.jdbcTypeName}" property="${column.fieldName}" <#if column.typeHandler != "org.apache.ibatis.type.UnknownTypeHandler">typeHandler="${column.typeHandler}"</#if>/>
+        <result column="${column.fieldName}" jdbcType="${column.jdbcTypeName}" property="${column.fieldName}" <#if column.typeHandler != "org.apache.ibatis.type.UnknownTypeHandler">javaType="${column.fieldType}" typeHandler="${column.typeHandler}"</#if>/>
         </#if>
     </#list>
     </resultMap>
