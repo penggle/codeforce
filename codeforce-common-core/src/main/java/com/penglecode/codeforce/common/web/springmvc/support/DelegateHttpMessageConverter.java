@@ -1,7 +1,7 @@
 package com.penglecode.codeforce.common.web.springmvc.support;
 
 import com.penglecode.codeforce.common.consts.GlobalConstants;
-import com.penglecode.codeforce.common.model.MapResult;
+import com.penglecode.codeforce.common.web.MapResult;
 import com.penglecode.codeforce.common.model.Result;
 import com.penglecode.codeforce.common.support.ErrorCode;
 import org.apache.commons.lang3.StringUtils;

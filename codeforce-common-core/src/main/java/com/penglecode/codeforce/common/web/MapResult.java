@@ -1,4 +1,7 @@
-package com.penglecode.codeforce.common.model;
+package com.penglecode.codeforce.common.web;
+
+import com.penglecode.codeforce.common.model.BaseDTO;
+import com.penglecode.codeforce.common.model.Result;
 
 import java.util.HashMap;
 import java.util.Map;

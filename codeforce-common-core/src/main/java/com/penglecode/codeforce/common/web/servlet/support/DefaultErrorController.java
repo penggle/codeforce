@@ -1,10 +1,10 @@
 package com.penglecode.codeforce.common.web.servlet.support;
 
-import com.penglecode.codeforce.common.model.MapResult;
 import com.penglecode.codeforce.common.model.Result;
 import com.penglecode.codeforce.common.support.DefaultErrorCode;
 import com.penglecode.codeforce.common.support.ErrorCode;
 import com.penglecode.codeforce.common.support.ErrorCodeResolver;
+import com.penglecode.codeforce.common.web.MapResult;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
