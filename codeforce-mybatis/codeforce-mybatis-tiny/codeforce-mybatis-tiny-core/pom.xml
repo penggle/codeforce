@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.penglecode</groupId>
+        <artifactId>codeforce-mybatis-tiny</artifactId>
+        <version>2.4.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>codeforce-mybatis-tiny-core</artifactId>
+    <name>codeforce-mybatis-tiny-core</name>
+    <description>mybatis-tiny的核心部分</description>
+
+    <dependencies>
+        <!-- codeforce-common-base -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-base</artifactId>
+        </dependency>
+
+        <!-- codeforce-common-domain -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-domain</artifactId>
+        </dependency>
+
+        <!-- codeforce-mybatis-tiny-anno -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-mybatis-tiny-anno</artifactId>
+        </dependency>
+
+        <!-- mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+
+        <!-- mybatis-spring -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+
+        <!-- spring-context -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <!-- spring-tx -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+
+        <!-- slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- freemarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+    </dependencies>
+</project>

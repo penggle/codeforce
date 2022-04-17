@@ -1,6 +1,6 @@
 package com.penglecode.codeforce.common.domain;
 
-import com.penglecode.codeforce.common.support.Convertible;
+import java.io.Serializable;
 
 /**
  * 领域对象(DomainObject)基类，领域对象包括实体对象、聚合根、值对象等。
@@ -11,7 +11,7 @@ import com.penglecode.codeforce.common.support.Convertible;
  * @author pengpeng
  * @version 1.0
  */
-public interface DomainObject extends Convertible {
+public interface DomainObject extends Serializable {
 
     /**
      * 领域对象数据出站（从存储介质输出出去）前的加工处理

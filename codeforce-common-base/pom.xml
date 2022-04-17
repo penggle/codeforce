@@ -4,44 +4,55 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-		<groupId>com.penglecode</groupId>
+        <groupId>com.penglecode</groupId>
         <artifactId>codeforce-parent</artifactId>
         <version>2.4.5-SNAPSHOT</version>
     </parent>
     <artifactId>codeforce-common-base</artifactId>
     <name>codeforce-common-base</name>
-    <description>公共基础部分(比如基础DTO、异常、常量、全局错误码等，这个模块是任何模块都可以引用的)</description>
+    <description>codeforce公共基础模块</description>
 
     <dependencies>
+        <!-- commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!-- spring-core -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
+            <artifactId>spring-context</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring-web -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <exclusions>
-                <!-- 保留spring-core -->
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-beans</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- swagger-annotations -->
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- jakarta.validation-api -->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
+
 </project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.penglecode</groupId>
+        <artifactId>codeforce-mybatis</artifactId>
+        <version>2.4.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>codeforce-mybatis-tiny</artifactId>
+    <packaging>pom</packaging>
+    <name>codeforce-mybatis-tiny</name>
+    <description>一个基于Mybatis仅支持单表操作的DSL框架，类似于Mybatis-Plus</description>
+
+    <modules>
+        <module>codeforce-mybatis-tiny-anno</module>
+        <module>codeforce-mybatis-tiny-core</module>
+    </modules>
+</project>

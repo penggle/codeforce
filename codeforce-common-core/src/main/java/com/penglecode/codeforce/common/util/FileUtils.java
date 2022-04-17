@@ -299,7 +299,7 @@ public class FileUtils {
      * @throws Exception
      */
     public static void copyFile(File srcFile, File destFile) throws IOException {
-    	com.google.common.io.Files.copy(srcFile, destFile);
+    	Files.copy(srcFile.toPath(), destFile.toPath());
     }
 
     /**

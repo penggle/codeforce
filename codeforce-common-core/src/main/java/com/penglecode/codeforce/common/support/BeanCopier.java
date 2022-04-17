@@ -1,6 +1,8 @@
 package com.penglecode.codeforce.common.support;
 
 import com.penglecode.codeforce.common.consts.ApplicationConstants;
+import com.penglecode.codeforce.common.domain.DomainObject;
+import com.penglecode.codeforce.common.model.BaseDTO;
 import com.penglecode.codeforce.common.util.JsonUtils;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.common.util.StringUtils;
@@ -17,9 +19,7 @@ import org.springframework.format.support.FormattingConversionService;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  *
  * 使用限制：
  *      1、该实现要求目标bean与源bean的字段名必须得完全匹配，本实现对于字段名对不上的无能为力!!!
- *      2、深度拷贝的字段(自定义bean)必须实现{@link Convertible}标记接口
+ *      2、深度拷贝的字段(自定义bean)必须实现{@link BaseDTO}或{@link DomainObject}标记接口
  *
  * @author pengpeng
  * @version 1.0
@@ -211,7 +211,12 @@ public class BeanCopier {
 
         @Override
         public Set<ConvertiblePair> getConvertibleTypes() {
-            return Collections.singleton(new ConvertiblePair(Convertible.class, Convertible.class));
+            Set<ConvertiblePair> convertiblePairs = new HashSet<>();
+            convertiblePairs.add(new ConvertiblePair(BaseDTO.class, BaseDTO.class));
+            convertiblePairs.add(new ConvertiblePair(BaseDTO.class, DomainObject.class));
+            convertiblePairs.add(new ConvertiblePair(DomainObject.class, DomainObject.class));
+            convertiblePairs.add(new ConvertiblePair(DomainObject.class, BaseDTO.class));
+            return convertiblePairs;
         }
 
         @Override
@@ -223,13 +228,59 @@ public class BeanCopier {
     }
 
     /**
-     * 默认XXO到String的拷贝(只考虑JSON)
+     * 默认XXO到Map之间的拷贝
+     * 例如DO -> Map、DTO -> Map等
+     */
+    static class DefaultXXO2MapConverter implements GenericConverter {
+
+        @Override
+        public Set<ConvertiblePair> getConvertibleTypes() {
+            Set<ConvertiblePair> convertiblePairs = new HashSet<>();
+            convertiblePairs.add(new ConvertiblePair(BaseDTO.class, Map.class));
+            convertiblePairs.add(new ConvertiblePair(DomainObject.class, Map.class));
+            return convertiblePairs;
+        }
+
+        @Override
+        public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+            return copy(source, new LinkedHashMap<>()); //递归深度拷贝
+        }
+
+    }
+
+    /**
+     * 默认Map到XXO之间的拷贝
+     * 例如Map -> DO、Map -> DTO等
+     */
+    static class DefaultMap2XXOConverter implements GenericConverter {
+
+        @Override
+        public Set<ConvertiblePair> getConvertibleTypes() {
+            Set<ConvertiblePair> convertiblePairs = new HashSet<>();
+            convertiblePairs.add(new ConvertiblePair(Map.class, BaseDTO.class));
+            convertiblePairs.add(new ConvertiblePair(Map.class, DomainObject.class));
+            return convertiblePairs;
+        }
+
+        @Override
+        public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+            Object target = BeanUtils.instantiateClass(targetType.getType());
+            return copy(source, target); //递归深度拷贝
+        }
+
+    }
+
+    /**
+     * 默认XXO到String的拷贝(只考虑JSON格式)
      */
     static class DefaultXXO2StringConverter implements GenericConverter {
 
         @Override
         public Set<ConvertiblePair> getConvertibleTypes() {
-            return Collections.singleton(new ConvertiblePair(Convertible.class, String.class));
+            Set<ConvertiblePair> convertiblePairs = new HashSet<>();
+            convertiblePairs.add(new ConvertiblePair(BaseDTO.class, String.class));
+            convertiblePairs.add(new ConvertiblePair(DomainObject.class, String.class));
+            return convertiblePairs;
         }
 
         @Override
@@ -240,13 +291,16 @@ public class BeanCopier {
     }
 
     /**
-     * 默认String到XXO的拷贝(只考虑JSON)
+     * 默认String到XXO的拷贝(只考虑JSON格式)
      */
     static class DefaultString2XXOConverter implements GenericConverter {
 
         @Override
         public Set<ConvertiblePair> getConvertibleTypes() {
-            return Collections.singleton(new ConvertiblePair(String.class, Convertible.class));
+            Set<ConvertiblePair> convertiblePairs = new HashSet<>();
+            convertiblePairs.add(new ConvertiblePair(String.class, BaseDTO.class));
+            convertiblePairs.add(new ConvertiblePair(String.class, DomainObject.class));
+            return convertiblePairs;
         }
 
         @Override

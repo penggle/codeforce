@@ -5,19 +5,24 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.penglecode</groupId>
-        <artifactId>codeforce-parent</artifactId>
+        <artifactId>codeforce-mybatis</artifactId>
         <version>2.4.5-SNAPSHOT</version>
     </parent>
-    <artifactId>codeforce-common-domain</artifactId>
-    <name>codeforce-common-domain</name>
-    <description>领域层公共部分(比如基础Domain-Object、Entity-Object等)</description>
+    <artifactId>codeforce-mybatis-dal</artifactId>
+    <name>codeforce-mybatis-dal</name>
+    <description>一个基于Mybatis的多数据源DAL层轻量级扩展</description>
 
     <dependencies>
-        <!-- codeforce-common-base -->
+        <!-- codeforce-common-core -->
         <dependency>
             <groupId>com.penglecode</groupId>
-            <artifactId>codeforce-common-base</artifactId>
-            <scope>provided</scope>
+            <artifactId>codeforce-common-core</artifactId>
+        </dependency>
+
+        <!-- mybatis-spring-boot-starter -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

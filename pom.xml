@@ -3,12 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.5</version>
-    </parent>
-
     <groupId>com.penglecode</groupId>
     <artifactId>codeforce-parent</artifactId>
     <version>2.4.5-SNAPSHOT</version>
@@ -61,9 +55,7 @@
         <mybatis.version>3.5.7</mybatis.version>
         <mybatis-spring.version>2.0.6</mybatis-spring.version>
         <mybatis-springboot.version>2.1.4</mybatis-springboot.version>
-        <commons-lang3.version>3.11</commons-lang3.version>
-        <guava.version>30.0-jre</guava.version>
-        <jackson.version>2.12.3</jackson.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
         <mysql.version>8.0.25</mysql.version>
         <swagger3.version>2.1.12</swagger3.version>
         <springdoc.version>1.6.4</springdoc.version>
@@ -90,6 +82,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- codeforce-common-model -->
+            <dependency>
+                <groupId>com.penglecode</groupId>
+                <artifactId>codeforce-common-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- codeforce-common-domain -->
             <dependency>
                 <groupId>com.penglecode</groupId>
@@ -104,17 +103,24 @@
                 <version>${project.version}</version>
             </dependency>
 			
-			<!-- codeforce-common-mybatis-dal -->
+			<!-- codeforce-mybatis-dal -->
             <dependency>
                 <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-common-mybatis-dal</artifactId>
+                <artifactId>codeforce-mybatis-dal</artifactId>
                 <version>${project.version}</version>
             </dependency>
 			
-			<!-- codeforce-common-mybatis-tiny -->
+			<!-- codeforce-mybatis-tiny-anno -->
             <dependency>
                 <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-common-mybatis-tiny</artifactId>
+                <artifactId>codeforce-mybatis-tiny-anno</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- codeforce-mybatis-tiny-core -->
+            <dependency>
+                <groupId>com.penglecode</groupId>
+                <artifactId>codeforce-mybatis-tiny-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -130,13 +136,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
-            </dependency>
-
-            <!-- guava -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
             </dependency>
 
             <!-- mybatis -->
@@ -166,17 +165,35 @@
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger3.version}</version>
             </dependency>
+
             <!-- springdoc -->
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>${springdoc.version}</version>
             </dependency>
+
             <!-- knife4j-springdoc-ui (仅仅使用knife4j提供的UI) -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-springdoc-ui</artifactId>
                 <version>${knife4j.version}</version>
+            </dependency>
+
+            <!-- 覆盖springboot默认的mysql驱动版本 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- spring-boot-dependencies -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -185,13 +202,9 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${springboot.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.2.0</version>
                     <configuration>
                         <!--使用默认的变量分割符即${}-->
                         <useDefaultDelimiters>true</useDefaultDelimiters>
@@ -270,11 +283,11 @@
 
     <modules>
         <module>codeforce-common-base</module>
+        <module>codeforce-common-model</module>
         <module>codeforce-common-domain</module>
         <module>codeforce-common-core</module>
-		<module>codeforce-common-mybatis</module>
         <module>codeforce-common-config</module>
-        <module>codeforce-examples-mybatis</module>
+        <module>codeforce-mybatis</module>
     </modules>
 
 </project>

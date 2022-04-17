@@ -5,18 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.penglecode</groupId>
-        <artifactId>codeforce-parent</artifactId>
+        <artifactId>codeforce-mybatis-tiny</artifactId>
         <version>2.4.5-SNAPSHOT</version>
     </parent>
-    <artifactId>codeforce-common-domain</artifactId>
-    <name>codeforce-common-domain</name>
-    <description>领域层公共部分(比如基础Domain-Object、Entity-Object等)</description>
+    <artifactId>codeforce-mybatis-tiny-anno</artifactId>
+    <name>codeforce-mybatis-tiny-anno</name>
+    <description>mybatis-tiny的注解部分</description>
 
     <dependencies>
-        <!-- codeforce-common-base -->
+        <!-- mybatis -->
         <dependency>
-            <groupId>com.penglecode</groupId>
-            <artifactId>codeforce-common-base</artifactId>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

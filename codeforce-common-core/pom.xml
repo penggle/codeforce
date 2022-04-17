@@ -19,10 +19,23 @@
             <artifactId>codeforce-common-base</artifactId>
         </dependency>
 
+        <!-- codeforce-common-model -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-model</artifactId>
+        </dependency>
+
         <!-- codeforce-common-domain -->
         <dependency>
             <groupId>com.penglecode</groupId>
             <artifactId>codeforce-common-domain</artifactId>
+        </dependency>
+
+        <!-- codeforce-mybatis-tiny-core -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-mybatis-tiny-core</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring-boot-starter-aop -->
@@ -41,33 +54,27 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring-boot-starter-webflux -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <!-- spring-tx -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-        </dependency>
-
-        <!-- guava -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
 
         <!-- commons-lang3 -->
