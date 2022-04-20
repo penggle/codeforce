@@ -155,7 +155,7 @@ public interface BaseEntityMapper<T extends EntityObject> {
     List<T> selectListByIds(@Param("ids") List<? extends Serializable> ids, @Param("columns") QueryColumns... columns);
 
     /**
-     * 查询所有结果集(数据量大时慎用)
+     * 查询所有结果集(需要在事务中使用，否则查询不到数据)
      *
      * @param columns 	- 指定查询返回的列(这里的列指的是实体对象<T>中的字段)，这里使用JAVA可变参数特性的讨巧写法，实际只取columns[0]为参数
      * @return 返回所有结果集
