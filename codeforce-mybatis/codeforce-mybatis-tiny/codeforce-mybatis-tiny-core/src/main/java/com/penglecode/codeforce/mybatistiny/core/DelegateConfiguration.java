@@ -1,9 +1,9 @@
-package com.penglecode.codeforce.mybatistiny;
+package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
-import com.penglecode.codeforce.mybatistiny.core.EntityMeta;
 import com.penglecode.codeforce.mybatistiny.executor.DynamicExecutor;
+import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -37,6 +37,8 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * DynamicExecutor的配套自定义Configuration
@@ -45,7 +47,12 @@ import java.util.*;
  * @version 1.0
  */
 @SuppressWarnings("unchecked")
-public class CustomConfiguration extends Configuration {
+public class DelegateConfiguration extends Configuration {
+
+    /**
+     * 被代理的Mybatis配置
+     */
+    private final Configuration delegate;
 
     /**
      * 当前Configuration上下文下的所有实体元数据信息
@@ -53,13 +60,26 @@ public class CustomConfiguration extends Configuration {
     private final Map<Class<? extends EntityObject>, EntityMeta<? extends EntityObject>> allEntityMetas = new HashMap<>();
 
     /**
-     * 被代理的Mybatis配置
+     * 实体对象的XML-Mapper注册器
      */
-    private final Configuration delegate;
+    private final EntityMapperRegistrar entityMapperRegistrar;
 
-    public CustomConfiguration(Configuration delegate) {
+    /**
+     * 实体对象的XML-Mapper注册信息
+     */
+    private final ConcurrentMap<Class<BaseEntityMapper<? extends EntityObject>>,String> entityMapperRegistries;
+
+    public DelegateConfiguration(Configuration delegate) {
         this.delegate = delegate;
-        //将delegate.interceptorChain设置到当前对象上来,在下面newExecutor(..)时要用到
+        this.initInterceptorChain();
+        this.entityMapperRegistrar = new EntityMapperRegistrar(this);
+        this.entityMapperRegistries = new ConcurrentHashMap<>();
+    }
+
+    /**
+     * 将delegate.interceptorChain设置到当前对象上来,在下面newExecutor(..)时要用到
+     */
+    protected void initInterceptorChain() {
         String fieldName = "interceptorChain";
         InterceptorChain interceptorChain = ReflectionUtils.getFieldValue(delegate, fieldName);
         ReflectionUtils.setFinalFieldValue(this, fieldName, interceptorChain);
@@ -687,7 +707,12 @@ public class CustomConfiguration extends Configuration {
 
     @Override
     public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
-        return delegate.getMapper(type, sqlSession);
+        T mapperInstance = delegate.getMapper(type, sqlSession);
+        if(mapperInstance instanceof BaseEntityMapper) { //如果生成的Mapper实例是mybatis-tiny框架下的BaseEntityMapper
+            Class<BaseEntityMapper<? extends EntityObject>> entityMapperClass = (Class<BaseEntityMapper<? extends EntityObject>>) type;
+            entityMapperRegistries.computeIfAbsent(entityMapperClass, entityMapperRegistrar::registerEntityMapper); //进行首次注册
+        }
+        return mapperInstance;
     }
 
     @Override
@@ -716,6 +741,22 @@ public class CustomConfiguration extends Configuration {
 
     public <E extends EntityObject> void setEntityMeta(Class<E> entityType, EntityMeta<E> entityMeta) {
         allEntityMetas.put(entityType, entityMeta);
+    }
+
+    protected Map<Class<? extends EntityObject>, EntityMeta<? extends EntityObject>> getAllEntityMetas() {
+        return allEntityMetas;
+    }
+
+    protected Configuration getDelegate() {
+        return delegate;
+    }
+
+    protected EntityMapperRegistrar getEntityMapperRegistrar() {
+        return entityMapperRegistrar;
+    }
+
+    protected ConcurrentMap<Class<BaseEntityMapper<? extends EntityObject>>, String> getEntityMapperRegistries() {
+        return entityMapperRegistries;
     }
 
 }

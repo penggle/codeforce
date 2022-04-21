@@ -8,11 +8,18 @@
         <artifactId>codeforce-mybatis-tiny</artifactId>
         <version>2.4.5-SNAPSHOT</version>
     </parent>
-    <artifactId>codeforce-mybatis-tiny-anno</artifactId>
-    <name>codeforce-mybatis-tiny-anno</name>
+    <artifactId>codeforce-mybatis-tiny-base</artifactId>
+    <name>codeforce-mybatis-tiny-base</name>
     <description>mybatis-tiny的注解部分</description>
 
     <dependencies>
+        <!-- codeforce-common-base -->
+        <dependency>
+            <groupId>com.penglecode</groupId>
+            <artifactId>codeforce-common-base</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- mybatis -->
         <dependency>
             <groupId>org.mybatis</groupId>

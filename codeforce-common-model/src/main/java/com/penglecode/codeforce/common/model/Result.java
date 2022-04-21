@@ -1,8 +1,5 @@
 package com.penglecode.codeforce.common.model;
 
-import com.penglecode.codeforce.common.support.ErrorCode;
-import com.penglecode.codeforce.common.support.GlobalErrorCode;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -92,13 +89,11 @@ public class Result<T> implements BaseDTO {
 	}
 
 	public static Builder success() {
-		ErrorCode ok = GlobalErrorCode.OK;
-		return new Builder(Boolean.TRUE, null, ok.getCode(), ok.getMessage());
+		return new Builder(Boolean.TRUE, null, "200", "OK");
 	}
 	
 	public static Builder failure() {
-		ErrorCode err = GlobalErrorCode.ERR;
-		return new Builder(Boolean.FALSE, null, err.getCode(), err.getMessage());
+		return new Builder(Boolean.FALSE, null, "500", "Internal Server Error");
 	}
 	
 	@Override

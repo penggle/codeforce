@@ -4,7 +4,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NamedThreadLocal;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
  * Mybatis Executor同步管理器
@@ -28,9 +27,9 @@ public class ExecutorSynchronizationManager {
         ExecutorType currentType = currentExecutorType.get();
         LOGGER.debug("Set current ExecutorType from [{}] to [{}]", currentType == null ? "DEFAULT" : currentType, executorType);
         currentExecutorType.set(executorType);
-        if(executorType == ExecutorType.BATCH && !TransactionSynchronizationManager.isActualTransactionActive()) {
+        /*if(executorType == ExecutorType.BATCH && !TransactionSynchronizationManager.isActualTransactionActive()) {
             LOGGER.warn("There is no actual active transaction found, activating JDBC batches is also futile!");
-        }
+        }*/
     }
 
     public static ExecutorType getCurrentExecutorType() {

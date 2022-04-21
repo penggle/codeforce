@@ -8,10 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.penglecode.codeforce.mybatistiny.exception.TypeHandleException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
+import org.apache.ibatis.type.TypeException;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -39,7 +39,7 @@ public class Jackson2TypeHandler<T> extends JsonTypeHandler<T> {
             try {
                 return getObjectMapper().readValue(json, typeReference);
             } catch (JsonProcessingException e) {
-                throw new TypeHandleException(String.format("Reading JSON(%s) as Type[%s] failed!", json, typeReference.getType()), e);
+                throw new TypeException(String.format("Reading JSON(%s) as Type[%s] failed!", json, typeReference.getType()), e);
             }
         }
         return null;
@@ -51,7 +51,7 @@ public class Jackson2TypeHandler<T> extends JsonTypeHandler<T> {
             try {
                 return getObjectMapper().writeValueAsString(object);
             } catch (JsonProcessingException e) {
-                throw new TypeHandleException(String.format("Writing Type[%s] as String failed!", object), e);
+                throw new TypeException(String.format("Writing Type[%s] as String failed!", object), e);
             }
         }
         return null;

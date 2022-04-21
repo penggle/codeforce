@@ -111,10 +111,10 @@
                 <version>${project.version}</version>
             </dependency>
 			
-			<!-- codeforce-mybatis-tiny-anno -->
+			<!-- codeforce-mybatis-tiny-base -->
             <dependency>
                 <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-mybatis-tiny-anno</artifactId>
+                <artifactId>codeforce-mybatis-tiny-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 /**
  * 实体元数据信息
  *
+ * 实体对象(EntityObject)，它对应着数据库中的一张表；而领域对象(DomainObject)则是包含了实体对象，不一定对应着数据库中的一张表
+ *
  * @author pengpeng
  * @version 1.0
  */

@@ -1,8 +1,5 @@
 package com.penglecode.codeforce.common.model;
 
-import com.penglecode.codeforce.common.support.ErrorCode;
-import com.penglecode.codeforce.common.support.GlobalErrorCode;
-
 import java.util.Map;
 
 /**
@@ -35,13 +32,11 @@ public class PageResult<T> extends Result<T> {
 	}
 
 	public static PageBuilder success() {
-		ErrorCode ok = GlobalErrorCode.OK;
-		return new PageBuilder(Boolean.TRUE, null, ok.getCode(), ok.getMessage());
+		return new PageBuilder(Boolean.TRUE, null, "200", "OK");
 	}
 
 	public static PageBuilder failure() {
-		ErrorCode err = GlobalErrorCode.ERR;
-		return new PageBuilder(Boolean.FALSE, null, err.getCode(), err.getMessage());
+		return new PageBuilder(Boolean.FALSE, null, "500", "Internal Server Error");
 	}
 
 	@Override

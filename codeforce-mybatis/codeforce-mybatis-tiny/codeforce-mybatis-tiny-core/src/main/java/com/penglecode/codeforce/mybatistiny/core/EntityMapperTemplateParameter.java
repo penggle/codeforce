@@ -15,13 +15,13 @@ import java.util.List;
  * @author pengpeng
  * @version 1.0
  */
-public class EntityMapperTemplateParameter<E extends EntityObject> {
+public class EntityMapperTemplateParameter {
 
     /** 实体对象的Mybatis-Mapper接口类型 */
-    private Class<BaseEntityMapper<E>> entityMapperClass;
+    private Class<BaseEntityMapper<? extends EntityObject>> entityMapperClass;
 
     /** 实体元数据 */
-    private EntityMeta<E> entityMeta;
+    private EntityMeta<? extends EntityObject> entityMeta;
 
     /** 实体XML-Mapper的namespace */
     private String mapperNamespace;
@@ -65,19 +65,19 @@ public class EntityMapperTemplateParameter<E extends EntityObject> {
     /** DELETE语句别名 */
     private String deleteTargetAlias;
 
-    public Class<BaseEntityMapper<E>> getEntityMapperClass() {
+    public Class<BaseEntityMapper<? extends EntityObject>> getEntityMapperClass() {
         return entityMapperClass;
     }
 
-    public void setEntityMapperClass(Class<BaseEntityMapper<E>> entityMapperClass) {
+    public void setEntityMapperClass(Class<BaseEntityMapper<? extends EntityObject>> entityMapperClass) {
         this.entityMapperClass = entityMapperClass;
     }
 
-    public EntityMeta<E> getEntityMeta() {
+    public EntityMeta<? extends EntityObject> getEntityMeta() {
         return entityMeta;
     }
 
-    public void setEntityMeta(EntityMeta<E> entityMeta) {
+    public void setEntityMeta(EntityMeta<? extends EntityObject> entityMeta) {
         this.entityMeta = entityMeta;
     }
 

@@ -36,15 +36,7 @@
         <!-- spring-core -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- spring-web -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <scope>provided</scope>
+            <artifactId>spring-core</artifactId>
         </dependency>
 
         <!-- jakarta.validation-api -->

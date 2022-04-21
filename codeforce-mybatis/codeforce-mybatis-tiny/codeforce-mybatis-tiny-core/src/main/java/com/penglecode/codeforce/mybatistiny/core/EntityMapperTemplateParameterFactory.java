@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author pengpeng
  * @version 1.0
  */
-public class EntityMapperTemplateParameterFactory<E extends EntityObject> {
+public class EntityMapperTemplateParameterFactory {
 
     private final DatabaseDialect databaseDialect;
 
@@ -33,18 +33,18 @@ public class EntityMapperTemplateParameterFactory<E extends EntityObject> {
         this.databaseDialect = databaseDialect;
     }
 
-    public EntityMapperTemplateParameter<E> createTemplateParameter(Class<BaseEntityMapper<E>> entityMapperClass, EntityMeta<E> entityMeta) {
-        EntityMapperTemplateParameter<E> parameter = newTemplateParameter();
+    public EntityMapperTemplateParameter createTemplateParameter(Class<BaseEntityMapper<? extends EntityObject>> entityMapperClass, EntityMeta<? extends EntityObject> entityMeta) {
+        EntityMapperTemplateParameter parameter = newTemplateParameter();
         parameter.setEntityMapperClass(entityMapperClass);
         parameter.setEntityMeta(entityMeta);
         return setTemplateCustomParameter(setTemplateCommonParameter(parameter));
     }
 
-    protected EntityMapperTemplateParameter<E> newTemplateParameter() {
-        return new EntityMapperTemplateParameter<>();
+    protected EntityMapperTemplateParameter newTemplateParameter() {
+        return new EntityMapperTemplateParameter();
     }
 
-    protected EntityMapperTemplateParameter<E> setTemplateCommonParameter(EntityMapperTemplateParameter<E> parameter) {
+    protected EntityMapperTemplateParameter setTemplateCommonParameter(EntityMapperTemplateParameter parameter) {
         parameter.setMapperNamespace(parameter.getEntityMapperClass().getName());
         parameter.setMapperHelperClass(XmlMapperHelper.class.getName());
         parameter.setEntityName(parameter.getEntityMeta().getEntityClass().getSimpleName());
@@ -78,7 +78,7 @@ public class EntityMapperTemplateParameterFactory<E extends EntityObject> {
         return parameter;
     }
 
-    protected EntityMapperTemplateParameter<E> setTemplateCustomParameter(EntityMapperTemplateParameter<E> parameter) {
+    protected EntityMapperTemplateParameter setTemplateCustomParameter(EntityMapperTemplateParameter parameter) {
         return parameter;
     }
 

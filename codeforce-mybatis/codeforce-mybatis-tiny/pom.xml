@@ -14,7 +14,7 @@
     <description>一个基于Mybatis仅支持单表操作的DSL框架，类似于Mybatis-Plus</description>
 
     <modules>
-        <module>codeforce-mybatis-tiny-anno</module>
+        <module>codeforce-mybatis-tiny-base</module>
         <module>codeforce-mybatis-tiny-core</module>
     </modules>
 </project>

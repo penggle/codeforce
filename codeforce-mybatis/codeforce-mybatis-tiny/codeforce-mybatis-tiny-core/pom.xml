@@ -13,46 +13,22 @@
     <description>mybatis-tiny的核心部分</description>
 
     <dependencies>
-        <!-- codeforce-common-base -->
-        <dependency>
-            <groupId>com.penglecode</groupId>
-            <artifactId>codeforce-common-base</artifactId>
-        </dependency>
-
         <!-- codeforce-common-domain -->
         <dependency>
             <groupId>com.penglecode</groupId>
             <artifactId>codeforce-common-domain</artifactId>
         </dependency>
 
-        <!-- codeforce-mybatis-tiny-anno -->
+        <!-- codeforce-mybatis-tiny-base -->
         <dependency>
             <groupId>com.penglecode</groupId>
-            <artifactId>codeforce-mybatis-tiny-anno</artifactId>
+            <artifactId>codeforce-mybatis-tiny-base</artifactId>
         </dependency>
 
         <!-- mybatis -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-        </dependency>
-
-        <!-- mybatis-spring -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-        </dependency>
-
-        <!-- spring-context -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-
-        <!-- spring-tx -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
         </dependency>
 
         <!-- slf4j-api -->
