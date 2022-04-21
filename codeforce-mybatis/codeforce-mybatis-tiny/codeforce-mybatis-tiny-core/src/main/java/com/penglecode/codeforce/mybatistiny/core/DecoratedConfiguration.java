@@ -41,13 +41,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * DynamicExecutor的配套自定义Configuration
+ * 自定义Configuration，用于实现应用程序在第一次通过{@link Configuration#getMapper(Class, SqlSession)}获取某个XxxMapper.class接口的代理实例时，
+ * 顺带自动生成其XxxMapper.xml，并将这个自动生成的XxxMapper.xml加载到{@link Configuration}中，最终就是运行时动态生成了许多{@link MappedStatement}。
+ * 这个契机(Configuration#getMapper(..))是从根儿上的唯一扎口，不论你用何种框架来集成Mybatis
  *
  * @author pengpeng
  * @version 1.0
  */
 @SuppressWarnings("unchecked")
-public class DelegateConfiguration extends Configuration {
+public class DecoratedConfiguration extends Configuration {
 
     /**
      * 被代理的Mybatis配置
@@ -69,7 +71,7 @@ public class DelegateConfiguration extends Configuration {
      */
     private final ConcurrentMap<Class<BaseEntityMapper<? extends EntityObject>>,String> entityMapperRegistries;
 
-    public DelegateConfiguration(Configuration delegate) {
+    public DecoratedConfiguration(Configuration delegate) {
         this.delegate = delegate;
         this.initInterceptorChain();
         this.entityMapperRegistrar = new EntityMapperRegistrar(this);

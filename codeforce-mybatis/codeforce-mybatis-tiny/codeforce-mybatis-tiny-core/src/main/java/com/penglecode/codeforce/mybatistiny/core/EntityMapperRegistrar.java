@@ -41,11 +41,11 @@ public class EntityMapperRegistrar {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityMapperRegistrar.class);
 
-    private final DelegateConfiguration configuration;
+    private final DecoratedConfiguration configuration;
 
     private final EntityMapperTemplateParameterFactory entityMapperTemplateParameterFactory;
 
-    public EntityMapperRegistrar(DelegateConfiguration configuration) {
+    public EntityMapperRegistrar(DecoratedConfiguration configuration) {
         this.configuration = configuration;
         this.entityMapperTemplateParameterFactory = createTemplateParameterFactory();
         this.registerCommonTypeAlias();
@@ -151,7 +151,7 @@ public class EntityMapperRegistrar {
         }
     }
 
-    protected DelegateConfiguration getConfiguration() {
+    protected DecoratedConfiguration getConfiguration() {
         return configuration;
     }
 

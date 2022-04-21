@@ -56,12 +56,12 @@ public class ReflectionUtils extends org.springframework.util.ReflectionUtils {
 	/**
 	 * 设置常量值
 	 *
-	 * @param constsClass
+	 * @param constClass
 	 * @param fieldName
 	 * @param value
 	 */
-	public static void setFinalConstsValue(Class<?> constsClass, String fieldName, Object value) {
-		Field field = findField(constsClass, fieldName);
+	public static void setFinalConstValue(Class<?> constClass, String fieldName, Object value) {
+		Field field = findField(constClass, fieldName);
 		setFinalFieldValue(null, field, value);
 	}
 
