@@ -1,11 +1,9 @@
 package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
+import com.penglecode.codeforce.common.util.CollectionUtils;
 import com.penglecode.codeforce.common.util.StringUtils;
-import com.penglecode.codeforce.mybatistiny.annotations.Column;
-import com.penglecode.codeforce.mybatistiny.annotations.Id;
-import com.penglecode.codeforce.mybatistiny.annotations.Table;
-import com.penglecode.codeforce.mybatistiny.annotations.Transient;
+import com.penglecode.codeforce.mybatistiny.annotations.*;
 import com.penglecode.codeforce.mybatistiny.support.JavaJdbcTypeEnum;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.util.Assert;
@@ -13,10 +11,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,6 +28,9 @@ public class EntityMeta<E extends EntityObject> {
     /** 实体类Class */
     private final Class<E> entityClass;
 
+    /** 主键ID列 */
+    private final Set<EntityField> idFields;
+
     /** 以fieldName为key的实体字段名映射 */
     private final Map<String,EntityField> fieldNameKeyedFields;
 
@@ -43,12 +41,22 @@ public class EntityMeta<E extends EntityObject> {
     private final Table tableAnnotation;
 
     protected EntityMeta(Class<E> entityClass) {
-        this.entityClass = entityClass;
-        this.fieldNameKeyedFields = resolveEntityFields(entityClass, EntityField::getFieldName);
-        this.columnNameKeyedFields = resolveEntityFields(entityClass, EntityField::getColumnName);
-        this.tableAnnotation = entityClass.getAnnotation(Table.class);
+        Table tableAnnotation = entityClass.getAnnotation(Table.class);
         Assert.state(tableAnnotation != null, String.format("EntityObject[%s] must be annotated with @%s", entityClass.getName(), Table.class.getName()));
-        Assert.state(fieldNameKeyedFields.values().stream().anyMatch(field -> field.getIdAnnotation() != null), String.format("EntityObject[%s] must specify an id which annotated with @%s", entityClass.getName(), Id.class.getName()));
+        Assert.state(StringUtils.isNotBlank(tableAnnotation.value()), String.format("EntityObject[%s] table name can not be empty!", entityClass.getName()));
+        Map<String,EntityField> fieldNameKeyedFields = resolveEntityFields(entityClass, EntityField::getFieldName);
+        Set<EntityField> idFields = fieldNameKeyedFields.values().stream().filter(field -> field.getIdAnnotation() != null).collect(Collectors.toSet());
+        Assert.state(!CollectionUtils.isEmpty(idFields), String.format("EntityObject[%s] must have at least one ID which annotated with @%s", entityClass.getName(), Id.class.getName()));
+        if(idFields.size() > 1) { //复合主键?
+            for(EntityField idField : idFields) {
+                Assert.state(GenerationType.NONE.equals(idField.getIdAnnotation().strategy()), String.format("The EntityObject[%s] generation strategy of Composite-ID can only be 'NONE'", entityClass.getName()));
+            }
+        }
+        this.entityClass = entityClass;
+        this.fieldNameKeyedFields = fieldNameKeyedFields;
+        this.idFields = idFields;
+        this.columnNameKeyedFields = resolveEntityFields(entityClass, EntityField::getColumnName);
+        this.tableAnnotation = tableAnnotation;
     }
 
     protected Map<String,EntityField> resolveEntityFields(Class<E> entityClass, Function<EntityField,String> keyFunction) {
@@ -66,6 +74,10 @@ public class EntityMeta<E extends EntityObject> {
 
     public Class<E> getEntityClass() {
         return entityClass;
+    }
+
+    public Set<EntityField> getIdFields() {
+        return idFields;
     }
 
     public Map<String, EntityField> getFieldNameKeyedFields() {

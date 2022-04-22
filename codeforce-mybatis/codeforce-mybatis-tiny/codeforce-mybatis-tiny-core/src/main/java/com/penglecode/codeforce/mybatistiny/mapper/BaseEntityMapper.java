@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * 实体对象(EntityObject)的基本CRUD类操作Mybatis-Mapper基类
+ * 实体对象(EntityObject)基本CRUD操作的Mybatis-Mapper基类
  *
  * @author pengpeng
  * @version 1.0
  */
-public interface BaseEntityMapper<T extends EntityObject> {
+public interface BaseEntityMapper<T extends EntityObject> extends BaseMapper {
 
     /**
      * 这里需要保持与BaseXxxMapper中的@Param参数名一致
