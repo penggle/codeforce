@@ -85,7 +85,6 @@ public class EntityMapperRegistrar {
     }
 
     protected EntityMapperTemplateParameterFactory createTemplateParameterFactory() {
-        Assert.hasText(configuration.getDatabaseId(), "Property 'databaseId' must be required in Mybatis Configuration!");
         return new EntityMapperTemplateParameterFactory(configuration.getDatabaseId());
     }
 

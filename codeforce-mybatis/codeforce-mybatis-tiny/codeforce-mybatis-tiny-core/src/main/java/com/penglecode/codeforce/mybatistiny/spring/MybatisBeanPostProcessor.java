@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
  * Mybatis基于Spring框架的{@link BeanPostProcessor}后置处理程序，用于替换{@link SqlSessionFactory}中的{@link Configuration}为{@link DecoratedConfiguration}
+ * 从而使得传统搭配(Mybatis + Spring或SpringBoot)的应用无需过多配置，只需@Import(MybatisTinyConfiguration.class)即可集成MybatisTiny
  *
  * @author pengpeng
  * @version 1.0

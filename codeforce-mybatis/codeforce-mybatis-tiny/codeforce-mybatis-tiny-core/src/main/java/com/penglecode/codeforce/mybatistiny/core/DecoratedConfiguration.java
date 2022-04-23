@@ -2,8 +2,10 @@ package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
+import com.penglecode.codeforce.common.util.StringUtils;
 import com.penglecode.codeforce.mybatistiny.executor.DynamicExecutor;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
+import com.penglecode.codeforce.mybatistiny.support.DefaultDatabaseIdProvider;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.CacheRefResolver;
 import org.apache.ibatis.builder.ResultMapResolver;
@@ -35,7 +37,9 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeAliasRegistry;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.springframework.util.Assert;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -73,9 +77,29 @@ public class DecoratedConfiguration extends Configuration {
 
     public DecoratedConfiguration(Configuration delegate) {
         this.delegate = delegate;
+        this.initDatabaseId();
         this.initInterceptorChain();
         this.entityMapperRegistrar = new EntityMapperRegistrar(this);
         this.entityMapperRegistries = new ConcurrentHashMap<>();
+    }
+
+    /**
+     * 初始化databaseId，如果需要的话
+     */
+    protected void initDatabaseId() {
+        String databaseId = delegate.getDatabaseId();
+        if(StringUtils.isNotBlank(databaseId)) { //如果应用程序设置了databaseId，则需要检查其对应的方言在DatabaseDialectEnum中是否注册
+            Assert.isTrue(DatabaseDialectEnum.hasRegisteredDialect(databaseId), String.format("Unsupported 'databaseId'(%s) in your Mybatis Configuration!", databaseId));
+        } else {
+            DatabaseIdProvider databaseIdProvider = new DefaultDatabaseIdProvider();
+            try {
+                databaseId = databaseIdProvider.getDatabaseId(delegate.getEnvironment().getDataSource());
+            } catch (SQLException e) {
+                throw new IllegalStateException(String.format("Can't obtain databaseId: %s", e.getMessage()), e);
+            }
+            Assert.isTrue(DatabaseDialectEnum.hasRegisteredDialect(databaseId), String.format("Unsupported 'databaseId'(%s), No suitable DatabaseDialect found!", databaseId));
+            delegate.setDatabaseId(databaseId);
+        }
     }
 
     /**

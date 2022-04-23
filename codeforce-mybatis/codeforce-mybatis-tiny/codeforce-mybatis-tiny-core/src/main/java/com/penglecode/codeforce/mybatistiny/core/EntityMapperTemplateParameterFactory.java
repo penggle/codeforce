@@ -5,9 +5,9 @@ import com.penglecode.codeforce.mybatistiny.annotations.Column;
 import com.penglecode.codeforce.mybatistiny.annotations.GenerationType;
 import com.penglecode.codeforce.mybatistiny.annotations.Id;
 import com.penglecode.codeforce.mybatistiny.annotations.Table;
-import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
-import com.penglecode.codeforce.mybatistiny.core.EntityMeta.EntityField;
 import com.penglecode.codeforce.mybatistiny.core.EntityMapperTemplateParameter.ColumnParameter;
+import com.penglecode.codeforce.mybatistiny.core.EntityMeta.EntityField;
+import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 import com.penglecode.codeforce.mybatistiny.mapper.BaseEntityMapper;
 import com.penglecode.codeforce.mybatistiny.support.XmlMapperHelper;
 import org.springframework.util.Assert;
@@ -28,9 +28,7 @@ public class EntityMapperTemplateParameterFactory {
     private final DatabaseDialect databaseDialect;
 
     public EntityMapperTemplateParameterFactory(String databaseId) {
-        DatabaseDialect databaseDialect = DatabaseDialectEnum.getDialect(databaseId);
-        Assert.notNull(databaseDialect, String.format("Unsupported Database: No suitable DatabaseDialect found for databaseId(%s) in Mybatis Configuration!", databaseId));
-        this.databaseDialect = databaseDialect;
+        this.databaseDialect = DatabaseDialectEnum.getDialect(databaseId);
     }
 
     public EntityMapperTemplateParameter createTemplateParameter(Class<BaseEntityMapper<? extends EntityObject>> entityMapperClass, EntityMeta<? extends EntityObject> entityMeta) {

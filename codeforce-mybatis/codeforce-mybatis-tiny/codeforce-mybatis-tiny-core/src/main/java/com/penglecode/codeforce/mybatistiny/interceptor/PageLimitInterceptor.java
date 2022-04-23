@@ -13,7 +13,6 @@ import org.apache.ibatis.reflection.factory.DefaultObjectFactory;
 import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
-import org.springframework.util.Assert;
 
 import java.sql.Connection;
 
@@ -67,9 +66,7 @@ public class PageLimitInterceptor implements Interceptor {
 	protected DatabaseDialect initDatabaseDialect(MetaObject metaObject) {
 		Configuration configuration = (Configuration) metaObject.getValue("delegate.configuration");
 		String databaseId = configuration.getDatabaseId();
-		DatabaseDialect databaseDialect = DatabaseDialectEnum.getDialect(databaseId);
-		Assert.notNull(databaseDialect, String.format("No DatabaseDialect found for databaseId(%s) in Mybatis Configuration!", databaseId));
-		return databaseDialect;
+		return DatabaseDialectEnum.getDialect(databaseId);
 	}
 
 	@Override

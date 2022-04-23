@@ -2,8 +2,7 @@ package com.penglecode.codeforce.mybatistiny.core;
 
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 数据库方言
@@ -38,7 +37,7 @@ public enum DatabaseDialectEnum implements DatabaseDialect {
             String upperSql = sql.toUpperCase();
             if(upperSql.startsWith("SELECT")) {
                 return "SELECT * FROM (" + sql + ") WHERE rownum <= " + limit;
-            } else if(upperSql.startsWith("UPDATE") || upperSql.startsWith("DELETE")) { //此分支实现对于复杂SQL可能会存在问题
+            } else if(upperSql.startsWith("UPDATE") || upperSql.startsWith("DELETE")) { //TODO,此分支实现对于复杂SQL可能会存在问题
                 if(upperSql.contains(" WHERE ")) {
                     return sql + " AND rownum <= " + limit;
                 } else {
@@ -108,7 +107,22 @@ public enum DatabaseDialectEnum implements DatabaseDialect {
                 }
             }
         }
-        return null;
+        throw new IllegalArgumentException(String.format("No suitable DatabaseDialect found for databaseId(%s)!", databaseId));
+    }
+
+    /**
+     * 判断指定的databaseId对应的方言是否已经注册了
+     *
+     * @param databaseId    - 数据库ID，例如mysql,oracle等，不区分大小写
+     * @return
+     */
+    public static boolean hasRegisteredDialect(String databaseId) {
+        for(DatabaseDialectEnum dbDialect : values()) {
+            if(dbDialect.name().equalsIgnoreCase(databaseId)) {
+                return true;
+            }
+        }
+        return ADDITIONAL_DIALECTS.containsKey(databaseId.toUpperCase());
     }
 
 }

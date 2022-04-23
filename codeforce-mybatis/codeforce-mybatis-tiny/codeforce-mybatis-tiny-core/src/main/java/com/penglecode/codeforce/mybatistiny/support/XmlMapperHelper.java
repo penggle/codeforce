@@ -20,11 +20,11 @@ public class XmlMapperHelper {
     private XmlMapperHelper() {}
 
     public static boolean isEmpty(Object paramObj) {
-        return !isNotEmpty(paramObj);
+        return ObjectUtils.isEmpty(paramObj);
     }
 
     public static boolean isNotEmpty(Object paramObj) {
-        return ObjectUtils.isEmpty(paramObj);
+        return !ObjectUtils.isEmpty(paramObj);
     }
 
     public static boolean isArrayOrCollection(Object paramObj) {
