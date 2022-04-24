@@ -9,10 +9,10 @@
         <version>2.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>codeforce-mybatis</artifactId>
+    <artifactId>codeforce-mybatis-parent</artifactId>
     <version>3.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
-    <name>codeforce-mybatis</name>
+    <name>codeforce-mybatis-parent</name>
     <description>公共的基于Mybatis的扩展部分(包括多数据源DAL层扩展、以及类似于Mybatis-Plus的DSL扩展等)</description>
 
 	<dependencyManagement>
@@ -24,10 +24,10 @@
                 <version>${project.version}</version>
             </dependency>
 			
-			<!-- xmodule3-common-mybatis-dsl -->
+			<!-- codeforce-mybatis-tiny-parent -->
             <dependency>
                 <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-mybatis-tiny</artifactId>
+                <artifactId>codeforce-mybatis-tiny-parent</artifactId>
                 <version>${project.version}</version>
             </dependency>
 		</dependencies>

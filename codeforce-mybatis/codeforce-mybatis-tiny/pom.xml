@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.penglecode</groupId>
-        <artifactId>codeforce-mybatis</artifactId>
+        <artifactId>codeforce-mybatis-parent</artifactId>
         <version>3.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>codeforce-mybatis-tiny</artifactId>
+    <artifactId>codeforce-mybatis-tiny-parent</artifactId>
     <packaging>pom</packaging>
-    <name>codeforce-mybatis-tiny</name>
+    <name>codeforce-mybatis-tiny-parent</name>
     <description>一个基于Mybatis仅支持单表操作的DSL框架，类似于Mybatis-Plus</description>
 
     <modules>
