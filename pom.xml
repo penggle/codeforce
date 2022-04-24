@@ -33,7 +33,7 @@
         <connection>scm:git:https://github.com/penggle/codeforce.git</connection>
         <developerConnection>scm:git:https://github.com/penggle/codeforce.git</developerConnection>
         <url>https://github.com/penggle/codeforce</url>
-        <tag>v${project.version}</tag>
+        <tag>v${codeforce.version}</tag>
     </scm>
 
     <distributionManagement>
@@ -51,6 +51,7 @@
     <properties>
         <springboot.version>2.4.5</springboot.version>
         <codeforce.version>2.4.5-SNAPSHOT</codeforce.version>
+        <codeforce-mybatis.version>3.5-SNAPSHOT</codeforce-mybatis.version>
 
         <mybatis.version>3.5.7</mybatis.version>
         <mybatis-spring.version>2.0.6</mybatis-spring.version>
@@ -80,56 +81,56 @@
             <dependency>
                 <groupId>com.penglecode</groupId>
                 <artifactId>codeforce-common-base</artifactId>
-                <version>${project.version}</version>
+                <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-model -->
             <dependency>
                 <groupId>com.penglecode</groupId>
                 <artifactId>codeforce-common-model</artifactId>
-                <version>${project.version}</version>
+                <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-domain -->
             <dependency>
                 <groupId>com.penglecode</groupId>
                 <artifactId>codeforce-common-domain</artifactId>
-                <version>${project.version}</version>
+                <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-core -->
             <dependency>
                 <groupId>com.penglecode</groupId>
                 <artifactId>codeforce-common-core</artifactId>
-                <version>${project.version}</version>
+                <version>${codeforce.version}</version>
             </dependency>
 			
-			<!-- codeforce-mybatis-dal -->
+            <!-- codeforce-common-config -->
+            <dependency>
+                <groupId>com.penglecode</groupId>
+                <artifactId>codeforce-common-config</artifactId>
+                <version>${codeforce.version}</version>
+            </dependency>
+
+            <!-- codeforce-mybatis-dal -->
             <dependency>
                 <groupId>com.penglecode</groupId>
                 <artifactId>codeforce-mybatis-dal</artifactId>
-                <version>${project.version}</version>
+                <version>${codeforce-mybatis.version}</version>
             </dependency>
-			
-			<!-- codeforce-mybatis-tiny-base -->
+
+            <!-- codeforce-mybatis-tiny-base -->
             <dependency>
                 <groupId>com.penglecode</groupId>
                 <artifactId>codeforce-mybatis-tiny-base</artifactId>
-                <version>${project.version}</version>
+                <version>${codeforce-mybatis.version}</version>
             </dependency>
 
             <!-- codeforce-mybatis-tiny-core -->
             <dependency>
                 <groupId>com.penglecode</groupId>
                 <artifactId>codeforce-mybatis-tiny-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- codeforce-common-config -->
-            <dependency>
-                <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-common-config</artifactId>
-                <version>${project.version}</version>
+                <version>${codeforce-mybatis.version}</version>
             </dependency>
 
             <!-- commons-lang3 -->

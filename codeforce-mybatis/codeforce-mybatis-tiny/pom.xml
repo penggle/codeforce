@@ -6,7 +6,8 @@
     <parent>
         <groupId>com.penglecode</groupId>
         <artifactId>codeforce-mybatis</artifactId>
-        <version>2.4.5-SNAPSHOT</version>
+        <version>3.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>codeforce-mybatis-tiny</artifactId>
     <packaging>pom</packaging>
