@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.penglecode</groupId>
+    <groupId>com.github.penggle</groupId>
     <artifactId>codeforce-parent</artifactId>
     <version>2.4-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -79,58 +79,37 @@
         <dependencies>
             <!-- codeforce-common-base -->
             <dependency>
-                <groupId>com.penglecode</groupId>
+                <groupId>com.github.penggle</groupId>
                 <artifactId>codeforce-common-base</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-model -->
             <dependency>
-                <groupId>com.penglecode</groupId>
+                <groupId>com.github.penggle</groupId>
                 <artifactId>codeforce-common-model</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-domain -->
             <dependency>
-                <groupId>com.penglecode</groupId>
+                <groupId>com.github.penggle</groupId>
                 <artifactId>codeforce-common-domain</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-core -->
             <dependency>
-                <groupId>com.penglecode</groupId>
+                <groupId>com.github.penggle</groupId>
                 <artifactId>codeforce-common-core</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 			
             <!-- codeforce-common-config -->
             <dependency>
-                <groupId>com.penglecode</groupId>
+                <groupId>com.github.penggle</groupId>
                 <artifactId>codeforce-common-config</artifactId>
                 <version>${codeforce.version}</version>
-            </dependency>
-
-            <!-- codeforce-mybatis-dal -->
-            <dependency>
-                <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-mybatis-dal</artifactId>
-                <version>${codeforce-mybatis.version}</version>
-            </dependency>
-
-            <!-- codeforce-mybatis-tiny-base -->
-            <dependency>
-                <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-mybatis-tiny-base</artifactId>
-                <version>${codeforce-mybatis.version}</version>
-            </dependency>
-
-            <!-- codeforce-mybatis-tiny-core -->
-            <dependency>
-                <groupId>com.penglecode</groupId>
-                <artifactId>codeforce-mybatis-tiny-core</artifactId>
-                <version>${codeforce-mybatis.version}</version>
             </dependency>
 
             <!-- commons-lang3 -->
@@ -312,7 +291,6 @@
         <module>codeforce-common-domain</module>
         <module>codeforce-common-core</module>
         <module>codeforce-common-config</module>
-        <module>codeforce-mybatis</module>
     </modules>
 
 </project>
