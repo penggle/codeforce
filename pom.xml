@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.penggle</groupId>
+    <groupId>io.github.penggle</groupId>
     <artifactId>codeforce-parent</artifactId>
     <version>2.4</version>
     <packaging>pom</packaging>
@@ -78,35 +78,35 @@
         <dependencies>
             <!-- codeforce-common-base -->
             <dependency>
-                <groupId>com.github.penggle</groupId>
+                <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-base</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-model -->
             <dependency>
-                <groupId>com.github.penggle</groupId>
+                <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-model</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-domain -->
             <dependency>
-                <groupId>com.github.penggle</groupId>
+                <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-domain</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 
             <!-- codeforce-common-core -->
             <dependency>
-                <groupId>com.github.penggle</groupId>
+                <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-core</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
 			
             <!-- codeforce-common-config -->
             <dependency>
-                <groupId>com.github.penggle</groupId>
+                <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-config</artifactId>
                 <version>${codeforce.version}</version>
             </dependency>
