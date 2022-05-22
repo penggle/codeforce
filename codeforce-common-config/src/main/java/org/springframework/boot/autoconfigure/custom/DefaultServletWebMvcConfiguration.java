@@ -2,6 +2,8 @@ package org.springframework.boot.autoconfigure.custom;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.penglecode.codeforce.common.web.springmvc.support.DelegateHttpMessageConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -35,6 +37,8 @@ public class DefaultServletWebMvcConfiguration extends AbstractSpringConfigurati
             if(converter instanceof MappingJackson2HttpMessageConverter) {
                 ObjectMapper objectMapper = ((MappingJackson2HttpMessageConverter) converter).getObjectMapper();
                 objectMapper.setSerializationInclusion(JsonInclude.Include.USE_DEFAULTS); //解决null值字段不输出的问题
+                objectMapper.registerModule(new Jdk8Module());
+                objectMapper.registerModule(new JavaTimeModule());
             }
             if(!(converter instanceof DelegateHttpMessageConverter)) {
                 converter = new DelegateHttpMessageConverter((HttpMessageConverter<Object>) converter);

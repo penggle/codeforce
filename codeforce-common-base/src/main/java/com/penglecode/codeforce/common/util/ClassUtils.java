@@ -76,4 +76,18 @@ public class ClassUtils extends org.springframework.util.ClassUtils {
         return (Class<G>) resolvableType.getGeneric(index).resolve();
     }
 
+    /**
+     * 根据className反射得到对应的Class对象，如果对应的类不存在则返回null
+     *
+     * @param className - 类名
+     * @return 返回对应的Class对象，如果不存在则返回null
+     */
+    public static Class<?> forName(String className) {
+        try {
+            return forName(className, getDefaultClassLoader());
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+
 }
