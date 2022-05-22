@@ -1,25 +1,32 @@
-package com.penglecode.codeforce.common.domain;
+package com.penglecode.codeforce.common.model;
 
 import com.penglecode.codeforce.common.support.BeanIntrospector;
 import com.penglecode.codeforce.common.support.SerializableFunction;
 import com.penglecode.codeforce.common.util.StringUtils;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import javax.validation.constraints.NotBlank;
 import java.lang.reflect.Field;
 
 /**
- * 通用排序对象
+ * 通用排序DTO
  *
  * @author pengpeng
  * @version 1.0
  */
-public class OrderBy implements DomainObject {
+@Schema(description="通用排序DTO")
+public class OrderBy implements BaseDTO {
 
 	private static final long serialVersionUID = 1L;
 
 	/** 排序字段名 */
+	@NotBlank(message="排序字段名(property)不能为空!")
+	@Schema(description="排序字段名")
 	private String property;
 
 	/** 排序顺序：asc|desc */
+	@NotBlank(message="排序顺序(direction)不能为空!")
+	@Schema(description="排序顺序(asc|desc)", defaultValue="asc")
 	private String direction;
 
 	protected OrderBy() {

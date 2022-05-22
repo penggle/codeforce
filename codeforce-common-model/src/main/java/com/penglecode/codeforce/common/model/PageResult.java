@@ -1,19 +1,24 @@
 package com.penglecode.codeforce.common.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Map;
 
 /**
- * 通用返回结果类(针对分页)
+ * 通用分页查询结果DTO
  * 
  * @param <T>
  * @author pengpeng
  * @version 1.0
  */
+@Schema(description="通用分页查询结果DTO")
 public class PageResult<T> extends Result<T> {
 
 	private static final long serialVersionUID = 1L;
 	
 	/** 当存在分页查询时此值为总记录数 */
+
+	@Schema(description="总记录数", defaultValue="0")
 	private int totalRowCount;
 
 	protected PageResult() {}

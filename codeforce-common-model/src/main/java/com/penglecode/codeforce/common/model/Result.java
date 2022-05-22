@@ -1,32 +1,40 @@
 package com.penglecode.codeforce.common.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 通用返回结果类
+ * 通用结果DTO
  *
  * @param <T>
  * @author pengpeng
  * @version 1.0
  */
+@Schema(description="通用结果DTO")
 public class Result<T> implements BaseDTO {
 
 	private static final long serialVersionUID = 1L;
 
 	/** 成功与否 */
+	@Schema(description="是否成功")
     private boolean success;
 
     /** 响应结果所属应用的Code(在结果输出出去时由框架拦截设置) */
+	@Schema(description="所属应用Code")
     private String app;
 
     /** 结果代码 */
+	@Schema(description="结果代码")
     private String code;
     
     /** 结果消息 */
+	@Schema(description="结果消息")
     private String message;
     
     /** 结果数据 */
+	@Schema(description="结果数据")
     private T data;
 
 	protected Result() {

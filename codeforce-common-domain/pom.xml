@@ -19,6 +19,12 @@
             <groupId>io.github.penggle</groupId>
             <artifactId>codeforce-common-base</artifactId>
         </dependency>
+
+        <!-- jakarta.validation-api -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

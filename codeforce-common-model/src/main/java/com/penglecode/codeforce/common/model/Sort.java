@@ -1,20 +1,26 @@
-package com.penglecode.codeforce.common.domain;
+package com.penglecode.codeforce.common.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * 通用排序对象
+ * 通用排序DTO
  *
  * @author pengpeng
  * @version 1.0
  */
-public class Sort implements DomainObject {
+@Schema(description="通用排序DTO")
+public class Sort implements BaseDTO {
 
 	private static final long serialVersionUID = 1L;
 
 	/** 排序列表 */
+	@Valid
+	@Schema(description="排序列表")
 	private List<OrderBy> orderBys = new ArrayList<>();
 
 	protected Sort() {

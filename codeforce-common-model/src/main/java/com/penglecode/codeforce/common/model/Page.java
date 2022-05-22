@@ -1,37 +1,59 @@
-package com.penglecode.codeforce.common.domain;
+package com.penglecode.codeforce.common.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 通用分页Page对象
+ * 通用分页DTO
  *
  * @author pengpeng
  * @version 1.0
  */
-public class Page implements DomainObject {
+@Schema(description="通用分页DTO")
+public class Page implements BaseDTO {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 当前页码 */
+	/**
+	 * 当前页码
+	 */
+	@NotNull(message="当前页码(pageIndex)不能为空!")
+	@Min(value=1, message="当前页码(pageIndex)不能小于1")
+	@Schema(description="当前页码(默认1)", defaultValue="1", example="1")
 	private Integer pageIndex = 1;
-	
-	/** 每页显示条数 */
+
+	/**
+	 * 每页显示条数
+	 */
+	@NotNull(message="每页显示条数(pageSize)不能为空!")
+	@Min(value=1, message="每页显示条数(pageSize)不能小于1")
+	@Schema(description="每页显示条数(默认10)", defaultValue="10", example="10")
 	private Integer pageSize = 10;
-	
-	/** 总记录数 */
+
+	/**
+	 * 总记录数
+	 */
+	@Schema(description="总记录数(默认0)", hidden=true)
 	private Integer totalRowCount = 0;
-	
+
 	/**
 	 * 总分页数
 	 */
+	@Schema(description="总分页数(默认0)", hidden=true)
 	private Integer totalPageCount = 0;
 
 	/**
 	 * 分页排序列表
 	 */
+	@Valid
+	@Schema(description="分页排序列表")
 	private List<OrderBy> orderBys = new ArrayList<>();
 	
 	protected Page() {
