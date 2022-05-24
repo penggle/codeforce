@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.penglecode.codeforce.common.web.springmvc.support.DelegateHttpMessageConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,10 @@ import java.util.List;
 @Configuration
 @ConditionalOnWebApplication(type=Type.SERVLET)
 @ConditionalOnClass({ Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class })
+@ConditionalOnProperty(name=DefaultServletWebMvcConfiguration.CONFIGURATION_ENABLED, havingValue="true", matchIfMissing=true)
 public class DefaultServletWebMvcConfiguration extends AbstractSpringConfiguration implements WebMvcConfigurer {
+
+    public static final String CONFIGURATION_ENABLED = "spring.mvc.customized.enabled";
 
     @Override
     @SuppressWarnings({"unchecked"})

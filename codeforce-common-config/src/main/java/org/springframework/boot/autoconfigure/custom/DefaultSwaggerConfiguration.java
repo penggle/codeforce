@@ -1,6 +1,7 @@
 package org.springframework.boot.autoconfigure.custom;
 
 import com.penglecode.codeforce.common.util.SpringUtils;
+import com.penglecode.codeforce.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -10,7 +11,9 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.providers.SpringWebProvider;
+import org.springdoc.webmvc.core.SpringDocWebMvcConfiguration;
 import org.springdoc.webmvc.core.SpringWebMvcProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,10 +24,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 默认的swagger配置(基于springdoc + knife4j)
@@ -36,6 +40,7 @@ import java.util.Map;
 @Configuration
 @ConditionalOnClass({OpenAPI.class, GroupedOpenApi.class})
 @ConditionalOnProperty(name=DefaultSwaggerConfiguration.CONFIGURATION_ENABLED, havingValue="true", matchIfMissing=true)
+@AutoConfigureBefore(SpringDocWebMvcConfiguration.class)
 public class DefaultSwaggerConfiguration extends AbstractSpringConfiguration {
 
     public static final String CONFIGURATION_ENABLED = "springdoc.customized.enabled";
@@ -57,7 +62,7 @@ public class DefaultSwaggerConfiguration extends AbstractSpringConfiguration {
         return GroupedOpenApi.builder().group("default")
                 //.addOperationCustomizer(new DefaultOperationCustomizer())
                 .packagesToScan(SpringUtils.getDefaultBasePackages())
-                .pathsToMatch("/api/**")
+                .pathsToMatch(getEnvironment().getProperty("springdoc.api-patterns", "/api/**").split(","))
                 .build();
     }
 
@@ -102,8 +107,12 @@ public class DefaultSwaggerConfiguration extends AbstractSpringConfiguration {
     @ConditionalOnMissingBean
     public List<Server> apiServers() {
         Environment environment = getEnvironment();
-        String serverUrl = String.format("http://127.0.0.1:%s%s", environment.getProperty("server.port", "8080"), environment.getProperty("server.servlet.context-path", ""));
-        return Collections.singletonList(new Server().description(String.format("Server[%s]", environment.getProperty("spring.application.name"))).url(serverUrl));
+        String apiServers = environment.getProperty("springdoc.api-servers");
+        String appName = environment.getProperty("spring.application.name");
+        if(StringUtils.isBlank(apiServers)) {
+            apiServers = String.format("http://127.0.0.1:%s%s", environment.getProperty("server.port", "8080"), environment.getProperty("server.servlet.context-path", ""));
+        }
+        return Stream.of(apiServers.split(",")).map(serverUrl -> new Server().description(String.format("Server[%s]", appName)).url(serverUrl)).collect(Collectors.toList());
     }
 
     /**
