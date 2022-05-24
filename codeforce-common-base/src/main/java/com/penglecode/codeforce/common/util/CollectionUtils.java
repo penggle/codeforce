@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
  * @author pengpeng
  * @version 1.0
  */
+@SuppressWarnings("ConstantConditions")
 public class CollectionUtils extends org.springframework.util.CollectionUtils {
 
     /**
@@ -87,17 +88,29 @@ public class CollectionUtils extends org.springframework.util.CollectionUtils {
         Assert.noNullElements(groupedLists, "The element of 'groupedLists' must be not empty!");
         //利用LinkedList的poll()特性
         LinkedList<List<T>> groupedElements = new LinkedList<>(groupedLists);
-        List<List<T>> startElements = new ArrayList<>();
-        startElements.add(groupedElements.poll());
+        //为递归中的flatMap创造条件,假设groupedElements.poll() => ["1","2","3"], 则startElements => [["1"],["2"],["3"]]
+        List<List<T>> startElements = groupedElements.poll().stream()
+                .map(Collections::singletonList)
+                .collect(Collectors.toList());
         List<List<T>> resultElements = new ArrayList<>();
         recursiveCartesianProduct(startElements, groupedElements, resultElements);
         return resultElements;
     }
 
+    /**
+     * 递归求取笛卡尔积
+     * @param startElements
+     * @param remainingElements
+     * @param resultElements
+     * @param <T>
+     */
     private static <T> void recursiveCartesianProduct(List<List<T>> startElements, LinkedList<List<T>> remainingElements, List<List<T>> resultElements) {
         if(!isEmpty(remainingElements)) {
             List<T> remainingFirst = remainingElements.poll();
-            List<List<T>> newStartElements = startElements.stream().flatMap(startElement -> remainingFirst.stream().map(element -> {
+            List<List<T>> newStartElements = startElements.stream()
+                    //利用flatMap将诸如：[["1"],"红"] ==flatMap()==> ["1","红"]
+                    //利用flatMap将诸如：[["1","红"],"A"] ==flatMap()==> ["1","红","A"]
+                    .flatMap(startElement -> remainingFirst.stream().map(element -> {
                 List<T> subCartesian = new ArrayList<>(startElement);
                 subCartesian.add(element);
                 return subCartesian;
@@ -106,15 +119,6 @@ public class CollectionUtils extends org.springframework.util.CollectionUtils {
         } else {
             resultElements.addAll(startElements);
         }
-    }
-
-    public static void main(String[] args) {
-        List<String> group1 = Arrays.asList("1", "2", "3");
-        List<String> group2 = Arrays.asList("红", "绿", "蓝");
-        List<String> group3 = Arrays.asList("A", "B", "C");
-        List<List<String>> groupedLists = Arrays.asList(group1, group2, group3);
-        groupedLists = cartesianProduct(groupedLists);
-        groupedLists.forEach(System.out::println);
     }
 
 }
