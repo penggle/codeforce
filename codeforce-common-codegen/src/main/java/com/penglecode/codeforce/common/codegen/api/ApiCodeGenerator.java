@@ -1,0 +1,121 @@
+package com.penglecode.codeforce.common.codegen.api;
+
+import com.penglecode.codeforce.common.codegen.ModuleCodeGenerator;
+import com.penglecode.codeforce.common.codegen.config.*;
+import com.penglecode.codeforce.common.codegen.support.ApiMethod;
+import com.penglecode.codeforce.common.codegen.support.ApiModelType;
+import com.penglecode.codeforce.common.codegen.support.CodegenContext;
+import com.penglecode.codeforce.common.util.CollectionUtils;
+
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * API接口代码生成器
+ *
+ * @author pengpeng
+ * @version 1.0
+ */
+public class ApiCodeGenerator extends ModuleCodeGenerator<ApiCodegenConfigProperties> {
+
+    protected ApiCodeGenerator(String module) {
+        super(module);
+    }
+
+    @Override
+    protected String getCodeName() {
+        return "Api代码";
+    }
+
+    @Override
+    protected void executeGenerate() throws Exception {
+        ApiCodegenConfigProperties codegenConfig = getCodegenConfig();
+        Map<String,Set<ApiMethod>> clientApiDeclarations = codegenConfig.getApi().getClientConfig().getApiDeclarations();
+        Map<String,Set<ApiMethod>> runtimeApiDeclarations = codegenConfig.getApi().getRuntimeConfig().getApiDeclarations();
+        Map<String, DomainEntityConfig> domainEntityConfigs = codegenConfig.getDomain().getDomainEntities();
+        if(!CollectionUtils.isEmpty(domainEntityConfigs)) {
+            for (Map.Entry<String,DomainEntityConfig> entry : domainEntityConfigs.entrySet()) {
+                DomainEntityConfig domainEntityConfig = entry.getValue();
+                if(clientApiDeclarations.containsKey(domainEntityConfig.getDomainEntityName())) { //1、生成指定领域实体的API接口(Client接口及实现)
+                    generateApiModel(codegenConfig, domainEntityConfig); //生成API接口的DTO
+                    CodegenContext<ApiCodegenConfigProperties, ApiClientConfig,DomainEntityConfig> codegenContext1 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getClientConfig(), domainEntityConfig);
+                    generateTarget(codegenContext1, new ApiClientCodegenParameterBuilder<>(codegenContext1).buildCodegenParameter()); //生成API接口Client
+
+                    CodegenContext<ApiCodegenConfigProperties, ApiRuntimeConfig,DomainEntityConfig> codegenContext2 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getRuntimeConfig(), domainEntityConfig);
+                    generateTarget(codegenContext2, new ApiClientRuntimeCodegenParameterBuilder<>(codegenContext2).buildCodegenParameter()); //生成API接口Client的实现
+                } else if(runtimeApiDeclarations.containsKey(domainEntityConfig.getDomainEntityName())) { //2、生成指定领域实体的API接口(Controller)
+                    generateApiModel(codegenConfig, domainEntityConfig); //生成API接口的DTO
+                    CodegenContext<ApiCodegenConfigProperties,ApiRuntimeConfig,DomainEntityConfig> codegenContext = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getRuntimeConfig(), domainEntityConfig);
+                    generateTarget(codegenContext, new ApiControllerRuntimeCodegenParameterBuilder<>(codegenContext).buildCodegenParameter()); //生成API接口Controller实现
+                }
+            }
+        }
+        Map<String, DomainAggregateConfig> domainAggregateConfigs = codegenConfig.getDomain().getDomainAggregates();
+        if(!CollectionUtils.isEmpty(domainAggregateConfigs)) {
+            for (Map.Entry<String, DomainAggregateConfig> entry : domainAggregateConfigs.entrySet()) {
+                DomainAggregateConfig domainAggregateConfig = entry.getValue();
+                if(clientApiDeclarations.containsKey(domainAggregateConfig.getDomainAggregateName())) { //3、生成指定聚合根的API接口(Client接口及实现)
+                    generateApiModel(codegenConfig, domainAggregateConfig); //生成DTO
+                    CodegenContext<ApiCodegenConfigProperties,ApiClientConfig,DomainAggregateConfig> codegenContext1 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getClientConfig(), domainAggregateConfig);
+                    generateTarget(codegenContext1, new ApiClientCodegenParameterBuilder<>(codegenContext1).buildCodegenParameter()); //生成API接口Client
+
+                    CodegenContext<ApiCodegenConfigProperties,ApiRuntimeConfig,DomainAggregateConfig> codegenContext2 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getRuntimeConfig(), domainAggregateConfig);
+                    generateTarget(codegenContext2, new ApiClientRuntimeCodegenParameterBuilder<>(codegenContext2).buildCodegenParameter()); //生成API接口Client的实现
+                } else if(runtimeApiDeclarations.containsKey(domainAggregateConfig.getDomainAggregateName())) { //4、生成指定聚合根的API接口(Controller/Client实现)
+                    generateApiModel(codegenConfig, domainAggregateConfig); //生成API接口的DTO
+                    CodegenContext<ApiCodegenConfigProperties,ApiRuntimeConfig,DomainAggregateConfig> codegenContext = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getRuntimeConfig(), domainAggregateConfig);
+                    generateTarget(codegenContext, new ApiControllerRuntimeCodegenParameterBuilder<>(codegenContext).buildCodegenParameter()); //生成API接口Controller实现
+                }
+            }
+        }
+    }
+
+    /**
+     * 生成指定领域对象的Request/Response对象
+     * @param codegenConfig
+     * @param domainObjectConfig
+     * @throws Exception
+     */
+    protected void generateApiModel(ApiCodegenConfigProperties codegenConfig, DomainObjectConfig domainObjectConfig) throws Exception {
+        CodegenContext<ApiCodegenConfigProperties,ApiModelConfig,? extends DomainObjectConfig> codegenContext1 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getModelConfig().withModelType(ApiModelType.SAVE_REQUEST), domainObjectConfig);
+        generateTarget(codegenContext1, new SaveReqApiModelCodegenParameterBuilder<>(codegenContext1).buildCodegenParameter());
+
+        CodegenContext<ApiCodegenConfigProperties,ApiModelConfig,? extends DomainObjectConfig> codegenContext2 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getModelConfig().withModelType(ApiModelType.QUERY_REQUEST), domainObjectConfig);
+        generateTarget(codegenContext2, new QueryReqApiModelCodegenParameterBuilder<>(codegenContext2).buildCodegenParameter());
+
+        CodegenContext<ApiCodegenConfigProperties,ApiModelConfig,? extends DomainObjectConfig> codegenContext3 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getModelConfig().withModelType(ApiModelType.QUERY_RESPONSE), domainObjectConfig);
+        generateTarget(codegenContext3, new QueryResApiModelCodegenParameterBuilder<>(codegenContext3).buildCodegenParameter());
+    }
+
+    /**
+     * 生成指定聚合根的Request/Response DTO对象
+     * @param codegenConfig
+     * @param domainAggregateConfig
+     * @throws Exception
+     */
+    protected void generateApiModel(ApiCodegenConfigProperties codegenConfig, DomainAggregateConfig domainAggregateConfig) throws Exception {
+        //生成Master的SAVE_DTO/QUERY_DTO
+        generateDtoModel(codegenConfig, codegenConfig.getDomain().getDomainEntities().get(domainAggregateConfig.getAggregateMasterEntity()));
+        for(DomainAggregateSlaveConfig domainAggregateSlaveConfig : domainAggregateConfig.getAggregateSlaveEntities()) {
+            //生成Slave的SAVE_DTO/QUERY_DTO
+            generateDtoModel(codegenConfig, codegenConfig.getDomain().getDomainEntities().get(domainAggregateSlaveConfig.getAggregateSlaveEntity()));
+        }
+        //生成聚合根的SAVE_REQUEST/QUERY_REQUEST/QUERY_RESPONSE对象
+        generateApiModel(codegenConfig, (DomainObjectConfig) domainAggregateConfig);
+    }
+
+    /**
+     * 生成指定领域实体的DTO对象
+     * @param codegenConfig
+     * @param domainEntityConfig
+     * @throws Exception
+     */
+    protected void generateDtoModel(ApiCodegenConfigProperties codegenConfig, DomainEntityConfig domainEntityConfig) throws Exception {
+        CodegenContext<ApiCodegenConfigProperties,ApiModelConfig,DomainEntityConfig> codegenContext1 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getModelConfig().withModelType(ApiModelType.SAVE_DTO), domainEntityConfig);
+        generateTarget(codegenContext1, new SaveDtoApiModelCodegenParameterBuilder(codegenContext1).buildCodegenParameter());
+
+        CodegenContext<ApiCodegenConfigProperties,ApiModelConfig,DomainEntityConfig> codegenContext2 = new CodegenContext<>(codegenConfig, codegenConfig.getApi().getModelConfig().withModelType(ApiModelType.QUERY_DTO), domainEntityConfig);
+        generateTarget(codegenContext2, new QueryDtoApiModelCodegenParameterBuilder(codegenContext2).buildCodegenParameter());
+    }
+
+}

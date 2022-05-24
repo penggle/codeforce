@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.penggle</groupId>
+        <artifactId>codeforce-parent</artifactId>
+        <version>2.4</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>codeforce-common-codegen</artifactId>
+    <name>codeforce-common-codegen</name>
+    <description>公共的代码生成部分</description>
+
+    <dependencies>
+        <!-- codeforce-common-config -->
+        <dependency>
+            <groupId>io.github.penggle</groupId>
+            <artifactId>codeforce-common-config</artifactId>
+        </dependency>
+
+        <!-- spring-boot-starter-jdbc -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <!-- mybatis-tiny -->
+        <dependency>
+            <groupId>io.github.penggle</groupId>
+            <artifactId>mybatis-tiny-core</artifactId>
+        </dependency>
+
+        <!-- mybatis-springboot-mds-starter -->
+        <dependency>
+            <groupId>io.github.penggle</groupId>
+            <artifactId>mybatis-springboot-mds-starter</artifactId>
+        </dependency>
+
+        <!-- freemarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
