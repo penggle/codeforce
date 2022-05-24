@@ -1,4 +1,4 @@
-package org.springframework.boot.autoconfigure.custom;
+package org.springframework.boot.autoconfigure.codeforce.defaults;
 
 import com.penglecode.codeforce.common.util.SpringUtils;
 import com.penglecode.codeforce.common.util.StringUtils;
@@ -11,9 +11,8 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.GroupedOpenApi;
 import org.springdoc.core.providers.SpringWebProvider;
-import org.springdoc.webmvc.core.SpringDocWebMvcConfiguration;
 import org.springdoc.webmvc.core.SpringWebMvcProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.codeforce.AbstractSpringConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -40,7 +39,6 @@ import java.util.stream.Stream;
 @Configuration
 @ConditionalOnClass({OpenAPI.class, GroupedOpenApi.class})
 @ConditionalOnProperty(name=DefaultSwaggerConfiguration.CONFIGURATION_ENABLED, havingValue="true", matchIfMissing=true)
-@AutoConfigureBefore(SpringDocWebMvcConfiguration.class)
 public class DefaultSwaggerConfiguration extends AbstractSpringConfiguration {
 
     public static final String CONFIGURATION_ENABLED = "springdoc.customized.enabled";

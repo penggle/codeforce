@@ -1,4 +1,4 @@
-package org.springframework.boot.autoconfigure.custom;
+package org.springframework.boot.autoconfigure.codeforce;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;

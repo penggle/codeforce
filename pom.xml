@@ -287,8 +287,8 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
-                <plugins>
-                    <!-- 发布所需插件 -->
+                <!--<plugins>
+                    &lt;!&ndash; 发布所需插件 &ndash;&gt;
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -314,7 +314,7 @@
                             </execution>
                         </executions>
                     </plugin>
-                </plugins>
+                </plugins>-->
             </build>
         </profile>
     </profiles>

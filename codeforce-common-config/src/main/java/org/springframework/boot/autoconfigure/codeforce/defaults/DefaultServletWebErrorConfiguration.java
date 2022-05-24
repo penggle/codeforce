@@ -1,14 +1,13 @@
-package org.springframework.boot.autoconfigure.custom;
+package org.springframework.boot.autoconfigure.codeforce.defaults;
 
 import com.penglecode.codeforce.common.web.servlet.support.DefaultErrorController;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.codeforce.AbstractSpringConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -30,7 +29,6 @@ import java.util.List;
 @ConditionalOnWebApplication(type=Type.SERVLET)
 @ConditionalOnClass({ Servlet.class, DispatcherServlet.class })
 @ConditionalOnProperty(name=DefaultServletWebErrorConfiguration.CONFIGURATION_ENABLED, havingValue="true", matchIfMissing=true)
-@AutoConfigureBefore(ErrorMvcAutoConfiguration.class)
 public class DefaultServletWebErrorConfiguration extends AbstractSpringConfiguration {
 
 	public static final String CONFIGURATION_ENABLED = "server.error.customized.enabled";

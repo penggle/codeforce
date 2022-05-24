@@ -1,9 +1,3 @@
 org.springframework.context.ApplicationContextInitializer=com.penglecode.codeforce.common.initializer.DefaultSpringAppPreInitializer
 org.springframework.context.ApplicationListener=com.penglecode.codeforce.common.initializer.DefaultSpringAppStartingListener
 org.springframework.boot.env.EnvironmentPostProcessor=com.penglecode.codeforce.common.initializer.DefaultSpringAppEnvInitializer
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.springframework.boot.autoconfigure.custom.DefaultSpringAppConfiguration,\
-org.springframework.boot.autoconfigure.custom.DefaultServletWebMvcConfiguration,\
-org.springframework.boot.autoconfigure.custom.DefaultServletWebErrorConfiguration,\
-org.springframework.boot.autoconfigure.custom.DefaultValidationConfiguration,\
-org.springframework.boot.autoconfigure.custom.DefaultSwaggerConfiguration

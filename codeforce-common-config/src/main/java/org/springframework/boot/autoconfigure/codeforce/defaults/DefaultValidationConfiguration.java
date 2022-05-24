@@ -1,8 +1,9 @@
-package org.springframework.boot.autoconfigure.custom;
+package org.springframework.boot.autoconfigure.codeforce.defaults;
 
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.boot.autoconfigure.codeforce.AbstractSpringConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;

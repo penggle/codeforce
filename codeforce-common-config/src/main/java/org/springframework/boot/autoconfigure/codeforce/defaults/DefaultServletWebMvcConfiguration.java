@@ -1,10 +1,11 @@
-package org.springframework.boot.autoconfigure.custom;
+package org.springframework.boot.autoconfigure.codeforce.defaults;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.penglecode.codeforce.common.web.springmvc.support.DelegateHttpMessageConverter;
+import org.springframework.boot.autoconfigure.codeforce.AbstractSpringConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;

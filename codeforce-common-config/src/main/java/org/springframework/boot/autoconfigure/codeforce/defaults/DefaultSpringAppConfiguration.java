@@ -1,4 +1,4 @@
-package org.springframework.boot.autoconfigure.custom;
+package org.springframework.boot.autoconfigure.codeforce.defaults;
 
 import com.penglecode.codeforce.common.consts.ApplicationConstants;
 import com.penglecode.codeforce.common.consts.GlobalConstants;
@@ -6,6 +6,7 @@ import com.penglecode.codeforce.common.initializer.DefaultSpringAppPostInitializ
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.codeforce.AbstractSpringConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.MessageSource;
