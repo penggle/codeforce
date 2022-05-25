@@ -31,6 +31,11 @@ public class GlobalConstants {
 	public static final Integer DEFAULT_NO_FALSE_FLAG = 0;
 
 	/**
+	 * 默认的MDC追踪参数traceId的key名称
+	 */
+	public static final String DEFAULT_MDC_TRACE_ID_KEY = "traceId";
+
+	/**
 	 * 全局应用代码
 	 */
 	public static final Constant<String> APP_CODE = new SpringEnvConstant<String>("spring.application.code") {};

@@ -4,13 +4,18 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.penglecode.codeforce.common.web.servlet.support.HttpApiTraceFilter;
 import com.penglecode.codeforce.common.web.springmvc.support.DelegateHttpMessageConverter;
 import com.penglecode.codeforce.common.config.AbstractSpringConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -49,6 +54,17 @@ public class DefaultServletWebMvcConfiguration extends AbstractSpringConfigurati
                 converters.set(i, converter); //replace
             }
         }
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name="httpApiTraceFilter")
+    public FilterRegistrationBean<HttpApiTraceFilter> httpApiTraceFilter() {
+        FilterRegistrationBean<HttpApiTraceFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setName("httpApiTraceFilter");
+        registrationBean.setFilter(new HttpApiTraceFilter());
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 
 }
