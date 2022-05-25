@@ -30,8 +30,8 @@ public class ApiCodeGenerator extends ModuleCodeGenerator<ApiCodegenConfigProper
     @Override
     protected void executeGenerate() throws Exception {
         ApiCodegenConfigProperties codegenConfig = getCodegenConfig();
-        Map<String,Set<ApiMethod>> clientApiDeclarations = codegenConfig.getApi().getClientConfig().getApiDeclarations();
-        Map<String,Set<ApiMethod>> runtimeApiDeclarations = codegenConfig.getApi().getRuntimeConfig().getApiDeclarations();
+        Map<String,Set<ApiMethod>> clientApiDeclarations = codegenConfig.getApi().getClientConfig().getApiProviders();
+        Map<String,Set<ApiMethod>> runtimeApiDeclarations = codegenConfig.getApi().getRuntimeConfig().getApiProviders();
         Map<String, DomainEntityConfig> domainEntityConfigs = codegenConfig.getDomain().getDomainEntities();
         if(!CollectionUtils.isEmpty(domainEntityConfigs)) {
             for (Map.Entry<String,DomainEntityConfig> entry : domainEntityConfigs.entrySet()) {

@@ -18,7 +18,7 @@ public class ApiClientConfig extends GenerableTargetConfig {
     private Set<ApiProtocol> apiProtocols;
 
     /** API接口声明Map类型,[key=领域对象名称,value=接口方法名枚举] */
-    private Map<String,Set<ApiMethod>> apiDeclarations;
+    private Map<String,Set<ApiMethod>> apiProviders;
 
     /** API接口继承interface列表 */
     private Set<Class<?>> apiExtendsInterfaces;
@@ -31,12 +31,12 @@ public class ApiClientConfig extends GenerableTargetConfig {
         this.apiProtocols = apiProtocols;
     }
 
-    public Map<String, Set<ApiMethod>> getApiDeclarations() {
-        return apiDeclarations;
+    public Map<String, Set<ApiMethod>> getApiProviders() {
+        return apiProviders;
     }
 
-    public void setApiDeclarations(Map<String, Set<ApiMethod>> apiDeclarations) {
-        this.apiDeclarations = apiDeclarations;
+    public void setApiProviders(Map<String, Set<ApiMethod>> apiProviders) {
+        this.apiProviders = apiProviders;
     }
 
     public Set<Class<?>> getApiExtendsInterfaces() {
