@@ -148,10 +148,10 @@
                 <version>${mybatis-tiny.version}</version>
             </dependency>
 
-            <!-- mybatis-springboot-mds-starter -->
+            <!-- mds-spring-boot-starter -->
             <dependency>
                 <groupId>io.github.penggle</groupId>
-                <artifactId>mybatis-springboot-mds-starter</artifactId>
+                <artifactId>mds-spring-boot-starter</artifactId>
                 <version>${mybatis-springboot-mds.version}</version>
             </dependency>
 

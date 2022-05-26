@@ -1,15 +1,15 @@
 package com.penglecode.codeforce.common.codegen.database;
 
-import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
 import com.penglecode.codeforce.common.codegen.config.DomainConfig;
 import com.penglecode.codeforce.common.codegen.config.DomainEntityColumnConfig;
-import com.penglecode.codeforce.common.codegen.config.DomainIntrospectConfig;
 import com.penglecode.codeforce.common.codegen.config.DomainEntityConfig;
+import com.penglecode.codeforce.common.codegen.config.DomainIntrospectConfig;
+import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
 import com.penglecode.codeforce.common.util.ObjectUtils;
 import com.penglecode.codeforce.common.util.SpringUtils;
 import com.penglecode.codeforce.common.util.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.springframework.boot.autoconfigure.mybatis.MdsComponentType;
+import org.springframework.boot.autoconfigure.mds.jdbc.MdsJdbcComponentType;
 import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
@@ -110,7 +110,7 @@ public class DatabaseIntrospector {
      */
     public IntrospectedTable introspectedTable(DomainEntityConfig domainEntityConfig) throws SQLException {
         String introspectDataSourceName = StringUtils.defaultIfBlank(domainEntityConfig.getIntrospectConfig().getIntrospectDataSource(), getDomainConfig().getDomainCommons().getIntrospectDataSource());
-        DataSource introspectDataSource = SpringUtils.getBean(MdsComponentType.DATASOURCE.getComponentBeanName(introspectDataSourceName), DataSource.class);
+        DataSource introspectDataSource = SpringUtils.getBean(MdsJdbcComponentType.DATASOURCE.getComponentBeanName(introspectDataSourceName), DataSource.class);
         try(Connection connection = introspectDataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             String targetTableName = domainEntityConfig.getDomainEntityTable();

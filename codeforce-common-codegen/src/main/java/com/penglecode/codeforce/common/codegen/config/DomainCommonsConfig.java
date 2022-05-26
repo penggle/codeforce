@@ -1,7 +1,7 @@
 package com.penglecode.codeforce.common.codegen.config;
 
 
-import org.springframework.boot.autoconfigure.mybatis.NamedDatabase;
+import org.springframework.boot.autoconfigure.mds.NamedDatabase;
 
 import java.util.HashMap;
 import java.util.Map;

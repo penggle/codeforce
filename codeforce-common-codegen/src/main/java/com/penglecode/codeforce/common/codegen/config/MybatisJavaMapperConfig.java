@@ -2,7 +2,7 @@ package com.penglecode.codeforce.common.codegen.config;
 
 import com.penglecode.codeforce.common.codegen.util.CodegenUtils;
 import com.penglecode.codeforce.common.util.StringUtils;
-import org.springframework.boot.autoconfigure.mybatis.NamedDatabase;
+import org.springframework.boot.autoconfigure.mds.NamedDatabase;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;
