@@ -15,17 +15,17 @@ import java.util.Set;
 public class ApiRuntimeConfig extends GenerableTargetConfig {
 
     /** API接口声明Map类型,[key=领域对象名称,value=接口方法名枚举] */
-    private Map<String,Set<ApiMethod>> apiDeclarations;
+    private Map<String,Set<ApiMethod>> apiProviders;
 
     /** API接口继承父类(可以不配置) */
     private Class<?> apiExtendsClass;
 
-    public Map<String, Set<ApiMethod>> getApiDeclarations() {
-        return apiDeclarations;
+    public Map<String, Set<ApiMethod>> getApiProviders() {
+        return apiProviders;
     }
 
-    public void setApiDeclarations(Map<String, Set<ApiMethod>> apiDeclarations) {
-        this.apiDeclarations = apiDeclarations;
+    public void setApiProviders(Map<String, Set<ApiMethod>> apiProviders) {
+        this.apiProviders = apiProviders;
     }
 
     public Class<?> getApiExtendsClass() {
@@ -38,7 +38,7 @@ public class ApiRuntimeConfig extends GenerableTargetConfig {
 
     @Override
     public String getGeneratedTargetName(String domainObjectName, boolean includePackage, boolean includeSuffix) {
-        String endName = !CollectionUtils.isEmpty(apiDeclarations) && apiDeclarations.containsKey(domainObjectName) ? "Controller" : "ApiServiceImpl";
+        String endName = !CollectionUtils.isEmpty(apiProviders) && apiProviders.containsKey(domainObjectName) ? "Controller" : "ApiServiceImpl";
         return (includePackage ? getTargetPackage() + "." : "") + domainObjectName + endName + (includeSuffix ? ".java" : "");
     }
 

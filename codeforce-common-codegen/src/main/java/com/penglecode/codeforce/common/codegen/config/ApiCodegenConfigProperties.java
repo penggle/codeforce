@@ -53,7 +53,7 @@ public class ApiCodegenConfigProperties extends ServiceCodegenConfigProperties {
         Assert.hasText(api.getRuntimeConfig().getTargetProject(), String.format("Api代码生成配置(%s.api.runtimeConfig.targetProject)必须指定!", codegenConfigPrefix));
         Assert.hasText(api.getTargetPackage(), String.format("Api代码生成配置(%s.api.targetPackage)必须指定!", codegenConfigPrefix));
         Assert.hasText(api.getTargetProject(), String.format("Api代码生成配置(%s.api.clientConfig.targetProject)必须指定!", codegenConfigPrefix));
-        Assert.isTrue(!CollectionUtils.isEmpty(api.getClientConfig().getApiDeclarations()) || !CollectionUtils.isEmpty(api.getRuntimeConfig().getApiDeclarations()), String.format("Api代码生成配置(%s.api.clientConfig.apiDeclarations|%s.api.runtimeConfig.apiDeclarations)必须指定之一!", codegenConfigPrefix, codegenConfigPrefix));
+        Assert.isTrue(!CollectionUtils.isEmpty(api.getClientConfig().getApiProviders()) || !CollectionUtils.isEmpty(api.getRuntimeConfig().getApiProviders()), String.format("Api代码生成配置(%s.api.clientConfig.apiDeclarations|%s.api.runtimeConfig.apiDeclarations)必须指定之一!", codegenConfigPrefix, codegenConfigPrefix));
     }
 
     /**
@@ -68,11 +68,11 @@ public class ApiCodegenConfigProperties extends ServiceCodegenConfigProperties {
         if(api.getRuntimeConfig().getApiExtendsClass() == null) {
             api.getRuntimeConfig().setApiExtendsClass(ServletHttpApiSupport.class);
         }
-        if(api.getClientConfig().getApiDeclarations() == null) {
-            api.getClientConfig().setApiDeclarations(new HashMap<>());
+        if(api.getClientConfig().getApiProviders() == null) {
+            api.getClientConfig().setApiProviders(new HashMap<>());
         }
-        if(api.getRuntimeConfig().getApiDeclarations() == null) {
-            api.getRuntimeConfig().setApiDeclarations(new HashMap<>());
+        if(api.getRuntimeConfig().getApiProviders() == null) {
+            api.getRuntimeConfig().setApiProviders(new HashMap<>());
         }
     }
 
