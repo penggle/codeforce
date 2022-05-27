@@ -1,18 +1,7 @@
 package com.penglecode.codeforce.common.codegen.config;
 
 import com.penglecode.codeforce.common.codegen.database.IntrospectedColumn;
-import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
 import com.penglecode.codeforce.common.codegen.support.IdGenerator;
-import com.penglecode.codeforce.common.codegen.util.CodegenUtils;
-import com.penglecode.codeforce.common.util.StringUtils;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 领域实体对应的数据库表列配置
@@ -45,9 +34,6 @@ public class DomainEntityColumnConfig {
 
     /** 更新时是否需要校验 */
     private boolean validateOnUpdate;
-
-    /** 校验表达式 */
-    private Set<String> validateExpressions;
 
     /** 不为空则当前列为查询条件列，该条件运算符支持eq,like|likeLeft|likeRight,gt|lt|gte|lte,in等 */
     private String operatorOnQuery;
@@ -135,14 +121,6 @@ public class DomainEntityColumnConfig {
         this.setValidateOnUpdate(true);
     }
 
-    public Set<String> getValidateExpressions() {
-        return validateExpressions;
-    }
-
-    public void setValidateExpressions(Set<String> validateExpressions) {
-        this.validateExpressions = validateExpressions;
-    }
-
     public String getOperatorOnQuery() {
         return operatorOnQuery;
     }
@@ -173,22 +151,6 @@ public class DomainEntityColumnConfig {
 
     public void setIntrospectedColumn(IntrospectedColumn introspectedColumn) {
         this.introspectedColumn = introspectedColumn;
-    }
-
-    public void initValidateExpressions(DomainConfig domainConfig) {
-        Set<String> finalValidateExpressions = Optional.ofNullable(validateExpressions).orElseGet(() -> {
-                    Set<String> expressions = new HashSet<>();
-                    if(validateOnInsert || validateOnUpdate) {
-                        Class<?> validatorType = FullyQualifiedJavaType.getStringInstance().equals(introspectedColumn.getJavaFieldType()) ? NotBlank.class : NotNull.class;
-                        expressions.add(String.format("@%s(message=\"%s\")", validatorType.getName(), getColumnTitle() + "不能为空!"));
-                    }
-                    return expressions;
-                })
-                .stream()
-                .filter(StringUtils::isNotBlank)
-                .map(expression -> CodegenUtils.parseAnnotationExpression(expression, domainConfig))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-        this.setValidateExpressions(finalValidateExpressions);
     }
 
 }

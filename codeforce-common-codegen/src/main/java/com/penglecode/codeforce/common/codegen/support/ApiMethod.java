@@ -19,20 +19,20 @@ public enum ApiMethod {
     REMOVE_BY_IDS("removeDomainObjectsByIds", "根据多个ID删除领域对象") {
         @Override
         public String getMethodName(String domainObjectName) {
-            return super.getMethodName(CodegenUtils.getPluralNameOfDomainObject(domainObjectName));
+            return super.getMethodName(CodegenUtils.getPluralName(domainObjectName));
         }
     },
     GET_BY_ID("getDomainObjectById", "根据多个ID获取领域对象"),
     GET_BY_IDS("getDomainObjectsByIds", "根据多个ID获取领域对象") {
         @Override
         public String getMethodName(String domainObjectName) {
-            return super.getMethodName(CodegenUtils.getPluralNameOfDomainObject(domainObjectName));
+            return super.getMethodName(CodegenUtils.getPluralName(domainObjectName));
         }
     },
     GET_BY_PAGE("getDomainObjectsByPage", "根据多个ID获取领域对象") {
         @Override
         public String getMethodName(String domainObjectName) {
-            return super.getMethodName(CodegenUtils.getPluralNameOfDomainObject(domainObjectName));
+            return super.getMethodName(CodegenUtils.getPluralName(domainObjectName));
         }
     };
 

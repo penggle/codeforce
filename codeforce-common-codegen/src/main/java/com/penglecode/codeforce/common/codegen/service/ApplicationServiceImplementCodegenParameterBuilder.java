@@ -317,7 +317,7 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
         methodBodyLines.add(String.format("    %s %s = BeanCopier.copy(%s, %s::new);", serviceMethod.getMethodReturnType(), domainObjectsVariableName, masterDomainObjectVariableName, codegenParameter.getDomainObjectParameter().getDomainObjectName()));
         methodBodyLines.add("    if(cascade) {");
         DomainEntityFieldConfig masterEntityIdFieldConfig = masterDomainServiceParameter.getDomainEntityConfig().getSingleIdField();
-        String masterDomainObjectIdsName = CodegenUtils.getPluralNameOfDomainObject(masterEntityIdFieldConfig.getFieldName());
+        String masterDomainObjectIdsName = CodegenUtils.getPluralName(masterEntityIdFieldConfig.getFieldName());
         String masterDomainObjectIdGetterName = masterEntityIdFieldConfig.getFieldGetterName();
         //List<Long> productIds = productBases.stream().map(ProductBaseInfo::getProductId).collect(Collectors.toList());
         methodBodyLines.add(String.format("        List<%s> %s = %s.stream().map(%s::%s).collect(Collectors.toList());", masterEntityIdFieldConfig.getFieldType().getShortName(), masterDomainObjectIdsName, masterDomainObjectVariableName, masterDomainServiceParameter.getDomainEntityConfig().getDomainEntityName(), masterDomainObjectIdGetterName));

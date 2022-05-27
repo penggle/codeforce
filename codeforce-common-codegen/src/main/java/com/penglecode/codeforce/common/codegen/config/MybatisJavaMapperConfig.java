@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
  *
  * @author pengpeng
  * @version 1.0
- * @created 2021/1/22 14:39
  */
 public class MybatisJavaMapperConfig extends GenerableTargetConfig {
 

@@ -22,6 +22,9 @@ import ${targetImport};
  * @version ${targetVersion}
  * @created ${targetCreated}
  */
+<#list targetAnnotations as targetAnnotation>
+${targetAnnotation}
+</#list>
 public class ${targetClass} implements EntityObject {
 
     private static final long serialVersionUID = 1L;

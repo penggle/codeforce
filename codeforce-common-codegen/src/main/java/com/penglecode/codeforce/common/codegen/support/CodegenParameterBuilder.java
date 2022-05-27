@@ -60,8 +60,8 @@ public abstract class CodegenParameterBuilder<C extends ModuleCodegenConfigPrope
         codegenParameter.setTargetFileName(targetConfig.getGeneratedTargetName(domainObjectName, false, true));
         codegenParameter.setTargetPackage(targetConfig.getTargetPackage());
         codegenParameter.setTargetClass(targetConfig.getGeneratedTargetName(domainObjectName, false, false));
-        codegenParameter.setTargetAuthor(codegenConfig.getDomain().getDomainCommons().getCommentAuthor());
-        codegenParameter.setTargetVersion("1.0.0");
+        codegenParameter.setTargetAuthor(codegenConfig.getDomain().getDomainCommons().getTargetAuthor());
+        codegenParameter.setTargetVersion(codegenConfig.getDomain().getDomainCommons().getTargetVersion());
         codegenParameter.setTargetCreated(DateTimeUtils.formatNow("yyyy'年'MM'月'dd'日' a HH:mm"));
         return codegenParameter;
     }
@@ -79,16 +79,21 @@ public abstract class CodegenParameterBuilder<C extends ModuleCodegenConfigPrope
      */
     protected abstract String getTargetTemplateName();
 
+    /**
+     * 创建领域对象参数
+     * @param domainObjectConfig
+     * @return
+     */
     protected DomainObjectParameter createDomainObjectParameter(D domainObjectConfig) {
         DomainObjectParameter parameter = new DomainObjectParameter();
         parameter.setDomainObjectName(domainObjectConfig.getDomainObjectName());
         parameter.setDomainObjectTitle(domainObjectConfig.getDomainObjectTitle());
         parameter.setDomainObjectAlias(domainObjectConfig.getDomainObjectAlias());
         parameter.setLowerDomainObjectAlias(StringUtils.lowerCaseFirstChar(domainObjectConfig.getDomainObjectAlias()));
-        parameter.setDomainObjectsAlias(CodegenUtils.getPluralNameOfDomainObject(parameter.getDomainObjectAlias()));
+        parameter.setDomainObjectsAlias(CodegenUtils.getPluralName(parameter.getDomainObjectAlias()));
         parameter.setLowerDomainObjectsAlias(StringUtils.lowerCaseFirstChar(parameter.getDomainObjectsAlias()));
         parameter.setLowerDomainObjectName(StringUtils.lowerCaseFirstChar(domainObjectConfig.getDomainObjectAlias()));
-        parameter.setLowerDomainObjectsName(CodegenUtils.getPluralNameOfDomainObject(parameter.getLowerDomainObjectName()));
+        parameter.setLowerDomainObjectsName(CodegenUtils.getPluralName(parameter.getLowerDomainObjectName()));
         //考虑到联合主键，所以统一取做id/ids
         parameter.setDomainObjectIdName("id");
         parameter.setUpperDomainObjectIdName(StringUtils.upperCaseFirstChar(parameter.getDomainObjectIdName()));

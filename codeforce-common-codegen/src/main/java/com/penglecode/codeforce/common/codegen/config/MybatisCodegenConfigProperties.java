@@ -33,9 +33,8 @@ public class MybatisCodegenConfigProperties extends DomainObjectCodegenConfigPro
 
     /**
      * 校验Mybatis代码生成配置
-     * @throws Exception
      */
-    protected void validateMybatisCodegenConfig() throws Exception {
+    protected void validateMybatisCodegenConfig() {
         String codegenConfigPrefix = getCodegenConfigPrefix(getModule());
         Assert.hasText(mybatis.getJavaMapperConfig().getTargetProject(), String.format("Mybatis代码生成配置(%s.mybatis.javaMapperConfig.targetProject)必须指定!", codegenConfigPrefix));
         Assert.hasText(mybatis.getJavaMapperConfig().getTargetPackage(), String.format("Mybatis代码生成配置(%s.mybatis.javaMapperConfig.targetPackage)必须指定!", codegenConfigPrefix));

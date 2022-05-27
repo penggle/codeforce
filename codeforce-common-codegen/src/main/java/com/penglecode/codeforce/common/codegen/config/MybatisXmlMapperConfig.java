@@ -5,7 +5,6 @@ package com.penglecode.codeforce.common.codegen.config;
  *
  * @author pengpeng
  * @version 1.0
- * @created 2021/1/22 14:38
  */
 public class MybatisXmlMapperConfig extends GenerableTargetConfig {
 

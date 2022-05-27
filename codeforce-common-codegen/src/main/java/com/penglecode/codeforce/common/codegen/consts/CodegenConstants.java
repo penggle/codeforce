@@ -35,6 +35,11 @@ public class CodegenConstants {
      */
     public static final String DEFAULT_CODEGEN_COMMENT_AUTHOR = "AutoCodeGenerator";
 
+    /**
+     * 默认的代码生成注释时间
+     */
+    public static final String DEFAULT_CODEGEN_COMMENT_VERSION = "1.0.0";
+
     private CodegenConstants() {}
 
 }

@@ -3,10 +3,14 @@ package com.penglecode.codeforce.common.codegen.domain;
 import com.penglecode.codeforce.common.codegen.config.*;
 import com.penglecode.codeforce.common.codegen.support.*;
 import com.penglecode.codeforce.common.codegen.util.CodegenUtils;
-import com.penglecode.codeforce.common.domain.DomainObject;
+import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.domain.ID;
+import com.penglecode.codeforce.mybatistiny.annotations.GenerationType;
+import com.penglecode.codeforce.mybatistiny.annotations.Id;
+import com.penglecode.codeforce.mybatistiny.annotations.Table;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 领域实体代码生成参数Builder
@@ -27,7 +31,9 @@ public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder
     @Override
     protected DomainEntityCodegenParameter setCustomCodegenParameter(DomainEntityCodegenParameter codegenParameter) {
         codegenParameter.setTargetComment(getDomainObjectConfig().getDomainEntityTitle() + "实体");
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DomainObject.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(EntityObject.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Table.class.getName()));
+        codegenParameter.setTargetAnnotations(Collections.singletonList(String.format("@Table(\"%s\")", getDomainObjectConfig().getDomainEntityTable())));
         List<ObjectFieldParameter> inherentFields = new ArrayList<>(); //实体固有字段
         List<ObjectFieldParameter> supportFields = new ArrayList<>(); //实体辅助字段
         List<ObjectFieldParameter> allFields = new ArrayList<>(); //实体所有字段
@@ -71,10 +77,12 @@ public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder
     protected ObjectFieldParameter buildEntityInherentField(DomainEntityFieldConfig domainEntityFieldConfig, CodegenParameter codegenParameter) {
         ObjectFieldParameter field = createDomainObjectFields(domainEntityFieldConfig);
         List<String> fieldAnnotations = new ArrayList<>();
-        for(String validateExpression : domainEntityFieldConfig.getDomainEntityColumnConfig().getValidateExpressions()) {
-            String[] expressions = validateExpression.split(":");
-            fieldAnnotations.add(expressions[1]);
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(expressions[0]));
+        for(CodegenAnnotationMeta validateAnnotation : domainEntityFieldConfig.getDomainEntityColumnConfig().getValidateAnnotations()) {
+            fieldAnnotations.add(validateAnnotation.getExpression());
+            codegenParameter.addTargetImportTypes(validateAnnotation.getImportTypes().stream().map(FullyQualifiedJavaType::new).collect(Collectors.toList()));
+        }
+        if(domainEntityFieldConfig.isIdField()) {
+
         }
         field.setFieldAnnotations(fieldAnnotations);
         field.setFieldGetterName(domainEntityFieldConfig.getFieldGetterName());

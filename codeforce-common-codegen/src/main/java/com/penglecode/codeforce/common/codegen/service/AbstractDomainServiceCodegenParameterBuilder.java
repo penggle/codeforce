@@ -276,7 +276,7 @@ public abstract class AbstractDomainServiceCodegenParameterBuilder<T extends Gen
         serviceMethod.setMasterDomainObjectParameter(createDomainObjectParameter(masterDomainEntityConfig));
         serviceMethod.setMasterIdNameOfSlave(masterIdNameOfSlave);
         serviceMethod.setUpperMasterIdNameOfSlave(StringUtils.upperCaseFirstChar(serviceMethod.getMasterIdNameOfSlave()));
-        serviceMethod.setMasterIdsNameOfSlave(CodegenUtils.getPluralNameOfDomainObject(masterIdNameOfSlave));
+        serviceMethod.setMasterIdsNameOfSlave(CodegenUtils.getPluralName(masterIdNameOfSlave));
         serviceMethod.setUpperMasterIdsNameOfSlave(StringUtils.upperCaseFirstChar(serviceMethod.getMasterIdsNameOfSlave()));
         return serviceMethod;
     }

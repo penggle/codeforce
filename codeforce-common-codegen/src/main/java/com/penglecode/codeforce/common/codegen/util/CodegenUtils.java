@@ -144,17 +144,17 @@ public class CodegenUtils {
     }
 
     /**
-     * 获取领域对象的复数形式
-     * @param domainObjectName  - 领域对象名称
+     * 获取指定名称的复数形式
+     * @param name  - 名称
      * @return
      */
-    public static String getPluralNameOfDomainObject(String domainObjectName) {
-        if(domainObjectName.endsWith("y")) {
-            return domainObjectName.substring(0, domainObjectName.length() - 1) + "ies";
-        } else if(domainObjectName.endsWith("s")) {
-            return domainObjectName + "es";
+    public static String getPluralName(String name) {
+        if(name.endsWith("y")) {
+            return name.substring(0, name.length() - 1) + "ies";
+        } else if(name.endsWith("s")) {
+            return name + "es";
         } else {
-            return domainObjectName + "s";
+            return name + "s";
         }
     }
 

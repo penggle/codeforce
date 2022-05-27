@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
  *
  * @author pengpeng
  * @version 1.0
- * @created 2021/2/6 22:03
  */
 public class DomainEnumCodegenParameterBuilder extends CodegenParameterBuilder<DomainObjectCodegenConfigProperties, DomainEnumConfig, DomainEnumConfig, DomainEnumCodegenParameter> {
 

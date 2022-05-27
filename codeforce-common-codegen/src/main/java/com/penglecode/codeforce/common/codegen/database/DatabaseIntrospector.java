@@ -110,10 +110,10 @@ public class DatabaseIntrospector {
      */
     public IntrospectedTable introspectedTable(DomainEntityConfig domainEntityConfig) throws SQLException {
         String introspectDataSourceName = StringUtils.defaultIfBlank(domainEntityConfig.getIntrospectConfig().getIntrospectDataSource(), getDomainConfig().getDomainCommons().getIntrospectDataSource());
-        DataSource introspectDataSource = SpringUtils.getBean(MdsJdbcComponentType.DATASOURCE.getComponentBeanName(introspectDataSourceName), DataSource.class);
+        DataSource introspectDataSource = SpringUtils.getBean(MdsJdbcComponentType.DATASOURCE.getComponentBeanName(introspectDataSourceName), MdsJdbcComponentType.DATASOURCE.getComponentBeanType());
         try(Connection connection = introspectDataSource.getConnection()) {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
-            String targetTableName = domainEntityConfig.getDomainEntityTable();
+            String targetTableName = domainEntityConfig.getIntrospectConfig().getIntrospectTableName();
             if(databaseMetaData.storesLowerCaseIdentifiers()) {
                 targetTableName = targetTableName.toLowerCase();
             } else if(databaseMetaData.storesUpperCaseIdentifiers()) {

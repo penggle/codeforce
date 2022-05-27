@@ -16,13 +16,16 @@ public class DomainIntrospectConfig {
     /** 自省方言数据库 */
     private DbType introspectDatabaseType;
 
-    /** 强制将数据库中的日期时间字段映射为String类型? 默认为Java8日期/时间对象 */
+    /** 自省表表名(考虑到分库分表单独列出的配置) */
+    private String introspectTableName;
+
+    /** 强制将数据库中的日期时间字段映射为String类型? 否则为Java8日期/时间对象 */
     private boolean forceDateTimeAsString = true;
 
     /** 强制将数据库中的INT(1)/TINYINT(1)/NUMBER(1)等字段映射为Boolean类型? */
     private boolean forceNumber1AsBoolean = true;
 
-    /** 强制将数据库中的浮点型字段映射为Double类型? 默认为BigDecimal */
+    /** 强制将数据库中的浮点型字段映射为Double类型? 否则为BigDecimal */
     private boolean forceDecimalNumericAsDouble = true;
 
     public String getIntrospectDataSource() {
@@ -39,6 +42,14 @@ public class DomainIntrospectConfig {
 
     public void setIntrospectDatabaseType(DbType introspectDatabaseType) {
         this.introspectDatabaseType = introspectDatabaseType;
+    }
+
+    public String getIntrospectTableName() {
+        return introspectTableName;
+    }
+
+    public void setIntrospectTableName(String introspectTableName) {
+        this.introspectTableName = introspectTableName;
     }
 
     public boolean isForceDateTimeAsString() {

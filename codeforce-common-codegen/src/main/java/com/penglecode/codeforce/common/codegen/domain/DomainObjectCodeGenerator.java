@@ -16,7 +16,6 @@ import java.util.Set;
  *
  * @author pengpeng
  * @version 1.0
- * @created 2021/1/28 21:01
  */
 public class DomainObjectCodeGenerator extends ModuleCodeGenerator<DomainObjectCodegenConfigProperties> {
 
@@ -50,7 +49,7 @@ public class DomainObjectCodeGenerator extends ModuleCodeGenerator<DomainObjectC
             }
         }
         Map<String,DomainAggregateConfig> domainAggregateConfigs = codegenConfig.getDomain().getDomainAggregates();
-        if(!CollectionUtils.isEmpty(domainAggregateConfigs)) { //3、生成聚合对象
+        if(!CollectionUtils.isEmpty(domainAggregateConfigs)) { //3、生成聚合根对象
             for(Map.Entry<String,DomainAggregateConfig> entry : domainAggregateConfigs.entrySet()) {
                 DomainAggregateConfig domainAggregateConfig = entry.getValue();
                 CodegenContext<DomainObjectCodegenConfigProperties,DomainAggregateConfig,DomainAggregateConfig> codegenContext = new CodegenContext<>(codegenConfig, domainAggregateConfig, domainAggregateConfig);

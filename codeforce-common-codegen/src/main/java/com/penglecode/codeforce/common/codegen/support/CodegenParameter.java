@@ -22,7 +22,7 @@ public abstract class CodegenParameter {
     /** 待生成目标对象的文件名 */
     private String targetFileName;
 
-    /** 待生成目标对象的第三方imports */
+    /** 待生成目标对象的项目内imports */
     private List<String> targetProjectImports;
 
     /** 待生成目标对象的第三方imports */
@@ -178,6 +178,10 @@ public abstract class CodegenParameter {
 
     public void addTargetImportType(FullyQualifiedJavaType targetImportType) {
         targetAllImportTypes.add(targetImportType);
+    }
+
+    public void addTargetImportTypes(List<FullyQualifiedJavaType> targetImportTypes) {
+        targetAllImportTypes.addAll(targetImportTypes);
     }
 
     /**

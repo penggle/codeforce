@@ -15,9 +15,6 @@ import java.util.Set;
  */
 public class DomainCommonsConfig extends GenerableTargetLocation {
 
-    /** 注释作者 */
-    private String commentAuthor;
-
     /** 运行时数据源名称 */
     private String runtimeDataSource;
 
@@ -42,14 +39,6 @@ public class DomainCommonsConfig extends GenerableTargetLocation {
     public DomainCommonsConfig() {
         this.globalTypes = new HashMap<>();
         this.globalTypes.put(NamedDatabase.class.getSimpleName(), NamedDatabase.class.getName());
-    }
-
-    public String getCommentAuthor() {
-        return commentAuthor;
-    }
-
-    public void setCommentAuthor(String commentAuthor) {
-        this.commentAuthor = commentAuthor;
     }
 
     public String getRuntimeDataSource() {

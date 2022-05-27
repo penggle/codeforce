@@ -189,8 +189,10 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
      * @param domainCommonsConfig
      */
     protected void initDomainCommonsConfigs(DomainCommonsConfig domainCommonsConfig) {
-        domain.getDomainCommons().setCommentAuthor(StringUtils.defaultIfBlank(domain.getDomainCommons().getCommentAuthor(), CodegenConstants.DEFAULT_CODEGEN_COMMENT_AUTHOR));
+        domain.getDomainCommons().setTargetAuthor(StringUtils.defaultIfBlank(domain.getDomainCommons().getTargetAuthor(), CodegenConstants.DEFAULT_CODEGEN_COMMENT_AUTHOR));
+        domain.getDomainCommons().setTargetVersion(StringUtils.defaultIfBlank(domain.getDomainCommons().getTargetVersion(), CodegenConstants.DEFAULT_CODEGEN_COMMENT_VERSION));
         DomainIntrospectConfig domainIntrospectConfig = domain.getDomainCommons().getIntrospectConfig();
+        domainIntrospectConfig.setIntrospectTableName(null); //公共配置的introspectTableName字段必须置空
         domainIntrospectConfig.setIntrospectDataSource(domainCommonsConfig.getIntrospectDataSource());
         if(domainIntrospectConfig.getIntrospectDatabaseType() == null) { //推断数据库类型
             String inferJdbcUrl = SpringUtils.getEnvProperty(String.format("spring.datasource.%s.url", domain.getDomainCommons().getIntrospectDataSource()), String.class);
@@ -215,6 +217,7 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
         domainEntityConfig.setRuntimeDataSource(StringUtils.defaultIfBlank(domainEntityConfig.getRuntimeDataSource(), domain.getDomainCommons().getRuntimeDataSource()));
         domainEntityConfig.getIntrospectConfig().setIntrospectDataSource(StringUtils.defaultIfBlank(domainEntityConfig.getIntrospectConfig().getIntrospectDataSource(), domain.getDomainCommons().getIntrospectConfig().getIntrospectDataSource()));
         domainEntityConfig.getIntrospectConfig().setIntrospectDatabaseType(ObjectUtils.defaultIfNull(domainEntityConfig.getIntrospectConfig().getIntrospectDatabaseType(), domain.getDomainCommons().getIntrospectConfig().getIntrospectDatabaseType()));
+        domainEntityConfig.getIntrospectConfig().setIntrospectTableName(StringUtils.defaultIfBlank(domainEntityConfig.getIntrospectConfig().getIntrospectTableName(), domainEntityConfig.getDomainEntityName())); //考虑到分库分表需要区分逻辑表和实际自省表
         domainEntityConfig.getIntrospectConfig().setForceDateTimeAsString(ObjectUtils.defaultIfNull(domainEntityConfig.getIntrospectConfig().isForceDateTimeAsString(), domain.getDomainCommons().getIntrospectConfig().isForceDateTimeAsString()));
         domainEntityConfig.getIntrospectConfig().setForceNumber1AsBoolean(ObjectUtils.defaultIfNull(domainEntityConfig.getIntrospectConfig().isForceNumber1AsBoolean(), domain.getDomainCommons().getIntrospectConfig().isForceNumber1AsBoolean()));
         domainEntityConfig.getIntrospectConfig().setForceDecimalNumericAsDouble(ObjectUtils.defaultIfNull(domainEntityConfig.getIntrospectConfig().isForceDecimalNumericAsDouble(), domain.getDomainCommons().getIntrospectConfig().isForceDecimalNumericAsDouble()));
@@ -258,6 +261,7 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
                 domainEntityColumn.setIntrospectedColumn(introspectedColumn);
                 domainEntityColumn.setIdColumn(pkColumns.contains(introspectedColumn));
                 domainEntityColumn.setColumnTitle(StringUtils.defaultIfBlank(domainEntityColumn.getColumnTitle(), columnName));
+                //如果不是主键或者是复合主键则其idGenerator必须强制设为null
                 if(!domainEntityColumn.isIdColumn() || pkColumns.size() != 1) {
                     domainEntityColumn.setIdGenerator(null);
                 } else if(introspectedColumn.isAutoIncrement()) { //非复合主键且是AUTO_INCREMENT的则明确设置其主键生成策略
@@ -267,18 +271,20 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
                     domainEntityColumn.setColumnOnUpdate(false);
                     domainEntityColumn.setValidateOnUpdate(true);
                 }
-                //如果是客户端指定主键值或者是复合主键，则需要出现在insert语句列中并且添加javax.validation校验
-                if(domainEntityColumn.isIdColumn() && (domainEntityColumn.getIdGenerator() == null || pkColumns.size() > 1)) {
-                    domainEntityColumn.setColumnOnInsert(true);
-                    domainEntityColumn.setColumnOnUpdate(false);
-                    domainEntityColumn.setValidateOnUpsert(true);
-                }
-                //如果是基于SEQUENCE序列的主键生成方式，则其必须出现在insert列中
-                if(domainEntityColumn.getIdGenerator() != null && IdGenStrategy.SEQUENCE.equals(domainEntityColumn.getIdGenerator().getStrategy())) {
-                    domainEntityColumn.setColumnOnInsert(true);
-                    domainEntityColumn.setValidateOnInsert(false);
-                    domainEntityColumn.setColumnOnUpdate(false);
-                    domainEntityColumn.setValidateOnUpdate(true);
+                if(domainEntityColumn.isIdColumn()) {
+                    //如果是客户端指定主键值或者是复合主键，则需要出现在insert语句列中并且添加javax.validation校验
+                    if(domainEntityColumn.getIdGenerator() == null || pkColumns.size() > 1) {
+                        domainEntityColumn.setColumnOnInsert(true);
+                        //domainEntityColumn.setColumnOnUpdate(false);
+                        domainEntityColumn.setValidateOnUpsert(true);
+                    }
+                    //如果是基于SEQUENCE序列的主键生成方式，则其必须出现在insert列中
+                    if(domainEntityColumn.getIdGenerator() != null && IdGenStrategy.SEQUENCE.equals(domainEntityColumn.getIdGenerator().getStrategy())) {
+                        domainEntityColumn.setColumnOnInsert(true);
+                        domainEntityColumn.setValidateOnInsert(false);
+                        domainEntityColumn.setColumnOnUpdate(false);
+                        domainEntityColumn.setValidateOnUpdate(true);
+                    }
                 }
             } else { //出现在领域对象列配置中的字段但是数据库中不存在,则自动忽略
                 iterator.remove();
@@ -332,7 +338,7 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
         Map<String,DomainEntityColumnConfig> domainEntityColumns = domainEntityConfig.getDomainEntityColumns();
         for(Map.Entry<String,DomainEntityColumnConfig> entry : domainEntityColumns.entrySet()) {
             DomainEntityColumnConfig domainEntityColumn = entry.getValue();
-            domainEntityColumn.initValidateExpressions(getDomain());
+            domainEntityColumn.initValidateAnnotations(getDomain());
         }
     }
 
@@ -358,7 +364,7 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
                 DomainAggregateFieldConfig domainAggregateFieldConfig = new DomainAggregateFieldConfig(fieldName, fieldType, fieldTitle, fieldTitle, DomainObjectFieldClass.DOMAIN_AGGREGATE_FIELD, domainAggregateConfig, domainAggregateSlaveConfig);
                 domainAggregateConfig.getDomainAggregateFields().put(slaveDomainEntityConfig.getDomainEntityName(), domainAggregateFieldConfig);
             } else if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //添加1:N聚合关系下的字段
-                String fieldName = CodegenUtils.getPluralNameOfDomainObject(StringUtils.lowerCaseFirstChar(slaveDomainEntityConfig.getDomainEntityAlias()));
+                String fieldName = CodegenUtils.getPluralName(StringUtils.lowerCaseFirstChar(slaveDomainEntityConfig.getDomainEntityAlias()));
                 FullyQualifiedJavaType fieldType = new FullyQualifiedJavaType(List.class.getName() + "<" + slaveDomainEntityConfig.getGeneratedTargetName(slaveDomainEntityConfig.getDomainEntityName(), true, false) + ">");
                 String fieldTitle = slaveDomainEntityConfig.getDomainEntityTitle();
                 DomainAggregateFieldConfig domainAggregateFieldConfig = new DomainAggregateFieldConfig(fieldName, fieldType, fieldTitle, fieldTitle, DomainObjectFieldClass.DOMAIN_AGGREGATE_FIELD, domainAggregateConfig, domainAggregateSlaveConfig);
@@ -477,11 +483,7 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
     }
 
     protected String getInQuerySupportFieldName(String javaFieldName) {
-        if(javaFieldName.endsWith("s")) {
-            return javaFieldName + "es";
-        } else {
-            return javaFieldName + "s";
-        }
+        return CodegenUtils.getPluralName(javaFieldName);
     }
 
     protected String getCodedSupportFieldName(String javaFieldName) {
