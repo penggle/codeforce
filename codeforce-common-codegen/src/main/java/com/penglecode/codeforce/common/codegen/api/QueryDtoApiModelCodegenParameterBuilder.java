@@ -5,7 +5,7 @@ import com.penglecode.codeforce.common.codegen.config.ApiModelConfig;
 import com.penglecode.codeforce.common.codegen.config.DomainEntityConfig;
 import com.penglecode.codeforce.common.codegen.config.DomainEntityFieldConfig;
 import com.penglecode.codeforce.common.codegen.support.CodegenContext;
-import com.penglecode.codeforce.common.codegen.support.DomainObjectFieldClass;
+import com.penglecode.codeforce.common.codegen.support.DomainObjectFieldGroup;
 
 /**
  * (ApiModelType.QUERY_DTO)API接口数据模型代码生成参数Builder
@@ -26,7 +26,7 @@ public class QueryDtoApiModelCodegenParameterBuilder extends DtoApiModelCodegenP
     @Override
     protected boolean isGenerableField(DomainEntityFieldConfig domainEntityFieldConfig) {
         //不是查询场景入站辅助字段
-        return !DomainObjectFieldClass.DOMAIN_ENTITY_SUPPORTS_QUERY_INBOUND_FIELD.equals(domainEntityFieldConfig.getFieldClass());
+        return !DomainObjectFieldGroup.DOMAIN_ENTITY_SUPPORTS_QUERY_INBOUND_FIELD.equals(domainEntityFieldConfig.getFieldGroup());
     }
 
 }

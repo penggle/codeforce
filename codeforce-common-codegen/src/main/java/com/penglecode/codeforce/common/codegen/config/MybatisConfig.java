@@ -8,19 +8,8 @@ package com.penglecode.codeforce.common.codegen.config;
  */
 public class MybatisConfig {
 
-    /** XxxMapper.xml配置 */
-    private MybatisXmlMapperConfig xmlMapperConfig;
-
     /** XxxMapper.java源码配置 */
     private MybatisJavaMapperConfig javaMapperConfig;
-
-    public MybatisXmlMapperConfig getXmlMapperConfig() {
-        return xmlMapperConfig;
-    }
-
-    public void setXmlMapperConfig(MybatisXmlMapperConfig xmlMapperConfig) {
-        this.xmlMapperConfig = xmlMapperConfig;
-    }
 
     public MybatisJavaMapperConfig getJavaMapperConfig() {
         return javaMapperConfig;

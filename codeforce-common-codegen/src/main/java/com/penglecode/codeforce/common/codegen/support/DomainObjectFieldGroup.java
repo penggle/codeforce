@@ -1,12 +1,12 @@
 package com.penglecode.codeforce.common.codegen.support;
 
 /**
- * 领域对象字段分类
+ * 领域对象字段分组
  *
  * @author pengpeng
  * @version 1.0
  */
-public enum DomainObjectFieldClass {
+public enum DomainObjectFieldGroup {
 
     /**
      * 领域实体对象字段

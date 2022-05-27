@@ -1,6 +1,6 @@
 package com.penglecode.codeforce.common.codegen.config;
 
-import com.penglecode.codeforce.common.codegen.support.DomainObjectFieldClass;
+import com.penglecode.codeforce.common.codegen.support.DomainObjectFieldGroup;
 import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
 import com.penglecode.codeforce.common.codegen.util.CodegenUtils;
 
@@ -24,15 +24,15 @@ public abstract class DomainObjectFieldConfig {
     /** 字段注释 */
     private final String fieldComment;
 
-    /** 领域对象字段分类 */
-    private final DomainObjectFieldClass fieldClass;
+    /** 领域对象字段分组 */
+    private final DomainObjectFieldGroup fieldGroup;
 
-    protected DomainObjectFieldConfig(String fieldName, FullyQualifiedJavaType fieldType, String fieldTitle, String fieldComment, DomainObjectFieldClass fieldClass) {
+    protected DomainObjectFieldConfig(String fieldName, FullyQualifiedJavaType fieldType, String fieldTitle, String fieldComment, DomainObjectFieldGroup fieldGroup) {
         this.fieldName = fieldName;
         this.fieldType = fieldType;
         this.fieldTitle = fieldTitle;
         this.fieldComment = fieldComment;
-        this.fieldClass = fieldClass;
+        this.fieldGroup = fieldGroup;
     }
 
     public String getFieldName() {
@@ -51,8 +51,8 @@ public abstract class DomainObjectFieldConfig {
         return fieldComment;
     }
 
-    public DomainObjectFieldClass getFieldClass() {
-        return fieldClass;
+    public DomainObjectFieldGroup getFieldGroup() {
+        return fieldGroup;
     }
 
     public String getFieldGetterName() {

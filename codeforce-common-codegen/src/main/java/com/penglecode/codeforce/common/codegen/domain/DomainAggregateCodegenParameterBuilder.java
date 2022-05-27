@@ -6,9 +6,7 @@ import com.penglecode.codeforce.common.codegen.support.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 领域聚合根代码生成参数Builder
@@ -45,28 +43,39 @@ public class DomainAggregateCodegenParameterBuilder extends CodegenParameterBuil
     }
 
     private ObjectFieldParameter buildAggregateInherentField(DomainAggregateFieldConfig domainAggregateFieldConfig, DomainEntityConfig slaveDomainEntityConfig, CodegenParameter codegenParameter) {
-        ObjectFieldParameter field = createDomainObjectFields(domainAggregateFieldConfig);
+        ObjectFieldParameter field = new ObjectFieldParameter();
+        field.setFieldName(domainAggregateFieldConfig.getFieldName());
+        field.setFieldType(domainAggregateFieldConfig.getFieldType().getShortName());
+        field.setFieldComment(domainAggregateFieldConfig.getFieldComment());
         List<String> fieldAnnotations = new ArrayList<>();
-        Class<? extends Annotation> notEmptyAnnotationClass = NotNull.class;
-        if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateFieldConfig.getDomainAggregateSlaveConfig().getMasterSlaveMapping().getMasterSlaveRelation())) {
-            notEmptyAnnotationClass = NotEmpty.class; //1:N关系使用集合
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
+        Set<CodegenAnnotationMeta> fieldAnnotationMetas = buildAggregateFieldAnnotations(domainAggregateFieldConfig);
+        for(CodegenAnnotationMeta fieldAnnotationMeta : fieldAnnotationMetas) {
+            fieldAnnotations.add(fieldAnnotationMeta.getExpression());
+            codegenParameter.addTargetImportTypes(fieldAnnotationMeta.getImportTypes());
         }
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(notEmptyAnnotationClass.getName()));
-        fieldAnnotations.add(String.format("@%s(message=\"%s\")", notEmptyAnnotationClass.getSimpleName(), domainAggregateFieldConfig.getFieldTitle() + "不能为空!"));
         field.setFieldAnnotations(fieldAnnotations);
         field.setFieldGetterName(domainAggregateFieldConfig.getFieldGetterName());
         field.setFieldSetterName(domainAggregateFieldConfig.getFieldSetterName());
+        if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateFieldConfig.getDomainAggregateSlaveConfig().getMasterSlaveMapping().getMasterSlaveRelation())) {
+            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
+        }
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(slaveDomainEntityConfig.getGeneratedTargetName(slaveDomainEntityConfig.getDomainEntityName(), true, false)));
         return field;
     }
 
-    protected ObjectFieldParameter createDomainObjectFields(DomainObjectFieldConfig domainObjectFieldConfig) {
-        ObjectFieldParameter field = new ObjectFieldParameter();
-        field.setFieldName(domainObjectFieldConfig.getFieldName());
-        field.setFieldType(domainObjectFieldConfig.getFieldType().getShortName());
-        field.setFieldComment(domainObjectFieldConfig.getFieldComment());
-        return field;
+    /**
+     * 构造聚合根字段上的注解
+     * @param domainAggregateFieldConfig
+     * @return
+     */
+    protected Set<CodegenAnnotationMeta> buildAggregateFieldAnnotations(DomainAggregateFieldConfig domainAggregateFieldConfig) {
+        Set<CodegenAnnotationMeta> fieldAnnotations = new LinkedHashSet<>();
+        Class<? extends Annotation> validatorType = NotNull.class;
+        if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateFieldConfig.getDomainAggregateSlaveConfig().getMasterSlaveMapping().getMasterSlaveRelation())) {
+            validatorType = NotEmpty.class; //1:N关系使用集合
+        }
+        fieldAnnotations.add(new CodegenAnnotationMeta(String.format("@%s(message=\"%s\")", validatorType.getSimpleName(), domainAggregateFieldConfig.getFieldTitle() + "不能为空!"), Collections.singleton(new FullyQualifiedJavaType(validatorType.getName()))));
+        return fieldAnnotations;
     }
 
     @Override

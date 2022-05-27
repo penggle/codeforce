@@ -276,8 +276,8 @@ public class DatabaseIntrospector {
 
         DomainEntityColumnConfig domainEntityColumn = domainEntityConfig.getDomainEntityColumns().get(introspectedColumn.getColumnName());
         if(domainEntityColumn != null) {
-            if(domainEntityColumn.getJavaTypeOverride() != null) { //处理javaTypeOverride配置
-                FullyQualifiedJavaType javaFieldType = new FullyQualifiedJavaType(domainEntityColumn.getJavaTypeOverride().getName());
+            if(domainEntityColumn.getJavaType() != null) { //处理javaTypeOverride配置
+                FullyQualifiedJavaType javaFieldType = new FullyQualifiedJavaType(domainEntityColumn.getJavaType().getName());
                 introspectedColumn.setJavaFieldType(javaFieldType); //设置为指定的javaTypeOverride
                 for(Map.Entry<Integer,JdbcTypeInformation> entry : jdbcTypes.entrySet()) {
                     JdbcTypeInformation jdbcTypeInformation = entry.getValue();

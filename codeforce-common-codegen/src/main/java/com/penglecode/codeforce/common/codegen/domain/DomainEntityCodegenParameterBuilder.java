@@ -5,12 +5,12 @@ import com.penglecode.codeforce.common.codegen.support.*;
 import com.penglecode.codeforce.common.codegen.util.CodegenUtils;
 import com.penglecode.codeforce.common.domain.EntityObject;
 import com.penglecode.codeforce.common.domain.ID;
-import com.penglecode.codeforce.mybatistiny.annotations.GenerationType;
-import com.penglecode.codeforce.mybatistiny.annotations.Id;
-import com.penglecode.codeforce.mybatistiny.annotations.Table;
+import com.penglecode.codeforce.common.util.StringUtils;
+import com.penglecode.codeforce.mybatistiny.annotations.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 领域实体代码生成参数Builder
@@ -40,10 +40,10 @@ public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder
         List<DomainEntityCodegenParameter.EnumFieldDecode> enumFieldDecodes = new ArrayList<>();
         for(Map.Entry<String, DomainEntityFieldConfig> entry : getTargetConfig().getDomainEntityFields().entrySet()) {
             DomainEntityFieldConfig domainEntityFieldConfig = entry.getValue();
-            if(domainEntityFieldConfig.getFieldClass().isSupportField()) { //领域实体辅助字段
-                supportFields.add(buildEntitySupportField(domainEntityFieldConfig, codegenParameter));
+            if(domainEntityFieldConfig.getFieldGroup().isSupportField()) { //领域实体辅助字段
+                supportFields.add(buildEntityFieldParameter(domainEntityFieldConfig, codegenParameter));
                 //处理领域对象数据出站DomainObject#beforeOutbound()实现
-                if(DomainObjectFieldClass.DOMAIN_ENTITY_SUPPORTS_QUERY_OUTBOUND_FIELD.equals(domainEntityFieldConfig.getFieldClass())) {
+                if(DomainObjectFieldGroup.DOMAIN_ENTITY_SUPPORTS_QUERY_OUTBOUND_FIELD.equals(domainEntityFieldConfig.getFieldGroup())) {
                     DomainEntityColumnConfig domainEntityColumnConfig = domainEntityFieldConfig.getDomainEntityColumnConfig(); //当前辅助字段是辅助谁的?
                     String shortDomainEnumType = getShortDomainEnumType(domainEntityColumnConfig.getDecodeEnumType());
                     DomainEnumConfig refDomainEnumConfig = resolveDecodeEnumConfig(domainEntityColumnConfig.getDecodeEnumType());
@@ -52,7 +52,7 @@ public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder
                     }
                 }
             } else { //领域实体固有字段
-                inherentFields.add(buildEntityInherentField(domainEntityFieldConfig, codegenParameter));
+                inherentFields.add(buildEntityFieldParameter(domainEntityFieldConfig, codegenParameter));
             }
         }
         codegenParameter.setInherentFields(inherentFields);
@@ -65,24 +65,22 @@ public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder
         return codegenParameter;
     }
 
-    protected ObjectFieldParameter buildEntitySupportField(DomainEntityFieldConfig domainEntityFieldConfig, CodegenParameter codegenParameter) {
-        ObjectFieldParameter field = createDomainObjectFields(domainEntityFieldConfig);
-        field.setFieldAnnotations(Collections.emptyList());
-        field.setFieldGetterName(domainEntityFieldConfig.getFieldGetterName());
-        field.setFieldSetterName(domainEntityFieldConfig.getFieldSetterName());
-        codegenParameter.addTargetImportType(domainEntityFieldConfig.getFieldType());
-        return field;
-    }
-
-    protected ObjectFieldParameter buildEntityInherentField(DomainEntityFieldConfig domainEntityFieldConfig, CodegenParameter codegenParameter) {
-        ObjectFieldParameter field = createDomainObjectFields(domainEntityFieldConfig);
+    /**
+     * 构造实体字段参数
+     * @param domainEntityFieldConfig
+     * @param codegenParameter
+     * @return
+     */
+    protected ObjectFieldParameter buildEntityFieldParameter(DomainEntityFieldConfig domainEntityFieldConfig, CodegenParameter codegenParameter) {
+        ObjectFieldParameter field = new ObjectFieldParameter();
+        field.setFieldName(domainEntityFieldConfig.getFieldName());
+        field.setFieldType(domainEntityFieldConfig.getFieldType().getShortName());
+        field.setFieldComment(domainEntityFieldConfig.getFieldComment());
         List<String> fieldAnnotations = new ArrayList<>();
-        for(CodegenAnnotationMeta validateAnnotation : domainEntityFieldConfig.getDomainEntityColumnConfig().getValidateAnnotations()) {
-            fieldAnnotations.add(validateAnnotation.getExpression());
-            codegenParameter.addTargetImportTypes(validateAnnotation.getImportTypes().stream().map(FullyQualifiedJavaType::new).collect(Collectors.toList()));
-        }
-        if(domainEntityFieldConfig.isIdField()) {
-
+        Set<CodegenAnnotationMeta> fieldAnnotationMetas = buildEntityFieldAnnotations(domainEntityFieldConfig);
+        for(CodegenAnnotationMeta fieldAnnotationMeta : fieldAnnotationMetas) {
+            fieldAnnotations.add(fieldAnnotationMeta.getExpression());
+            codegenParameter.addTargetImportTypes(fieldAnnotationMeta.getImportTypes());
         }
         field.setFieldAnnotations(fieldAnnotations);
         field.setFieldGetterName(domainEntityFieldConfig.getFieldGetterName());
@@ -91,6 +89,93 @@ public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder
         return field;
     }
 
+    /**
+     * 构造实体字段上的注解
+     * @param domainEntityFieldConfig
+     * @return
+     */
+    protected Set<CodegenAnnotationMeta> buildEntityFieldAnnotations(DomainEntityFieldConfig domainEntityFieldConfig) {
+        Set<CodegenAnnotationMeta> fieldAnnotations = new LinkedHashSet<>();
+        attachValidationAnnotations(fieldAnnotations, domainEntityFieldConfig);
+        attachMybatisTinyAnnotations(fieldAnnotations, domainEntityFieldConfig);
+        return fieldAnnotations;
+    }
+
+    /**
+     * 附加上javax.validation注解
+     * @param fieldAnnotations
+     * @param domainEntityFieldConfig
+     */
+    protected void attachValidationAnnotations(Set<CodegenAnnotationMeta> fieldAnnotations, DomainEntityFieldConfig domainEntityFieldConfig) {
+        DomainEntityColumnConfig domainEntityColumnConfig = domainEntityFieldConfig.getDomainEntityColumnConfig();
+        if(domainEntityColumnConfig.isValidateOnInsert() || domainEntityColumnConfig.isValidateOnUpdate()) {
+            Class<?> validatorType = FullyQualifiedJavaType.getStringInstance().equals(domainEntityColumnConfig.getIntrospectedColumn().getJavaFieldType()) ? NotBlank.class : NotNull.class;
+            fieldAnnotations.add(new CodegenAnnotationMeta(String.format("@%s(message=\"%s\")", validatorType.getSimpleName(), domainEntityFieldConfig.getFieldTitle() + "不能为空!"), Collections.singleton(new FullyQualifiedJavaType(validatorType.getName()))));
+        }
+    }
+
+    /**
+     * 附加上MybatisTiny注解
+     * @param fieldAnnotations
+     * @param domainEntityFieldConfig
+     */
+    protected void attachMybatisTinyAnnotations(Set<CodegenAnnotationMeta> fieldAnnotations, DomainEntityFieldConfig domainEntityFieldConfig) {
+        DomainEntityColumnConfig domainEntityColumnConfig = domainEntityFieldConfig.getDomainEntityColumnConfig();
+        Set<FullyQualifiedJavaType> annotationImports = new LinkedHashSet<>();
+        Set<String> annotationProperties = new LinkedHashSet<>();
+        //1、处理@Id注解
+        if(domainEntityFieldConfig.isIdField()) {
+            IdGenerator idGenerator = domainEntityColumnConfig.getIdGenerator();
+            if(idGenerator != null) {
+                if(IdGenStrategy.IDENTITY.equals(idGenerator.getStrategy())) {
+                    annotationProperties.add("strategy=GenerationType.IDENTITY");
+                } else if(IdGenStrategy.SEQUENCE.equals(idGenerator.getStrategy())) {
+                    annotationProperties.add("strategy=GenerationType.SEQUENCE");
+                    annotationProperties.add("generator=\"" + idGenerator.getParameter() + "\"");
+                }
+                annotationImports.add(new FullyQualifiedJavaType(GenerationType.class.getName()));
+            }
+            annotationImports.add(new FullyQualifiedJavaType(Id.class.getName()));
+            if(domainEntityColumnConfig.isColumnOnUpdate()) {
+                annotationProperties.add("updatable=true");
+            }
+            fieldAnnotations.add(new CodegenAnnotationMeta(String.format("@Id%s", annotationProperties.isEmpty() ? "" : "(" + String.join(", ", annotationProperties) + ")"), annotationImports));
+        }
+
+        annotationImports.clear();
+        annotationProperties.clear();
+        if(!domainEntityFieldConfig.getFieldGroup().isSupportField()) {
+            //2、处理@Column注解
+            if(!domainEntityColumnConfig.isColumnOnInsert()) {
+                annotationProperties.add("insertable=false");
+            }
+            if(!domainEntityColumnConfig.isColumnOnUpdate()) {
+                annotationProperties.add("updatable=false");
+            }
+            if(StringUtils.isNotBlank(domainEntityColumnConfig.getSelectClause())) {
+                annotationProperties.add("select=\"" + domainEntityColumnConfig.getSelectClause() + "\"");
+            }
+            if(domainEntityColumnConfig.getTypeHandler() != null) {
+                annotationProperties.add("typeHandler=" + domainEntityColumnConfig.getTypeHandler().getSimpleName() + ".class");
+            }
+            if(!annotationProperties.isEmpty()) {
+                annotationImports.add(new FullyQualifiedJavaType(Column.class.getName()));
+                fieldAnnotations.add(new CodegenAnnotationMeta(String.format("@Column%s", annotationProperties.isEmpty() ? "" : "(" + String.join(", ", annotationProperties) + ")"), annotationImports));
+            }
+        } else {
+            //3、处理@T注解
+            annotationImports.add(new FullyQualifiedJavaType(Transient.class.getName()));
+            fieldAnnotations.add(new CodegenAnnotationMeta("@Transient", annotationImports));
+        }
+    }
+
+    /**
+     * 构建枚举值字段decode参数
+     * @param domainEntityFieldConfig
+     * @param refDomainEnumConfig
+     * @param codegenParameter
+     * @return
+     */
     protected DomainEntityCodegenParameter.EnumFieldDecode buildEnumFieldDecode(DomainEntityFieldConfig domainEntityFieldConfig, DomainEnumConfig refDomainEnumConfig, CodegenParameter codegenParameter) {
         DomainEntityCodegenParameter.EnumFieldDecode field = new DomainEntityCodegenParameter.EnumFieldDecode();
         field.setRefEnumTypeName(refDomainEnumConfig.getDomainEnumName());
@@ -123,14 +208,6 @@ public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder
             codegenParameter.setIdFieldType(idFieldType.getShortName());
             codegenParameter.setIdFieldName(sb.toString());
         }
-    }
-
-    protected ObjectFieldParameter createDomainObjectFields(DomainObjectFieldConfig domainObjectFieldConfig) {
-        ObjectFieldParameter field = new ObjectFieldParameter();
-        field.setFieldName(domainObjectFieldConfig.getFieldName());
-        field.setFieldType(domainObjectFieldConfig.getFieldType().getShortName());
-        field.setFieldComment(domainObjectFieldConfig.getFieldComment());
-        return field;
     }
 
     protected String getShortDomainEnumType(String domainEnumType) {

@@ -287,7 +287,7 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
             DomainEntityFieldConfig domainEntityField = entry.getValue();
             if(domainEntityField.getQueryConditionOperator() != null) {
                 String fieldGetterName = CodegenUtils.getGetterMethodName(domainEntityField.getFieldName(), domainEntityField.getFieldType().getFullyQualifiedNameWithoutTypeParameters());
-                if(!domainEntityField.getFieldClass().isSupportField()) { //持久化字段
+                if(!domainEntityField.getFieldGroup().isSupportField()) { //持久化字段
                     criteriaCodes.append("                .").append(domainEntityField.getQueryConditionOperator().getOpName()).append("(").append(domainEntityConfig.getDomainEntityName()).append("::").append(fieldGetterName).append(")").append("\n");
                 } else { //辅助字段
                     DomainEntityColumnConfig refDomainEntityColumn = domainEntityField.getDomainEntityColumnConfig();

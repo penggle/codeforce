@@ -34,12 +34,9 @@ public class MybatisCodeGenerator extends ModuleCodeGenerator<MybatisCodegenConf
         if(!CollectionUtils.isEmpty(domainEntityConfigs)) {
             for(Map.Entry<String,DomainEntityConfig> entry : domainEntityConfigs.entrySet()) {
                 DomainEntityConfig domainEntityConfig = entry.getValue();
-                //1、生成XxxMapper.java接口
-                CodegenContext<MybatisCodegenConfigProperties,MybatisJavaMapperConfig,DomainEntityConfig> codegenContext1 = new CodegenContext<>(codegenConfig, codegenConfig.getMybatis().getJavaMapperConfig(), domainEntityConfig);
-                generateTarget(codegenContext1, new MybatisJavaMapperCodegenParameterBuilder(codegenContext1).buildCodegenParameter());
-                //2、生成XxxMapper.xml
-                //CodegenContext<MybatisCodegenConfigProperties,MybatisXmlMapperConfig,DomainEntityConfig> codegenContext2 = new CodegenContext<>(codegenConfig, codegenConfig.getMybatis().getXmlMapperConfig(), domainEntityConfig);
-                //generateTarget(codegenContext2, new MybatisXmlMapperCodegenParameterBuilder(codegenContext2).buildCodegenParameter());
+                //生成XxxMapper.java接口
+                CodegenContext<MybatisCodegenConfigProperties,MybatisJavaMapperConfig,DomainEntityConfig> codegenContext = new CodegenContext<>(codegenConfig, codegenConfig.getMybatis().getJavaMapperConfig(), domainEntityConfig);
+                generateTarget(codegenContext, new MybatisJavaMapperCodegenParameterBuilder(codegenContext).buildCodegenParameter());
             }
         }
     }

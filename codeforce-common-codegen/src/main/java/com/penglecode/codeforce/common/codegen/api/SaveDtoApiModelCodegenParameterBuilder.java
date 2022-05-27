@@ -25,7 +25,7 @@ public class SaveDtoApiModelCodegenParameterBuilder extends DtoApiModelCodegenPa
     @Override
     protected boolean isGenerableField(DomainEntityFieldConfig domainEntityFieldConfig) {
         //不是辅助字段 && 不是create_time/update_time字段
-        return !domainEntityFieldConfig.getFieldClass().isSupportField()
+        return !domainEntityFieldConfig.getFieldGroup().isSupportField()
                 && !domainEntityFieldConfig.getDomainEntityColumnConfig().getColumnName().equals(getCodegenConfig().getDomain().getDomainCommons().getDefaultCreateTimeColumn())
                 && !domainEntityFieldConfig.getDomainEntityColumnConfig().getColumnName().equals(getCodegenConfig().getDomain().getDomainCommons().getDefaultUpdateTimeColumn());
     }

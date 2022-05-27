@@ -1,7 +1,7 @@
 package com.penglecode.codeforce.common.codegen.api;
 
 import com.penglecode.codeforce.common.codegen.support.CodegenContext;
-import com.penglecode.codeforce.common.codegen.support.DomainObjectFieldClass;
+import com.penglecode.codeforce.common.codegen.support.DomainObjectFieldGroup;
 import com.penglecode.codeforce.common.codegen.config.ApiCodegenConfigProperties;
 import com.penglecode.codeforce.common.codegen.config.ApiModelConfig;
 import com.penglecode.codeforce.common.codegen.config.DomainEntityFieldConfig;
@@ -25,7 +25,7 @@ public class QueryResApiModelCodegenParameterBuilder<D extends DomainObjectConfi
 
     protected boolean isGenerableField(DomainEntityFieldConfig domainEntityFieldConfig) {
         //不是查询辅助字段
-        return !DomainObjectFieldClass.DOMAIN_ENTITY_SUPPORTS_QUERY_INBOUND_FIELD.equals(domainEntityFieldConfig.getFieldClass());
+        return !DomainObjectFieldGroup.DOMAIN_ENTITY_SUPPORTS_QUERY_INBOUND_FIELD.equals(domainEntityFieldConfig.getFieldGroup());
     }
 
 }

@@ -180,7 +180,7 @@ public abstract class CodegenParameter {
         targetAllImportTypes.add(targetImportType);
     }
 
-    public void addTargetImportTypes(List<FullyQualifiedJavaType> targetImportTypes) {
+    public void addTargetImportTypes(Collection<FullyQualifiedJavaType> targetImportTypes) {
         targetAllImportTypes.addAll(targetImportTypes);
     }
 

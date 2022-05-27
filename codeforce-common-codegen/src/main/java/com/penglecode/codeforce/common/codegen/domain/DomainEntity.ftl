@@ -63,9 +63,9 @@ public class ${targetClass} implements EntityObject {
 
 <#if (enumFieldDecodes?size > 0)>
     @Override
-    public ${targetClass} beforeOutbound() {
+    public ${targetClass} processOutbound() {
     <#list enumFieldDecodes as decode>
-        Optional.ofNullable(${decode.refEnumTypeName}.of(${decode.entityFieldName})).ifPresent(em -> ${decode.entityFieldSetterName}(em.${decode.refEnumNameFieldGetterName}()));
+        Optional.ofNullable(${decode.refEnumTypeName}.of(${decode.entityFieldName})).map(${decode.refEnumTypeName}::${decode.refEnumNameFieldGetterName}).ifPresent(this::${decode.entityFieldSetterName});
     </#list>
         return this;
     }

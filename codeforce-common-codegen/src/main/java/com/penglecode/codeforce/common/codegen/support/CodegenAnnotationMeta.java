@@ -14,9 +14,9 @@ public class CodegenAnnotationMeta {
     private final String expression;
 
     /** 注解表达式中所涉及的导入类型 */
-    private final Set<String> importTypes;
+    private final Set<FullyQualifiedJavaType> importTypes;
 
-    public CodegenAnnotationMeta(String expression, Set<String> importTypes) {
+    public CodegenAnnotationMeta(String expression, Set<FullyQualifiedJavaType> importTypes) {
         this.expression = expression;
         this.importTypes = importTypes;
     }
@@ -25,7 +25,7 @@ public class CodegenAnnotationMeta {
         return expression;
     }
 
-    public Set<String> getImportTypes() {
+    public Set<FullyQualifiedJavaType> getImportTypes() {
         return importTypes;
     }
 

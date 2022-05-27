@@ -2,6 +2,7 @@ package com.penglecode.codeforce.common.codegen.config;
 
 import com.penglecode.codeforce.common.codegen.database.IntrospectedColumn;
 import com.penglecode.codeforce.common.codegen.support.IdGenerator;
+import org.apache.ibatis.type.TypeHandler;
 
 /**
  * 领域实体对应的数据库表列配置
@@ -9,6 +10,7 @@ import com.penglecode.codeforce.common.codegen.support.IdGenerator;
  * @author pengpeng
  * @version 1.0
  */
+@SuppressWarnings("rawtypes")
 public class DomainEntityColumnConfig {
 
     /** 列名 */
@@ -35,14 +37,20 @@ public class DomainEntityColumnConfig {
     /** 更新时是否需要校验 */
     private boolean validateOnUpdate;
 
-    /** 不为空则当前列为查询条件列，该条件运算符支持eq,like|likeLeft|likeRight,gt|lt|gte|lte,in等 */
-    private String operatorOnQuery;
+    /** 不为空则指示当前列为分页查询条件列，该条件运算符支持eq,like|likeLeft|likeRight,gt|lt|gte|lte,in等 */
+    private String queryOperator;
 
     /** 当前字段decode所需的枚举类型 */
     private String decodeEnumType;
 
     /** 覆盖当前列的自省Java类型 */
-    private Class<?> javaTypeOverride;
+    private Class<?> javaType;
+
+    /** 当前字段的select字句 */
+    private String selectClause;
+
+    /** Mybatis的TypeHandler */
+    private Class<? extends TypeHandler> typeHandler;
 
     /** 对应的自省列 */
     private IntrospectedColumn introspectedColumn;
@@ -121,12 +129,12 @@ public class DomainEntityColumnConfig {
         this.setValidateOnUpdate(true);
     }
 
-    public String getOperatorOnQuery() {
-        return operatorOnQuery;
+    public String getQueryOperator() {
+        return queryOperator;
     }
 
-    public void setOperatorOnQuery(String operatorOnQuery) {
-        this.operatorOnQuery = operatorOnQuery;
+    public void setQueryOperator(String queryOperator) {
+        this.queryOperator = queryOperator;
     }
 
     public String getDecodeEnumType() {
@@ -137,12 +145,28 @@ public class DomainEntityColumnConfig {
         this.decodeEnumType = decodeEnumType;
     }
 
-    public Class<?> getJavaTypeOverride() {
-        return javaTypeOverride;
+    public Class<?> getJavaType() {
+        return javaType;
     }
 
-    public void setJavaTypeOverride(Class<?> javaTypeOverride) {
-        this.javaTypeOverride = javaTypeOverride;
+    public void setJavaType(Class<?> javaType) {
+        this.javaType = javaType;
+    }
+
+    public String getSelectClause() {
+        return selectClause;
+    }
+
+    public void setSelectClause(String selectClause) {
+        this.selectClause = selectClause;
+    }
+
+    public Class<? extends TypeHandler> getTypeHandler() {
+        return typeHandler;
+    }
+
+    public void setTypeHandler(Class<? extends TypeHandler> typeHandler) {
+        this.typeHandler = typeHandler;
     }
 
     public IntrospectedColumn getIntrospectedColumn() {

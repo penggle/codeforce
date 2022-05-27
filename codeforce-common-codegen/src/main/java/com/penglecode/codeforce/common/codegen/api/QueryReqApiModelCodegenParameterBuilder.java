@@ -64,11 +64,11 @@ public class QueryReqApiModelCodegenParameterBuilder<D extends DomainObjectConfi
 
     protected boolean isGenerableField4Query(DomainEntityFieldConfig domainEntityFieldConfig) {
         //查询辅助字段?
-        if(DomainObjectFieldClass.DOMAIN_ENTITY_SUPPORTS_QUERY_INBOUND_FIELD.equals(domainEntityFieldConfig.getFieldClass())) {
+        if(DomainObjectFieldGroup.DOMAIN_ENTITY_SUPPORTS_QUERY_INBOUND_FIELD.equals(domainEntityFieldConfig.getFieldGroup())) {
             return true;
         }
         //领域实体字段且是查询条件列
-        return !domainEntityFieldConfig.getFieldClass().isSupportField() && StringUtils.isNotBlank(domainEntityFieldConfig.getDomainEntityColumnConfig().getOperatorOnQuery());
+        return !domainEntityFieldConfig.getFieldGroup().isSupportField() && StringUtils.isNotBlank(domainEntityFieldConfig.getDomainEntityColumnConfig().getQueryOperator());
     }
 
     /**
