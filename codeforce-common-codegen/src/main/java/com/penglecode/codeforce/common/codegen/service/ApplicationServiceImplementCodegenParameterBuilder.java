@@ -1,7 +1,6 @@
 package com.penglecode.codeforce.common.codegen.service;
 
 import com.penglecode.codeforce.common.codegen.config.*;
-import com.penglecode.codeforce.common.codegen.service.DomainServiceParameters.DomainServiceParameter;
 import com.penglecode.codeforce.common.codegen.support.CodegenContext;
 import com.penglecode.codeforce.common.codegen.support.DomainMasterSlaveRelation;
 import com.penglecode.codeforce.common.codegen.support.DomainObjectParameter;
@@ -14,10 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 聚合根对应的应用服务实现代码生成参数Builder
@@ -43,16 +40,20 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
         String serviceInterfaceName = serviceInterfaceConfig.getGeneratedTargetName(domainAggregateConfig.getDomainAggregateName(), false, false);
         codegenParameter.setTargetAnnotations(Collections.singletonList(String.format("@Service(\"%s\")", StringUtils.lowerCaseFirstChar(serviceInterfaceName))));
         codegenParameter.setTargetImplements(Collections.singletonList(serviceInterfaceName));
+
+        Set<String> appServiceDataSources = new LinkedHashSet<>(); //当前应用服务中所涉及到的数据源集合(考虑到多数据源)
         DomainEntityConfig masterDomainEntityConfig = getCodegenConfig().getDomain().getDomainEntities().get(domainAggregateConfig.getAggregateMasterEntity());
-        codegenParameter.setTransactionManagerName(masterDomainEntityConfig.getRuntimeDataSource() + "TransactionManager");
+        appServiceDataSources.add(masterDomainEntityConfig.getRuntimeDataSource());
         DomainServiceParameter masterDomainServiceParameter = buildDomainServiceParameter(masterDomainEntityConfig, codegenParameter);
         List<DomainServiceParameter> slaveDomainServiceParameters = new ArrayList<>();
         for(DomainAggregateSlaveConfig domainAggregateSlaveConfig : domainAggregateConfig.getAggregateSlaveEntities()) {
             DomainEntityConfig slaveDomainEntityConfig = getCodegenConfig().getDomain().getDomainEntities().get(domainAggregateSlaveConfig.getAggregateSlaveEntity());
-            DomainServiceParameter slaveDomainServiceParameter = buildDomainServiceParameter(slaveDomainEntityConfig, codegenParameter);
-            slaveDomainServiceParameters.add(slaveDomainServiceParameter);
+            slaveDomainServiceParameters.add(buildDomainServiceParameter(slaveDomainEntityConfig, codegenParameter));
+            appServiceDataSources.add(slaveDomainEntityConfig.getRuntimeDataSource());
         }
         codegenParameter.setDomainServices(new DomainServiceParameters(masterDomainServiceParameter, slaveDomainServiceParameters));
+        codegenParameter.setTransactionManagerName(appServiceDataSources.size() > 1 ? String.join(",", appServiceDataSources) : appServiceDataSources.iterator().next() + "TransactionManager");
+
         attachApplicationServiceImplementImports(codegenParameter);
         codegenParameter.setPrepareAggregateObjects(prepareAggregateObjects(codegenParameter));
         codegenParameter = super.setCustomCodegenParameter(codegenParameter);
@@ -90,6 +91,7 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Transactional.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(CollectionUtils.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Collections.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Collectors.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Map.class.getName()));
     }
     
@@ -115,28 +117,44 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
         for(DomainServiceParameter slaveDomainServiceParameter : slaveDomainServiceParameters) {
             DomainAggregateFieldConfig domainAggregateSlaveFieldConfig = domainAggregateFieldConfigs.get(slaveDomainServiceParameter.getDomainEntityConfig().getDomainEntityName());
             DomainAggregateSlaveConfig domainAggregateSlaveConfig = domainAggregateSlaveFieldConfig.getDomainAggregateSlaveConfig();
-            String relateFieldSetterOfSlave = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave(), null);
-            String relateFieldGetterOfMaster = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfMaster(), null);
-            if(DomainMasterSlaveRelation.RELATION_11.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { // 1:1关系?
-                //ProductExtraInfo productExtra = product.getProductExtra();
-                methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                //if(productExtra != null) {
-                methodBodyLines.add(String.format("if(%s != null) {", domainAggregateSlaveFieldConfig.getFieldName()));
-                //productExtra.setProductId(product.getProductId());
-                methodBodyLines.add(String.format("    %s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
-                //productExtraInfoService.createProductExtra(productExtra);
-                methodBodyLines.add(String.format("    %s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getCreateDomainObject().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
-                methodBodyLines.add("}");
-            } else if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //1:N关系?
-                //List<ProductSaleSpec> productSaleSpecs = product.getProductSaleSpecs();
-                methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                //if(!CollectionUtils.isEmpty(productSaleSpecs)) {
-                methodBodyLines.add(String.format("if(!CollectionUtils.isEmpty(%s)) {", domainAggregateSlaveFieldConfig.getFieldName()));
-                //productSaleSpecs.forEach(item -> item.setProductId(product.getProductId()));
-                methodBodyLines.add(String.format("    %s.forEach(item -> item.%s(%s.%s()));", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
-                //productSaleSpecService.batchCreateProductSaleSpec(productSaleSpecs);
-                methodBodyLines.add(String.format("    %s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getBatchCreateDomainObjects().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
-                methodBodyLines.add("}");
+            if(domainAggregateSlaveConfig.isCascadingOnInsert()) { //级联保存?
+                String relateFieldSetterOfSlave = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave(), null);
+                String relateFieldGetterOfMaster = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfMaster(), null);
+                if(DomainMasterSlaveRelation.RELATION_11.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { // 1:1关系?
+                    //ProductExtraInfo productExtra = product.getProductExtra();
+                    methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
+                    if(domainAggregateSlaveConfig.isValidateOnInsert()) { //存在数据校验?则去掉if判断
+                        //productExtra.setProductId(product.getProductId());
+                        methodBodyLines.add(String.format("%s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
+                        //productExtraInfoService.createProductExtra(productExtra);
+                        methodBodyLines.add(String.format("%s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getCreateDomainObject().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
+                    } else { //否则在存在值的情况下进行级联保存
+                        //if(productExtra != null) {
+                        methodBodyLines.add(String.format("if(%s != null) {", domainAggregateSlaveFieldConfig.getFieldName()));
+                        //productExtra.setProductId(product.getProductId());
+                        methodBodyLines.add(String.format("    %s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
+                        //productExtraInfoService.createProductExtra(productExtra);
+                        methodBodyLines.add(String.format("    %s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getCreateDomainObject().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
+                        methodBodyLines.add("}");
+                    }
+                } else if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //1:N关系?
+                    //List<ProductSaleSpec> productSaleSpecs = product.getProductSaleSpecs();
+                    methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
+                    if(domainAggregateSlaveConfig.isValidateOnInsert()) { //存在数据校验?则去掉if判断
+                        //productSaleSpecs.forEach(item -> item.setProductId(product.getProductId()));
+                        methodBodyLines.add(String.format("%s.forEach(item -> item.%s(%s.%s()));", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
+                        //productSaleSpecService.batchCreateProductSaleSpec(productSaleSpecs);
+                        methodBodyLines.add(String.format("%s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getCreateDomainObjects().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
+                    } else { //否则在存在值的情况下进行级联保存
+                        //if(!CollectionUtils.isEmpty(productSaleSpecs)) {
+                        methodBodyLines.add(String.format("if(!CollectionUtils.isEmpty(%s)) {", domainAggregateSlaveFieldConfig.getFieldName()));
+                        //productSaleSpecs.forEach(item -> item.setProductId(product.getProductId()));
+                        methodBodyLines.add(String.format("    %s.forEach(item -> item.%s(%s.%s()));", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
+                        //productSaleSpecService.batchCreateProductSaleSpec(productSaleSpecs);
+                        methodBodyLines.add(String.format("    %s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getCreateDomainObjects().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
+                        methodBodyLines.add("}");
+                    }
+                }
             }
         }
         serviceMethod.setMethodBodyLines(methodBodyLines);
@@ -151,7 +169,7 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
         DomainAggregateConfig domainAggregateConfig = getDomainObjectConfig();
         String domainObjectVariableName = codegenParameter.getDomainObjectParameter().getLowerDomainObjectName(); //聚合对象变量名
         methodBodyLines.add(String.format("ValidationAssert.notNull(%s, MessageSupplier.ofRequiredParameter(\"%s\"));", domainObjectVariableName, domainObjectVariableName));
-        String validateFields = domainAggregateConfig.getValidateFields("create");
+        String validateFields = domainAggregateConfig.getValidateFields("modify");
         if(StringUtils.isNotBlank(validateFields)) {
             methodBodyLines.add(String.format("BeanValidator.validateBean(%s);", domainObjectVariableName + validateFields));
         }
@@ -166,31 +184,48 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
             DomainEntityConfig slaveDomainEntityConfig = slaveDomainServiceParameter.getDomainEntityConfig();
             DomainAggregateFieldConfig domainAggregateSlaveFieldConfig = domainAggregateFieldConfigs.get(slaveDomainEntityConfig.getDomainEntityName());
             DomainAggregateSlaveConfig domainAggregateSlaveConfig = domainAggregateSlaveFieldConfig.getDomainAggregateSlaveConfig();
-            String relateFieldSetterOfSlave = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave(), null);
-            String relateFieldGetterOfMaster = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfMaster(), null);
-            if(DomainMasterSlaveRelation.RELATION_11.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { // 1:1关系?
-                //ProductExtraInfo productExtra = product.getProductExtra();
-                methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                //if(productExtra != null) {
-                methodBodyLines.add(String.format("if(%s != null) {", domainAggregateSlaveFieldConfig.getFieldName()));
-                //productExtra.setProductId(product.getProductId());
-                methodBodyLines.add(String.format("    %s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
-                //productExtraInfoService.modifyProductExtraById(productExtra);
-                methodBodyLines.add(String.format("    %s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getModifyDomainObjectById().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
-                methodBodyLines.add("}");
-            } else if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //1:N关系?
-                String transientSlavesVariable = "transient" + StringUtils.upperCaseFirstChar(domainAggregateSlaveFieldConfig.getFieldName());
-                String persistedSlavesVariable = "persisted" + StringUtils.upperCaseFirstChar(domainAggregateSlaveFieldConfig.getFieldName());
-                //List<ProductSaleSpec> transientProductSaleSpecs = product.getProductSaleSpecs();
-                methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), transientSlavesVariable, domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                //if(!CollectionUtils.isEmpty(transientProductSaleSpecs)) {
-                methodBodyLines.add(String.format("if(!CollectionUtils.isEmpty(%s)) {", transientSlavesVariable));
-                ByMasterIdDomainServiceMethodParameter getByMasterIdDomainServiceMethod = slaveDomainServiceParameter.getDomainServiceCodegenParameter().getGetDomainObjectsByXxxMasterId().get(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave());
-                //List<ProductSaleSpec> persistedProductSaleSpecs = productSaleSpecService.getProductSaleSpecsByProductId(product.getProductId());
-                methodBodyLines.add(String.format("    %s %s = %s.%s(%s.%s());", getByMasterIdDomainServiceMethod.getMethodReturnType(), persistedSlavesVariable, slaveDomainServiceParameter.getDomainServiceInstanceName(), getByMasterIdDomainServiceMethod.getMethodName(), domainObjectVariableName, relateFieldGetterOfMaster));
-                //DomainServiceHelper.batchMergeEntityObjects(transientProductSaleSpecs, persistedProductSaleSpecs, ProductSaleSpec::identity, productSaleSpecService::batchCreateProductSaleSpec, productSaleSpecService::batchModifyProductSaleSpecById, productSaleSpecService::removeProductSaleSpecByIds);
-                methodBodyLines.add(String.format("    DomainServiceHelper.batchMergeEntityObjects(%s, %s, %s::identity, %s::%s, %s::%s, %s::%s);", transientSlavesVariable, persistedSlavesVariable, slaveDomainEntityConfig.getDomainEntityName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getBatchCreateDomainObjects().getMethodName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getBatchModifyDomainObjectsById().getMethodName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getRemoveDomainObjectsByIds().getMethodName()));
-                methodBodyLines.add("}");
+            if(domainAggregateSlaveConfig.isCascadingOnUpdate()) { //级联保存?
+                String relateFieldSetterOfSlave = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave(), null);
+                String relateFieldGetterOfMaster = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfMaster(), null);
+                if(DomainMasterSlaveRelation.RELATION_11.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { // 1:1关系?
+                    //ProductExtraInfo productExtra = product.getProductExtra();
+                    methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
+                    if(domainAggregateSlaveConfig.isValidateOnUpdate()) { //存在数据校验?则去掉if判断
+                        //productExtra.setProductId(product.getProductId());
+                        methodBodyLines.add(String.format("%s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
+                        //productExtraInfoService.modifyProductExtraById(productExtra);
+                        methodBodyLines.add(String.format("%s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getModifyDomainObjectById().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
+                    } else {
+                        //if(productExtra != null) {
+                        methodBodyLines.add(String.format("if(%s != null) {", domainAggregateSlaveFieldConfig.getFieldName()));
+                        //productExtra.setProductId(product.getProductId());
+                        methodBodyLines.add(String.format("    %s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
+                        //productExtraInfoService.modifyProductExtraById(productExtra);
+                        methodBodyLines.add(String.format("    %s.%s(%s);", slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getModifyDomainObjectById().getMethodName(), domainAggregateSlaveFieldConfig.getFieldName()));
+                        methodBodyLines.add("}");
+                    }
+                } else if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //1:N关系?
+                    String transientSlavesVariable = "transient" + StringUtils.upperCaseFirstChar(domainAggregateSlaveFieldConfig.getFieldName());
+                    String persistedSlavesVariable = "persisted" + StringUtils.upperCaseFirstChar(domainAggregateSlaveFieldConfig.getFieldName());
+                    //List<ProductSaleSpec> transientProductSaleSpecs = product.getProductSaleSpecs();
+                    methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), transientSlavesVariable, domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
+                    if(domainAggregateSlaveConfig.isValidateOnUpdate()) { //存在数据校验?则去掉if判断
+                        ByMasterIdDomainServiceMethodParameter getByMasterIdDomainServiceMethod = slaveDomainServiceParameter.getDomainServiceCodegenParameter().getGetDomainObjectsByXxxMasterId().get(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave());
+                        //List<ProductSaleSpec> persistedProductSaleSpecs = productSaleSpecService.getProductSaleSpecsByProductId(product.getProductId());
+                        methodBodyLines.add(String.format("%s %s = %s.%s(%s.%s());", getByMasterIdDomainServiceMethod.getMethodReturnType(), persistedSlavesVariable, slaveDomainServiceParameter.getDomainServiceInstanceName(), getByMasterIdDomainServiceMethod.getMethodName(), domainObjectVariableName, relateFieldGetterOfMaster));
+                        //DomainServiceHelper.batchMergeEntityObjects(transientProductSaleSpecs, persistedProductSaleSpecs, ProductSaleSpec::identity, productSaleSpecService::batchCreateProductSaleSpec, productSaleSpecService::batchModifyProductSaleSpecById, productSaleSpecService::removeProductSaleSpecByIds);
+                        methodBodyLines.add(String.format("DomainServiceHelper.batchMergeEntityObjects(%s, %s, %s::identity, %s::%s, %s::%s, %s::%s);", transientSlavesVariable, persistedSlavesVariable, slaveDomainEntityConfig.getDomainEntityName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getCreateDomainObjects().getMethodName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getModifyDomainObjectsById().getMethodName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getRemoveDomainObjectsByIds().getMethodName()));
+                    } else {
+                        //if(!CollectionUtils.isEmpty(transientProductSaleSpecs)) { //这种情况下可能存在bug,烦不了
+                        methodBodyLines.add(String.format("if(!CollectionUtils.isEmpty(%s)) {", transientSlavesVariable));
+                        ByMasterIdDomainServiceMethodParameter getByMasterIdDomainServiceMethod = slaveDomainServiceParameter.getDomainServiceCodegenParameter().getGetDomainObjectsByXxxMasterId().get(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave());
+                        //List<ProductSaleSpec> persistedProductSaleSpecs = productSaleSpecService.getProductSaleSpecsByProductId(product.getProductId());
+                        methodBodyLines.add(String.format("    %s %s = %s.%s(%s.%s());", getByMasterIdDomainServiceMethod.getMethodReturnType(), persistedSlavesVariable, slaveDomainServiceParameter.getDomainServiceInstanceName(), getByMasterIdDomainServiceMethod.getMethodName(), domainObjectVariableName, relateFieldGetterOfMaster));
+                        //DomainServiceHelper.batchMergeEntityObjects(transientProductSaleSpecs, persistedProductSaleSpecs, ProductSaleSpec::identity, productSaleSpecService::batchCreateProductSaleSpec, productSaleSpecService::batchModifyProductSaleSpecById, productSaleSpecService::removeProductSaleSpecByIds);
+                        methodBodyLines.add(String.format("    DomainServiceHelper.batchMergeEntityObjects(%s, %s, %s::identity, %s::%s, %s::%s, %s::%s);", transientSlavesVariable, persistedSlavesVariable, slaveDomainEntityConfig.getDomainEntityName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getCreateDomainObjects().getMethodName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getModifyDomainObjectsById().getMethodName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), slaveDomainServiceParameter.getDomainServiceCodegenParameter().getRemoveDomainObjectsByIds().getMethodName()));
+                        methodBodyLines.add("}");
+                    }
+                }
             }
         }
         serviceMethod.setMethodBodyLines(methodBodyLines);
@@ -256,10 +291,12 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
             DomainAggregateFieldConfig domainAggregateSlaveFieldConfig = domainAggregateFieldConfigs.get(slaveDomainServiceParameter.getDomainEntityConfig().getDomainEntityName());
             DomainAggregateSlaveConfig domainAggregateSlaveConfig = domainAggregateSlaveFieldConfig.getDomainAggregateSlaveConfig();
             ByMasterIdDomainServiceMethodParameter getByMasterIdDomainServiceMethod = slaveDomainServiceParameter.getDomainServiceCodegenParameter().getGetDomainObjectsByXxxMasterId().get(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave());
-            //product.setProductExtra(productExtraInfoService.getProductExtraById(id));
+            //product.setProductExtra(productExtraInfoService.getProductExtraByProductId(id));
+            //product.setProductSaleSpecs(productSaleSpecService.getProductSaleSpecsByProductId(id));
             methodBodyLines.add(String.format("        %s.%s(%s.%s(%s));", domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldSetterName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), getByMasterIdDomainServiceMethod.getMethodName(), domainObjectIdName));
         }
         methodBodyLines.add("    }");
+        methodBodyLines.add(String.format("    return %s;", domainObjectVariableName));
         methodBodyLines.add("}");
         //return null;
         methodBodyLines.add("return null;");
@@ -302,7 +339,6 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
     protected ApplicationServiceMethodParameter prepareAggregateObjects(ApplicationServiceImplementCodegenParameter codegenParameter) {
         DomainAggregateConfig domainAggregateConfig = getDomainObjectConfig();
         ApplicationServiceMethodParameter serviceMethod = new ApplicationServiceMethodParameter();
-        serviceMethod.setActivated(true);
         serviceMethod.setMethodReturnType("List<" + codegenParameter.getDomainObjectParameter().getDomainObjectName() + ">");
         serviceMethod.setMethodName("prepare" + codegenParameter.getDomainObjectParameter().getDomainObjectsAlias());
 
@@ -331,6 +367,7 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
             DomainAggregateSlaveConfig domainAggregateSlaveConfig = domainAggregateSlaveFieldConfig.getDomainAggregateSlaveConfig();
             ByMasterIdDomainServiceMethodParameter getByMasterIdsDomainServiceMethod = slaveDomainServiceParameter.getDomainServiceCodegenParameter().getGetDomainObjectsByXxxMasterIds().get(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave());
             //Map<Long,ProductExtraInfo> productExtras = productExtraInfoService.getProductExtrasByIds(productIds);
+            //Map<Long,List<ProductSaleSpec>> productSaleSpecs = productSaleSpecService.getProductSaleSpecsByProductIds(productIds);
             methodBodyLines.add(String.format("        %s %s = %s.%s(%s);", getByMasterIdsDomainServiceMethod.getMethodReturnType(), slaveDomainObjectParameter.getLowerDomainObjectsName(), slaveDomainServiceParameter.getDomainServiceInstanceName(), getByMasterIdsDomainServiceMethod.getMethodName(), masterDomainObjectIdsName));
 
             //product.setProductExtra(productExtras.get(product.getProductId()));

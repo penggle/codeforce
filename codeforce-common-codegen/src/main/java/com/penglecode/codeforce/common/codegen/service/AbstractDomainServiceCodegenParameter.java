@@ -20,13 +20,13 @@ public abstract class AbstractDomainServiceCodegenParameter extends CodegenParam
     private DomainServiceMethodParameter createDomainObject;
 
     /** 批量的创建领域对象的方法参数 */
-    private DomainServiceMethodParameter batchCreateDomainObjects;
+    private DomainServiceMethodParameter createDomainObjects;
 
     /** 根据ID修改领域对象的方法参数 */
     private DomainServiceMethodParameter modifyDomainObjectById;
 
     /** 批量的根据ID修改领域对象的方法参数 */
-    private DomainServiceMethodParameter batchModifyDomainObjectsById;
+    private DomainServiceMethodParameter modifyDomainObjectsById;
 
     /** 根据ID删除领域对象的方法参数 */
     private DomainServiceMethodParameter removeDomainObjectById;
@@ -81,12 +81,12 @@ public abstract class AbstractDomainServiceCodegenParameter extends CodegenParam
         this.createDomainObject = createDomainObject;
     }
 
-    public DomainServiceMethodParameter getBatchCreateDomainObjects() {
-        return batchCreateDomainObjects;
+    public DomainServiceMethodParameter getCreateDomainObjects() {
+        return createDomainObjects;
     }
 
-    public void setBatchCreateDomainObjects(DomainServiceMethodParameter batchCreateDomainObjects) {
-        this.batchCreateDomainObjects = batchCreateDomainObjects;
+    public void setCreateDomainObjects(DomainServiceMethodParameter createDomainObjects) {
+        this.createDomainObjects = createDomainObjects;
     }
 
     public DomainServiceMethodParameter getModifyDomainObjectById() {
@@ -97,12 +97,12 @@ public abstract class AbstractDomainServiceCodegenParameter extends CodegenParam
         this.modifyDomainObjectById = modifyDomainObjectById;
     }
 
-    public DomainServiceMethodParameter getBatchModifyDomainObjectsById() {
-        return batchModifyDomainObjectsById;
+    public DomainServiceMethodParameter getModifyDomainObjectsById() {
+        return modifyDomainObjectsById;
     }
 
-    public void setBatchModifyDomainObjectsById(DomainServiceMethodParameter batchModifyDomainObjectsById) {
-        this.batchModifyDomainObjectsById = batchModifyDomainObjectsById;
+    public void setModifyDomainObjectsById(DomainServiceMethodParameter modifyDomainObjectsById) {
+        this.modifyDomainObjectsById = modifyDomainObjectsById;
     }
 
     public DomainServiceMethodParameter getRemoveDomainObjectById() {

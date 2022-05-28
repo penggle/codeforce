@@ -78,22 +78,11 @@ public class DomainServiceHelper {
      */
     private static <T extends EntityObject, K extends Serializable> void groupByCreateAndModify(List<T> transientEntityObjects, List<T> persistedEntityObjects, Function<T,K> entityObjectIdGetter, EnumMap<OperationGroup,List<T>> groupedEntityObjects) {
         for(T transientEntityObject : transientEntityObjects) {
-            Serializable transientEntityObjectId = entityObjectIdGetter.apply(transientEntityObject);
-            if(!ObjectUtils.isEmpty(transientEntityObjectId)) {
-                boolean existsed = false;
-                for(T persistedEntityObject : persistedEntityObjects) {
-                    Serializable persistedEntityObjectId = entityObjectIdGetter.apply(persistedEntityObject);
-                    if(transientEntityObjectId.equals(persistedEntityObjectId)) {
-                        existsed = true;
-                        break;
-                    }
-                }
-                if(existsed) { //客户端传来的实体对象的ID在数据库中存在，则表示修改
-                    groupedEntityObjects.get(OperationGroup.MODIFY).add(transientEntityObject);
-                } else { //客户端传来的实体对象的ID在数据库中不存在，则表示新增
-                    groupedEntityObjects.get(OperationGroup.CREATE).add(transientEntityObject);
-                }
-            } else { //客户端传来的实体对象的ID为空，则表示新增
+            K transientEntityObjectId = entityObjectIdGetter.apply(transientEntityObject);
+            Map<K,T> keyedPersistedEntityObjects = persistedEntityObjects.stream().collect(Collectors.toMap(entityObjectIdGetter, Function.identity()));
+            if(keyedPersistedEntityObjects.containsKey(transientEntityObjectId)) { //客户端传来的实体对象的ID在数据库中存在，则表示修改
+                groupedEntityObjects.get(OperationGroup.MODIFY).add(transientEntityObject);
+            } else { //否则表示新增
                 groupedEntityObjects.get(OperationGroup.CREATE).add(transientEntityObject);
             }
         }
@@ -105,9 +94,9 @@ public class DomainServiceHelper {
     private static <T extends EntityObject, K extends Serializable> void groupByRemove(List<T> transientEntityObjects, List<T> persistedEntityObjects, Function<T,K> entityObjectIdGetter, EnumMap<OperationGroup,List<T>> groupedEntityObjects) {
         for(T persistedEntityObject : persistedEntityObjects) {
             boolean remove = true;
-            Serializable persistedEntityObjectId = entityObjectIdGetter.apply(persistedEntityObject);
+            K persistedEntityObjectId = entityObjectIdGetter.apply(persistedEntityObject);
             for(T transientEntityObject : transientEntityObjects) {
-                Serializable transientEntityObjectId = entityObjectIdGetter.apply(transientEntityObject);
+                K transientEntityObjectId = entityObjectIdGetter.apply(transientEntityObject);
                 if(!ObjectUtils.isEmpty(transientEntityObjectId) && transientEntityObjectId.equals(persistedEntityObjectId)) {
                     remove = false;
                 }

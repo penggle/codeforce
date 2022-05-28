@@ -29,7 +29,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
 
     @Resource(name="${mapperBeanName}")
     private ${mapperInterfaceName} ${mapperInstanceName};
-<#if createDomainObject.activated>
+<#if createDomainObject??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -37,21 +37,21 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     <#list createDomainObject.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        ${mapperInstanceName}.insertModel(${domainObjectParameter.lowerDomainObjectName});
+        ${mapperInstanceName}.insert(${domainObjectParameter.lowerDomainObjectName});
     }
 </#if>
-<#if batchCreateDomainObjects.activated>
+<#if createDomainObjects??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
-    public void batchCreate${domainObjectParameter.domainObjectsAlias}(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName}) {
-    <#list batchCreateDomainObjects.methodBodyLines as methodBodyLine>
+    public void create${domainObjectParameter.domainObjectsAlias}(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName}) {
+    <#list createDomainObjects.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        MybatisHelper.batchUpdateDomainObjects(${domainObjectParameter.lowerDomainObjectsName}, this::create${domainObjectParameter.domainObjectAlias}, ${mapperInstanceName});
+        EntityMapperHelper.batchUpdateEntityObjects(${domainObjectParameter.lowerDomainObjectsName}, this::create${domainObjectParameter.domainObjectAlias}, ${mapperInstanceName});
     }
 </#if>
-<#if modifyDomainObjectById.activated>
+<#if modifyDomainObjectById??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -59,21 +59,21 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     <#list modifyDomainObjectById.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        ${mapperInstanceName}.updateModelById(${domainObjectParameter.lowerDomainObjectName}.identity(), updateColumns);
+        ${mapperInstanceName}.updateById(${domainObjectParameter.lowerDomainObjectName}.identity(), updateColumns);
     }
 </#if>
-<#if batchModifyDomainObjectsById.activated>
+<#if modifyDomainObjectsById??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
-    public void batchModify${domainObjectParameter.domainObjectsAlias}ById(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName}) {
-    <#list batchModifyDomainObjectsById.methodBodyLines as methodBodyLine>
+    public void modify${domainObjectParameter.domainObjectsAlias}ById(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName}) {
+    <#list modifyDomainObjectsById.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        MybatisHelper.batchUpdateDomainObjects(${domainObjectParameter.lowerDomainObjectsName}, this::modify${domainObjectParameter.domainObjectAlias}ById, ${mapperInstanceName});
+        EntityMapperHelper.batchUpdateEntityObjects(${domainObjectParameter.lowerDomainObjectsName}, this::modify${domainObjectParameter.domainObjectAlias}ById, ${mapperInstanceName});
     }
 </#if>
-<#if removeDomainObjectById.activated>
+<#if removeDomainObjectById??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -81,10 +81,10 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     <#list removeDomainObjectById.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        return ${mapperInstanceName}.deleteModelById(${domainObjectParameter.domainObjectIdName});
+        return ${mapperInstanceName}.deleteById(${domainObjectParameter.domainObjectIdName});
     }
 </#if>
-<#if removeDomainObjectsByIds.activated>
+<#if removeDomainObjectsByIds??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -92,11 +92,10 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     <#list removeDomainObjectsByIds.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        return MybatisHelper.batchDeleteDomainObjects(${domainObjectParameter.domainObjectIdsName}, ${mapperInstanceName});
+        return EntityMapperHelper.batchDeleteEntityObjects(${domainObjectParameter.domainObjectIdsName}, ${mapperInstanceName});
     }
 </#if>
 <#list removeDomainObjectsByXxxMasterId?values as removeDomainObjectsByMasterId>
-<#if removeDomainObjectsByMasterId.activated>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -104,18 +103,17 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     <#list removeDomainObjectsByMasterId.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        ${mapperInstanceName}.deleteModelByCriteria(criteria);
+        ${mapperInstanceName}.deleteByCriteria(criteria);
     }
-</#if>
 </#list>
-<#if getDomainObjectById.activated>
+<#if getDomainObjectById??>
 
     @Override
     public ${domainObjectParameter.domainObjectName} get${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} ${domainObjectParameter.domainObjectIdName}) {
         return ObjectUtils.isEmpty(${domainObjectParameter.domainObjectIdName}) ? null : ${mapperInstanceName}.selectModelById(${domainObjectParameter.domainObjectIdName});
     }
 </#if>
-<#if getDomainObjectsByIds.activated>
+<#if getDomainObjectsByIds??>
 
     @Override
     List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ${domainObjectParameter.domainObjectIdsName}) {
@@ -123,7 +121,6 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     }
 </#if>
 <#list getDomainObjectsByXxxMasterId?values as getDomainObjectsByMasterId>
-<#if getDomainObjectsByMasterId.activated>
 
     @Override
     public ${getDomainObjectsByMasterId.methodReturnType} get${domainObjectParameter.domainObjectsAlias}By${getDomainObjectsByMasterId.upperMasterIdNameOfSlave}(${getDomainObjectsByMasterId.masterDomainObjectParameter.domainObjectIdType} ${getDomainObjectsByMasterId.masterIdNameOfSlave}) {
@@ -131,10 +128,8 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
         ${methodBodyLine}
     </#list>
     }
-</#if>
 </#list>
 <#list getDomainObjectsByXxxMasterIds?values as getDomainObjectsByMasterIds>
-<#if getDomainObjectsByMasterIds.activated>
 
     @Override
     public ${getDomainObjectsByMasterIds.methodReturnType} get${domainObjectParameter.domainObjectsAlias}By${getDomainObjectsByMasterIds.upperMasterIdsNameOfSlave}(List<${getDomainObjectsByMasterIds.masterDomainObjectParameter.domainObjectIdType}> ${getDomainObjectsByMasterIds.masterIdsNameOfSlave}) {
@@ -142,19 +137,18 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
         ${methodBodyLine}
     </#list>
     }
-</#if>
 </#list>
-<#if getDomainObjectsByPage.activated>
+<#if getDomainObjectsByPage??>
 
     @Override
     public List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByPage(${domainObjectParameter.domainObjectName} condition, Page page) {
     <#list getDomainObjectsByPage.methodBodyLines as methodBodyLine>
         ${methodBodyLine}
     </#list>
-        return MybatisHelper.selectDomainObjectListByPage(${mapperInstanceName}, criteria, page);
+        return EntityMapperHelper.selectEntityObjectListByPage(${mapperInstanceName}, criteria, page);
     }
 </#if>
-<#if getDomainObjectTotalCount.activated>
+<#if getDomainObjectTotalCount??>
 
     @Override
     public int get${domainObjectParameter.domainObjectAlias}TotalCount() {
@@ -162,14 +156,14 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     }
 </#if>
 
-<#if forEachDomainObject1.activated>
+<#if forEachDomainObject1??>
 
     @Override
     public void forEach${domainObjectParameter.domainObjectAlias}(Consumer<${domainObjectParameter.domainObjectName}> consumer) {
         ${mapperInstanceName}.selectAllModelList().forEach(consumer);
     }
 </#if>
-<#if forEachDomainObject2.activated>
+<#if forEachDomainObject2??>
 
     @Override
     public void forEach${domainObjectParameter.domainObjectAlias}(ObjIntConsumer<${domainObjectParameter.domainObjectName}> consumer) {

@@ -76,7 +76,6 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
-        apiMethod.setActivated(true);
         apiMethod.setMethodReturnType(methodReturnType);
         apiMethod.setMethodName(methodName);
         apiMethod.setInputApiModelName(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
@@ -89,7 +88,6 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
      */
     protected ApiMethodParameter removeDomainObjectById(P codegenParameter) {
         ApiMethodParameter apiMethod = new ApiMethodParameter();
-        apiMethod.setActivated(true);
         apiMethod.setMethodReturnType(String.format("%s<%s>", Result.class.getSimpleName(), "Void"));
         apiMethod.setMethodName("remove" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias() + "ById");
         return apiMethod;
@@ -102,7 +100,6 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
     protected ApiMethodParameter removeDomainObjectsByIds(P codegenParameter) {
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
-        apiMethod.setActivated(true);
         apiMethod.setMethodReturnType(String.format("%s<%s>", Result.class.getSimpleName(), "Void"));
         apiMethod.setMethodName("remove" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias() + "ByIds");
         return apiMethod;
@@ -120,7 +117,6 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
         apiMethod.setOutputApiModelName(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
-        apiMethod.setActivated(true);
         apiMethod.setMethodReturnType(String.format("%s<%s>", Result.class.getSimpleName(), apiMethod.getOutputApiModelName()));
         apiMethod.setMethodName("get" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias() + "ById");
         return apiMethod;
@@ -138,7 +134,6 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
         apiMethod.setOutputApiModelName(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
-        apiMethod.setActivated(true);
         apiMethod.setMethodReturnType(String.format("%s<List<%S>>", Result.class.getSimpleName(), apiMethod.getOutputApiModelName()));
         apiMethod.setMethodName("get" + codegenParameter.getDomainObjectParameter().getDomainObjectsAlias() + "ByIds");
         return apiMethod;
@@ -159,7 +154,6 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
         ApiMethodParameter apiMethod = new ApiMethodParameter();
         apiMethod.setInputApiModelName(reqApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
         apiMethod.setOutputApiModelName(resApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
-        apiMethod.setActivated(true);
         apiMethod.setMethodReturnType(String.format("%s<List<%s>>", PageResult.class.getSimpleName(), apiMethod.getOutputApiModelName()));
         apiMethod.setMethodName("get" + codegenParameter.getDomainObjectParameter().getDomainObjectsAlias() + "ByPage");
         return apiMethod;

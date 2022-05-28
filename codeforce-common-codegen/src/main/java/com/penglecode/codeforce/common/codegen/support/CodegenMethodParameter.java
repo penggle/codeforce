@@ -11,9 +11,6 @@ import java.util.List;
  */
 public class CodegenMethodParameter {
 
-    /** 是否生成当前方法,默认true */
-    private boolean activated;
-
     /** 方法返回类型 */
     private String methodReturnType;
 
@@ -22,14 +19,6 @@ public class CodegenMethodParameter {
 
     /** 方法体代码行 */
     private List<String> methodBodyLines = new ArrayList<>();
-
-    public boolean isActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
 
     public String getMethodReturnType() {
         return methodReturnType;

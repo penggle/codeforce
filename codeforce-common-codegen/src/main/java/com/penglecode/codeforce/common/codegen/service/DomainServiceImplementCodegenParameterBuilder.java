@@ -15,11 +15,13 @@ import com.penglecode.codeforce.common.util.ObjectUtils;
 import com.penglecode.codeforce.common.util.StringUtils;
 import com.penglecode.codeforce.mybatistiny.dsl.LambdaQueryCriteria;
 import com.penglecode.codeforce.mybatistiny.dsl.QueryCriteria;
+import com.penglecode.codeforce.mybatistiny.support.EntityMapperHelper;
 import org.apache.ibatis.cursor.Cursor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +61,7 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
         codegenParameter.setTransactionManagerName(domainEntityConfig.getRuntimeDataSource() + "TransactionManager");
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(mybatisJavaMapperConfig.getGeneratedTargetName(domainEntityConfig.getDomainEntityName(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(serviceInterfaceConfig.getGeneratedTargetName(domainEntityConfig.getDomainEntityName(), true, false)));
-        attachDomainServiceImplementImports(codegenParameter);
+
         return super.setCustomCodegenParameter(codegenParameter);
     }
 
@@ -68,19 +70,17 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
      * @param codegenParameter
      */
     protected void attachDomainServiceImplementImports(DomainServiceImplementCodegenParameter codegenParameter) {
-        //codegenParameter.addTargetImportType(new FullyQualifiedJavaType(MybatisHelper.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(LambdaQueryCriteria.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(MapLambdaBuilder.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(QueryCriteria.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BeanValidator.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(MessageSupplier.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(ValidationAssert.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Cursor.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Service.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Resource.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Transactional.class.getName()));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(CollectionUtils.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BeanValidator.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(MessageSupplier.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(ValidationAssert.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(EntityMapperHelper.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Map.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(MapLambdaBuilder.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(ObjectUtils.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(CollectionUtils.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Collections.class.getName()));
     }
     
@@ -96,35 +96,48 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
         String upperDefaultCreateTimeFieldName = null;
         if(defaultCreateTimeColumn != null && defaultCreateTimeColumn.isColumnOnInsert()) {
             upperDefaultCreateTimeFieldName = StringUtils.upperCaseFirstChar(defaultCreateTimeColumn.getIntrospectedColumn().getJavaFieldName());
-            methodBodyLines.add(String.format("%s.set%s(StringUtils.defaultIfBlank(%s.get%s(), DateTimeUtils.formatNow()));", domainObjectVariableName, upperDefaultCreateTimeFieldName, domainObjectVariableName, upperDefaultCreateTimeFieldName));
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(StringUtils.class.getName()));
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DateTimeUtils.class.getName()));
+            setAccessTimeDefaultValue(codegenParameter, methodBodyLines, domainObjectVariableName, defaultCreateTimeColumn, upperDefaultCreateTimeFieldName);
         }
         DomainEntityColumnConfig defaultUpdateTimeColumn = getCodegenConfig().getDefaultUpdateTimeColumn(domainEntityConfig);
         if(defaultUpdateTimeColumn != null && defaultUpdateTimeColumn.isColumnOnInsert()) {
             String upperDefaultUpdateTimeFieldName = StringUtils.upperCaseFirstChar(defaultUpdateTimeColumn.getIntrospectedColumn().getJavaFieldName());
-            if(upperDefaultCreateTimeFieldName != null) {
+            if(upperDefaultCreateTimeFieldName != null && defaultUpdateTimeColumn.getJavaType().equals(defaultCreateTimeColumn.getJavaType())) {
                 methodBodyLines.add(String.format("%s.set%s(%s.get%s());", domainObjectVariableName, upperDefaultUpdateTimeFieldName, domainObjectVariableName, upperDefaultCreateTimeFieldName));
             } else {
-                methodBodyLines.add(String.format("%s.set%s(DateTimeUtils.formatNow());", domainObjectVariableName, upperDefaultUpdateTimeFieldName));
+                setAccessTimeDefaultValue(codegenParameter, methodBodyLines, domainObjectVariableName, defaultUpdateTimeColumn, upperDefaultUpdateTimeFieldName);
             }
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DateTimeUtils.class.getName()));
         }
         String validateFields = domainEntityConfig.getValidateFields("create");
         if(StringUtils.isNotBlank(validateFields)) {
             methodBodyLines.add(String.format("BeanValidator.validateBean(%s);", domainObjectVariableName + validateFields));
         }
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        //后续代码写在freemarker模板中了
         return serviceMethod;
     }
 
+    /**
+     * 设置操作时间的默认值
+     */
+    private void setAccessTimeDefaultValue(DomainServiceImplementCodegenParameter codegenParameter, List<String> methodBodyLines, String domainObjectVariableName, DomainEntityColumnConfig accessTimeColumn, String upperAccessTimeFieldName) {
+        if(LocalDateTime.class.equals(accessTimeColumn.getJavaType())) {
+            methodBodyLines.add(String.format("%s.set%s(ObjectUtils.defaultIfNull(%s.get%s(), LocalDateTime::now));", domainObjectVariableName, upperAccessTimeFieldName, domainObjectVariableName, upperAccessTimeFieldName));
+            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(LocalDateTime.class.getName()));
+        } else {
+            methodBodyLines.add(String.format("%s.set%s(StringUtils.defaultIfBlank(%s.get%s(), DateTimeUtils::formatNow));", domainObjectVariableName, upperAccessTimeFieldName, domainObjectVariableName, upperAccessTimeFieldName));
+            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(StringUtils.class.getName()));
+            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DateTimeUtils.class.getName()));
+        }
+    }
+
     @Override
-    protected DomainServiceMethodParameter batchCreateDomainObjects(DomainServiceImplementCodegenParameter codegenParameter) {
-        DomainServiceMethodParameter serviceMethod = super.batchCreateDomainObjects(codegenParameter);
+    protected DomainServiceMethodParameter createDomainObjects(DomainServiceImplementCodegenParameter codegenParameter) {
+        DomainServiceMethodParameter serviceMethod = super.createDomainObjects(codegenParameter);
         List<String> methodBodyLines = new ArrayList<>();
         String domainObjectsVariableName = codegenParameter.getDomainObjectParameter().getLowerDomainObjectsName();
         methodBodyLines.add(String.format("ValidationAssert.notEmpty(%s, MessageSupplier.ofRequiredParameter(\"%s\"));", domainObjectsVariableName, domainObjectsVariableName));
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        //后续代码写在freemarker模板中了
         return serviceMethod;
     }
 
@@ -138,9 +151,7 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
         DomainEntityColumnConfig defaultUpdateTimeColumn = getCodegenConfig().getDefaultUpdateTimeColumn(domainEntityConfig);
         if(defaultUpdateTimeColumn != null && defaultUpdateTimeColumn.isColumnOnUpdate()) {
             String upperDefaultUpdateTimeFieldName = StringUtils.upperCaseFirstChar(defaultUpdateTimeColumn.getIntrospectedColumn().getJavaFieldName());
-            methodBodyLines.add(String.format("%s.set%s(StringUtils.defaultIfBlank(%s.get%s(), DateTimeUtils.formatNow()));", domainObjectVariableName, upperDefaultUpdateTimeFieldName, domainObjectVariableName, upperDefaultUpdateTimeFieldName));
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(StringUtils.class.getName()));
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DateTimeUtils.class.getName()));
+            setAccessTimeDefaultValue(codegenParameter, methodBodyLines, domainObjectVariableName, defaultUpdateTimeColumn, upperDefaultUpdateTimeFieldName);
         }
         String validateFields = domainEntityConfig.getValidateFields("modify");
         if(StringUtils.isNotBlank(validateFields)) {
@@ -156,23 +167,21 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
                 updateFields.append("                .with(").append(domainEntityConfig.getDomainEntityName()).append("::").append(CodegenUtils.getGetterMethodName(fieldName, fieldType)).append(")").append("\n");
             }
         }
-        if(updateFields.length() > 0) {
-            updateFields.append("                .build();");
-            methodBodyLines.add(updateFields.toString());
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Map.class.getName()));
-            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(MapLambdaBuilder.class.getName()));
-        }
+        updateFields.append("                .build();");
+        methodBodyLines.add(updateFields.toString());
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        //后续代码写在freemarker模板中了
         return serviceMethod;
     }
 
     @Override
-    protected DomainServiceMethodParameter batchModifyDomainObjectsById(DomainServiceImplementCodegenParameter codegenParameter) {
-        DomainServiceMethodParameter serviceMethod = super.batchModifyDomainObjectsById(codegenParameter);
+    protected DomainServiceMethodParameter modifyDomainObjectsById(DomainServiceImplementCodegenParameter codegenParameter) {
+        DomainServiceMethodParameter serviceMethod = super.modifyDomainObjectsById(codegenParameter);
         List<String> methodBodyLines = new ArrayList<>();
         String domainObjectsVariableName = codegenParameter.getDomainObjectParameter().getLowerDomainObjectsName();
         methodBodyLines.add(String.format("ValidationAssert.notEmpty(%s, MessageSupplier.ofRequiredParameter(\"%s\"));", domainObjectsVariableName, domainObjectsVariableName));
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        //后续代码写在freemarker模板中了
         return serviceMethod;
     }
 
@@ -191,6 +200,7 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
             methodBodyLines.add(String.format("BeanValidator.validateMap(%s%s);", domainObjectIdName, domainEntityConfig.getValidateFields("byId")));
         }
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        //后续代码写在freemarker模板中了
         return serviceMethod;
     }
 
@@ -201,6 +211,7 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
         String domainObjectIdsName = codegenParameter.getDomainObjectParameter().getDomainObjectIdsName();
         methodBodyLines.add(String.format("ValidationAssert.notEmpty(%s, MessageSupplier.ofRequiredParameter(\"%s\"));", domainObjectIdsName, domainObjectIdsName));
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        //后续代码写在freemarker模板中了
         return serviceMethod;
     }
 
@@ -211,40 +222,39 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
         String slaveDomainObjectName = codegenParameter.getDomainObjectParameter().getDomainObjectName();
         String getMasterDomainObjectIdRef = slaveDomainObjectName + "::" + CodegenUtils.getGetterMethodName(masterIdNameOfSlave, serviceMethod.getMasterDomainObjectParameter().getDomainObjectIdType());
         methodBodyLines.add(String.format("BeanValidator.validateProperty(%s, %s);", masterIdNameOfSlave, getMasterDomainObjectIdRef));
-        methodBodyLines.add(String.format("QueryCriteria<%s> criteria = LambdaQueryCriteria.ofEmpty(%s::new)", slaveDomainObjectName, slaveDomainObjectName));
+        methodBodyLines.add(String.format("QueryCriteria<%s> criteria = LambdaQueryCriteria.ofSupplier(%s::new)", slaveDomainObjectName, slaveDomainObjectName));
         methodBodyLines.add(String.format("    .eq(%s, %s);", getMasterDomainObjectIdRef, masterIdNameOfSlave));
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(QueryCriteria.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(LambdaQueryCriteria.class.getName()));
         return serviceMethod;
     }
 
     @Override
     protected DomainServiceMethodParameter getDomainObjectById(DomainServiceImplementCodegenParameter codegenParameter) {
-        //nothing to do
         return super.getDomainObjectById(codegenParameter);
     }
 
     @Override
     protected DomainServiceMethodParameter getDomainObjectsByIds(DomainServiceImplementCodegenParameter codegenParameter) {
-        //nothing to do
         return super.getDomainObjectsByIds(codegenParameter);
     }
 
     @Override
     protected ByMasterIdDomainServiceMethodParameter getDomainObjectsByMasterId(DomainServiceImplementCodegenParameter codegenParameter, DomainEntityConfig slaveDomainEntityConfig, DomainEntityConfig masterDomainEntityConfig, DomainAggregateSlaveConfig domainAggregateSlaveConfig, String masterIdNameOfSlave) {
         ByMasterIdDomainServiceMethodParameter serviceMethod = super.getDomainObjectsByMasterId(codegenParameter, slaveDomainEntityConfig, masterDomainEntityConfig, domainAggregateSlaveConfig, masterIdNameOfSlave);
-        String mapperSelectMethod = "selectModelByCriteria";
-        if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //如果是1:N关系?
-            mapperSelectMethod = "selectModelListByCriteria";
-        }
+        String mapperSelectMethod = DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation()) ? "selectListByCriteria" : "selectByCriteria";
         List<String> methodBodyLines = new ArrayList<>();
         String slaveDomainObjectName = codegenParameter.getDomainObjectParameter().getDomainObjectName();
         methodBodyLines.add(String.format("if(!ObjectUtils.isEmpty(%s)) {", masterIdNameOfSlave));
-        methodBodyLines.add(String.format("    QueryCriteria<%s> criteria = LambdaQueryCriteria.ofEmpty(%s::new)", slaveDomainObjectName, slaveDomainObjectName));
+        methodBodyLines.add(String.format("    QueryCriteria<%s> criteria = LambdaQueryCriteria.ofSupplier(%s::new)", slaveDomainObjectName, slaveDomainObjectName));
         methodBodyLines.add(String.format("        .eq(%s::%s, %s);", slaveDomainObjectName, CodegenUtils.getGetterMethodName(masterIdNameOfSlave, serviceMethod.getMasterDomainObjectParameter().getDomainObjectIdType()), masterIdNameOfSlave));
         methodBodyLines.add(String.format("    return %s.%s(criteria);", codegenParameter.getMapperInstanceName(), mapperSelectMethod));
         methodBodyLines.add("}");
         methodBodyLines.add("return Collections.emptyList();");
         serviceMethod.setMethodBodyLines(methodBodyLines);
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(QueryCriteria.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(LambdaQueryCriteria.class.getName()));
         return serviceMethod;
     }
 
@@ -256,7 +266,7 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
         String slaveDomainObjectName = codegenParameter.getDomainObjectParameter().getDomainObjectName();
         String getMasterIdOfSlaveRef = slaveDomainObjectName + "::" + CodegenUtils.getGetterMethodName(serviceMethod.getMasterIdNameOfSlave(), serviceMethod.getMasterDomainObjectParameter().getDomainObjectIdType());
         methodBodyLines.add(String.format("if(!CollectionUtils.isEmpty(%s)) {", masterIdsNameOfSlave));
-        methodBodyLines.add(String.format("    QueryCriteria<%s> criteria = LambdaQueryCriteria.ofEmpty(%s::new)", slaveDomainObjectName, slaveDomainObjectName));
+        methodBodyLines.add(String.format("    QueryCriteria<%s> criteria = LambdaQueryCriteria.ofSupplier(%s::new)", slaveDomainObjectName, slaveDomainObjectName));
         methodBodyLines.add(String.format("        .in(%s, %s.toArray());", getMasterIdOfSlaveRef, masterIdsNameOfSlave));
         String slaveDomainObjectsName = codegenParameter.getDomainObjectParameter().getLowerDomainObjectsName();
         methodBodyLines.add(String.format("    List<%s> %s = %s.selectModelListByCriteria(criteria);", slaveDomainObjectName, slaveDomainObjectsName, codegenParameter.getMapperInstanceName()));
@@ -271,52 +281,55 @@ public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomai
         methodBodyLines.add("}");
         methodBodyLines.add("return Collections.emptyMap();");
         serviceMethod.setMethodBodyLines(methodBodyLines);
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Map.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Collectors.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(QueryCriteria.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(LambdaQueryCriteria.class.getName()));
         return serviceMethod;
     }
 
     @Override
     protected DomainServiceMethodParameter getDomainObjectsByPage(DomainServiceImplementCodegenParameter codegenParameter) {
         DomainServiceMethodParameter serviceMethod = super.getDomainObjectsByPage(codegenParameter);
-        DomainEntityConfig domainEntityConfig = getDomainObjectConfig();
-        String domainObjectVariableName = codegenParameter.getDomainObjectParameter().getLowerDomainObjectName();
-        StringBuilder criteriaCodes = new StringBuilder(String.format("QueryCriteria<%s> criteria = LambdaQueryCriteria.of(condition)", domainObjectVariableName)).append("\n");
-        Map<String, DomainEntityFieldConfig> domainEntityFields = domainEntityConfig.getDomainEntityFields();
-        for(Map.Entry<String,DomainEntityFieldConfig> entry : domainEntityFields.entrySet()) {
-            DomainEntityFieldConfig domainEntityField = entry.getValue();
-            if(domainEntityField.getQueryConditionOperator() != null) {
-                String fieldGetterName = CodegenUtils.getGetterMethodName(domainEntityField.getFieldName(), domainEntityField.getFieldType().getFullyQualifiedNameWithoutTypeParameters());
-                if(!domainEntityField.getFieldGroup().isSupportField()) { //持久化字段
-                    criteriaCodes.append("                .").append(domainEntityField.getQueryConditionOperator().getOpName()).append("(").append(domainEntityConfig.getDomainEntityName()).append("::").append(fieldGetterName).append(")").append("\n");
-                } else { //辅助字段
-                    DomainEntityColumnConfig refDomainEntityColumn = domainEntityField.getDomainEntityColumnConfig();
-                    String refFieldGetterName = CodegenUtils.getGetterMethodName(refDomainEntityColumn.getIntrospectedColumn().getJavaFieldName(), refDomainEntityColumn.getIntrospectedColumn().getJavaFieldType().getFullyQualifiedNameWithoutTypeParameters());
-                    criteriaCodes.append("                .").append(domainEntityField.getQueryConditionOperator().getOpName()).append("(").append(domainEntityConfig.getDomainEntityName()).append("::").append(refFieldGetterName).append(", condition.").append(fieldGetterName).append("())").append("\n");
+        if(serviceMethod != null) {
+            DomainEntityConfig domainEntityConfig = getDomainObjectConfig();
+            String domainObjectVariableName = codegenParameter.getDomainObjectParameter().getLowerDomainObjectName();
+            StringBuilder criteriaCodes = new StringBuilder(String.format("QueryCriteria<%s> criteria = LambdaQueryCriteria.of(condition)", domainObjectVariableName)).append("\n");
+            Map<String, DomainEntityFieldConfig> domainEntityFields = domainEntityConfig.getDomainEntityFields();
+            for(Map.Entry<String,DomainEntityFieldConfig> entry : domainEntityFields.entrySet()) {
+                DomainEntityFieldConfig domainEntityField = entry.getValue();
+                if(domainEntityField.getQueryConditionOperator() != null) {
+                    String fieldGetterName = CodegenUtils.getGetterMethodName(domainEntityField.getFieldName(), domainEntityField.getFieldType().getFullyQualifiedNameWithoutTypeParameters());
+                    if(!domainEntityField.getFieldGroup().isSupportField()) { //持久化字段
+                        criteriaCodes.append("                .").append(domainEntityField.getQueryConditionOperator().getOpName()).append("(").append(domainEntityConfig.getDomainEntityName()).append("::").append(fieldGetterName).append(")").append("\n");
+                    } else { //辅助字段
+                        DomainEntityColumnConfig refDomainEntityColumn = domainEntityField.getDomainEntityColumnConfig();
+                        String refFieldGetterName = CodegenUtils.getGetterMethodName(refDomainEntityColumn.getIntrospectedColumn().getJavaFieldName(), refDomainEntityColumn.getIntrospectedColumn().getJavaFieldType().getFullyQualifiedNameWithoutTypeParameters());
+                        criteriaCodes.append("                .").append(domainEntityField.getQueryConditionOperator().getOpName()).append("(").append(domainEntityConfig.getDomainEntityName()).append("::").append(refFieldGetterName).append(", condition.").append(fieldGetterName).append("())").append("\n");
+                    }
                 }
             }
+            criteriaCodes.append("                .dynamic(true)").append("\n");
+            criteriaCodes.append("                .orderBy(page.getOrderBys());");
+            serviceMethod.setMethodBodyLines(Collections.singletonList(criteriaCodes.toString()));
+            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(QueryCriteria.class.getName()));
+            codegenParameter.addTargetImportType(new FullyQualifiedJavaType(LambdaQueryCriteria.class.getName()));
         }
-        criteriaCodes.append("                .dynamic(true)").append("\n");
-        criteriaCodes.append("                .orderBy(page.getOrderBys());");
-        serviceMethod.setMethodBodyLines(Collections.singletonList(criteriaCodes.toString()));
         return serviceMethod;
     }
 
     @Override
     protected DomainServiceMethodParameter getDomainObjectTotalCount(DomainServiceImplementCodegenParameter codegenParameter) {
-        //nothing to do
         return super.getDomainObjectTotalCount(codegenParameter);
     }
 
     @Override
     protected DomainServiceMethodParameter forEachDomainObject1(DomainServiceImplementCodegenParameter codegenParameter) {
-        //nothing to do
         return super.forEachDomainObject1(codegenParameter);
     }
 
     @Override
     protected DomainServiceMethodParameter forEachDomainObject2(DomainServiceImplementCodegenParameter codegenParameter) {
-        //nothing to do
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Cursor.class.getName()));
         return super.forEachDomainObject2(codegenParameter);
     }
 

@@ -23,43 +23,43 @@ import ${targetImport};
  * @created ${targetCreated}
  */
 public interface ${targetClass} {
-<#if createDomainObject.activated>
+<#if createDomainObject??>
 
     /**
-     * 创建${domainObjectParameter.domainObjectTitle}(默认会级联保存关联的领域对象)
+     * 创建${domainObjectParameter.domainObjectTitle}(默认会级联保存关联的领域实体对象)
      *
-     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域对象
+     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域聚合根对象
      */
     void create${domainObjectParameter.domainObjectAlias}(${domainObjectParameter.domainObjectName} ${domainObjectParameter.lowerDomainObjectName});
 </#if>
-<#if modifyDomainObjectById.activated>
+<#if modifyDomainObjectById??>
 
     /**
-     * 根据ID修改${domainObjectParameter.domainObjectTitle}(默认会级联保存关联的领域对象)
+     * 根据ID修改${domainObjectParameter.domainObjectTitle}(默认会级联保存关联的领域实体对象)
      *
-     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域对象(其id字段必须有值)
+     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域聚合根对象(其id字段必须有值)
      */
     void modify${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectName} ${domainObjectParameter.lowerDomainObjectName});
 </#if>
-<#if removeDomainObjectById.activated>
+<#if removeDomainObjectById??>
 
     /**
-     * 根据ID删除${domainObjectParameter.domainObjectTitle}(默认会级联删除关联的领域对象)
+     * 根据ID删除${domainObjectParameter.domainObjectTitle}(默认会级联删除关联的领域实体对象)
      *
      * @param ${domainObjectParameter.domainObjectIdName}    - ID主键
      */
     void remove${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} ${domainObjectParameter.domainObjectIdName});
 </#if>
-<#if removeDomainObjectsByIds.activated>
+<#if removeDomainObjectsByIds??>
 
     /**
-     * 根据多个ID删除${domainObjectParameter.domainObjectTitle}(默认会级联删除关联的领域对象)
+     * 根据多个ID删除${domainObjectParameter.domainObjectTitle}(默认会级联删除关联的领域实体对象)
      *
      * @param ${domainObjectParameter.domainObjectIdsName}    - ID主键列表
      */
     void remove${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ${domainObjectParameter.domainObjectIdsName});
 </#if>
-<#if getDomainObjectById.activated>
+<#if getDomainObjectById??>
 
     /**
      * 根据ID获取${domainObjectParameter.domainObjectTitle}
@@ -70,30 +70,30 @@ public interface ${targetClass} {
      */
     ${domainObjectParameter.domainObjectName} get${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} ${domainObjectParameter.domainObjectIdName}, boolean cascade);
 </#if>
-<#if getDomainObjectsByIds.activated>
+<#if getDomainObjectsByIds??>
 
     /**
      * 根据多个ID获取${domainObjectParameter.domainObjectTitle}
      *
      * @param ${domainObjectParameter.domainObjectIdsName}    - ID主键列表
-     * @param cascade       - 是否级联加载关联领域对象
-     * @return 返回完整的领域对象信息
+     * @param cascade       - 是否级联加载关联领域实体对象
+     * @return 返回完整的领域聚合根对象信息
      */
     List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ${domainObjectParameter.domainObjectIdsName}, boolean cascade);
 </#if>
-<#if getDomainObjectsByPage.activated>
+<#if getDomainObjectsByPage??>
 
     /**
      * 根据条件查询${domainObjectParameter.domainObjectTitle}列表(排序、分页)
      *
      * @param condition		- 查询条件
      * @param page			- 分页/排序参数
-     * @param cascade       - 是否级联加载关联领域对象
-     * @return 返回完整的领域对象列表
+     * @param cascade       - 是否级联加载关联领域实体对象
+     * @return 返回完整的领域聚合根对象列表
      */
     List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByPage(${domainObjectParameter.domainObjectName} condition, Page page, boolean cascade);
 </#if>
-<#if getDomainObjectTotalCount.activated>
+<#if getDomainObjectTotalCount??>
 
     /**
      * 获取${domainObjectParameter.domainObjectTitle}总记录数
@@ -102,7 +102,7 @@ public interface ${targetClass} {
      */
     int get${domainObjectParameter.domainObjectAlias}TotalCount();
 </#if>
-<#if forEachDomainObject1.activated>
+<#if forEachDomainObject1??>
 
     /**
      * 基于Mybatis游标操作，遍历所有${domainObjectParameter.domainObjectTitle}
@@ -118,7 +118,7 @@ public interface ${targetClass} {
      */
     void forEach${domainObjectParameter.domainObjectAlias}(Consumer<${domainObjectParameter.domainObjectName}> consumer);
 </#if>
-<#if forEachDomainObject2.activated>
+<#if forEachDomainObject2??>
 
     /**
      * 基于Mybatis游标操作，遍历所有${domainObjectParameter.domainObjectTitle}

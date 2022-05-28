@@ -32,7 +32,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     private ${domainService.domainServiceName} ${domainService.domainServiceInstanceName};
 
 </#list>
-<#if createDomainObject.activated>
+<#if createDomainObject??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -42,7 +42,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if modifyDomainObjectById.activated>
+<#if modifyDomainObjectById??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -52,7 +52,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if removeDomainObjectById.activated>
+<#if removeDomainObjectById??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -62,7 +62,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if removeDomainObjectsByIds.activated>
+<#if removeDomainObjectsByIds??>
 
     @Override
     @Transactional(transactionManager="${transactionManagerName}", rollbackFor=Exception.class)
@@ -72,7 +72,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if getDomainObjectById.activated>
+<#if getDomainObjectById??>
 
     @Override
     public ${domainObjectParameter.domainObjectName} get${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} ${domainObjectParameter.domainObjectIdName}, boolean cascade) {
@@ -81,7 +81,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if getDomainObjectsByIds.activated>
+<#if getDomainObjectsByIds??>
 
     @Override
     public List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ${domainObjectParameter.domainObjectIdsName}, boolean cascade) {
@@ -90,7 +90,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if getDomainObjectsByPage.activated>
+<#if getDomainObjectsByPage??>
 
     @Override
     public List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByPage(${domainObjectParameter.domainObjectName} condition, Page page, boolean cascade) {
@@ -99,7 +99,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if prepareAggregateObjects.activated>
+<#if prepareAggregateObjects??>
 
     protected List<${domainObjectParameter.domainObjectName}> prepare${domainObjectParameter.lowerDomainObjectName}List(List<${prepareAggregateObjects.masterDomainObjectParameter.domainObjectName}> ${prepareAggregateObjects.masterDomainObjectParameter.lowerDomainObjectsName}, boolean cascade) {
     <#list prepareAggregateObjects.methodBodyLines as methodBodyLine>
@@ -107,7 +107,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if getDomainObjectTotalCount.activated>
+<#if getDomainObjectTotalCount??>
 
     @Override
     public int get${domainObjectParameter.domainObjectAlias}TotalCount() {
@@ -116,7 +116,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if forEachDomainObject1.activated>
+<#if forEachDomainObject1??>
 
     @Override
     public void forEach${domainObjectParameter.domainObjectAlias}(Consumer<${domainObjectParameter.domainObjectName}> consumer) {
@@ -125,7 +125,7 @@ public class ${targetClass} implements <#list targetImplements as targetImplemen
     </#list>
     }
 </#if>
-<#if forEachDomainObject2.activated>
+<#if forEachDomainObject2??>
 
     @Override
     public void forEach${domainObjectParameter.domainObjectAlias}(ObjIntConsumer<${domainObjectParameter.domainObjectName}> consumer) {

@@ -1,7 +1,5 @@
 package com.penglecode.codeforce.common.codegen.service;
 
-import com.penglecode.codeforce.common.codegen.config.DomainEntityConfig;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +9,7 @@ import java.util.List;
  * @author pengpeng
  * @version 1.0
  */
-public class DomainServiceParameters extends ArrayList<DomainServiceParameters.DomainServiceParameter> {
+public class DomainServiceParameters extends ArrayList<DomainServiceParameter> {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +20,7 @@ public class DomainServiceParameters extends ArrayList<DomainServiceParameters.D
     public DomainServiceParameters(DomainServiceParameter masterDomainServiceParameter, List<DomainServiceParameter> slaveDomainServiceParameters) {
         this.masterDomainServiceParameter = masterDomainServiceParameter;
         this.slaveDomainServiceParameters = slaveDomainServiceParameters;
-        List<DomainServiceParameters.DomainServiceParameter> allDomainServiceParameters = new ArrayList<>();
+        List<DomainServiceParameter> allDomainServiceParameters = new ArrayList<>();
         allDomainServiceParameters.add(masterDomainServiceParameter);
         allDomainServiceParameters.addAll(slaveDomainServiceParameters);
         addAll(allDomainServiceParameters);
@@ -34,48 +32,6 @@ public class DomainServiceParameters extends ArrayList<DomainServiceParameters.D
 
     public List<DomainServiceParameter> getSlaveDomainServiceParameters() {
         return slaveDomainServiceParameters;
-    }
-
-    public static class DomainServiceParameter {
-
-        private final DomainServiceInterfaceCodegenParameter domainServiceCodegenParameter;
-
-        private final DomainEntityConfig domainEntityConfig;
-
-        private final String domainServiceName;
-
-        private final String domainServiceBeanName;
-
-        private final String domainServiceInstanceName;
-
-        public DomainServiceParameter(DomainServiceInterfaceCodegenParameter domainServiceCodegenParameter, DomainEntityConfig domainEntityConfig, String domainServiceName, String domainServiceBeanName, String domainServiceInstanceName) {
-            this.domainServiceCodegenParameter = domainServiceCodegenParameter;
-            this.domainEntityConfig = domainEntityConfig;
-            this.domainServiceName = domainServiceName;
-            this.domainServiceBeanName = domainServiceBeanName;
-            this.domainServiceInstanceName = domainServiceInstanceName;
-        }
-
-        public DomainServiceInterfaceCodegenParameter getDomainServiceCodegenParameter() {
-            return domainServiceCodegenParameter;
-        }
-
-        public DomainEntityConfig getDomainEntityConfig() {
-            return domainEntityConfig;
-        }
-
-        public String getDomainServiceName() {
-            return domainServiceName;
-        }
-
-        public String getDomainServiceBeanName() {
-            return domainServiceBeanName;
-        }
-
-        public String getDomainServiceInstanceName() {
-            return domainServiceInstanceName;
-        }
-
     }
 
 }

@@ -23,43 +23,43 @@ import ${targetImport};
  * @created ${targetCreated}
  */
 public interface ${targetClass} {
-<#if createDomainObject.activated>
+<#if createDomainObject??>
 
     /**
      * 创建${domainObjectParameter.domainObjectTitle}
      *
-     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域对象
+     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域实体
      */
     void create${domainObjectParameter.domainObjectAlias}(${domainObjectParameter.domainObjectName} ${domainObjectParameter.lowerDomainObjectName});
 </#if>
-<#if batchCreateDomainObjects.activated>
+<#if createDomainObjects??>
 
     /**
      * 批量创建${domainObjectParameter.domainObjectTitle}
      *
-     * @param ${domainObjectParameter.lowerDomainObjectsName}    - 被保存的领域对象集合
+     * @param ${domainObjectParameter.lowerDomainObjectsName}    - 被保存的领域实体集合
      */
-    void batchCreate${domainObjectParameter.domainObjectsAlias}(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName});
+    void create${domainObjectParameter.domainObjectsAlias}(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName});
 </#if>
-<#if modifyDomainObjectById.activated>
+<#if modifyDomainObjectById??>
 
     /**
      * 根据ID修改${domainObjectParameter.domainObjectTitle}
      *
-     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域对象(其id字段必须有值)
+     * @param ${domainObjectParameter.lowerDomainObjectName}     - 被保存的领域实体(其id字段必须有值)
      */
     void modify${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectName} ${domainObjectParameter.lowerDomainObjectName});
 </#if>
-<#if batchModifyDomainObjectsById.activated>
+<#if modifyDomainObjectsById??>
 
     /**
      * 根据ID批量修改${domainObjectParameter.domainObjectTitle}
      *
-     * @param ${domainObjectParameter.lowerDomainObjectsName}    - 被保存的领域对象集合(其id字段必须有值)
+     * @param ${domainObjectParameter.lowerDomainObjectsName}    - 被保存的领域实体集合(其id字段必须有值)
      */
-    void batchModify${domainObjectParameter.domainObjectsAlias}ById(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName});
+    void modify${domainObjectParameter.domainObjectsAlias}ById(List<${domainObjectParameter.domainObjectName}> ${domainObjectParameter.lowerDomainObjectsName});
 </#if>
-<#if removeDomainObjectById.activated>
+<#if removeDomainObjectById??>
 
     /**
      * 根据ID删除${domainObjectParameter.domainObjectTitle}
@@ -68,7 +68,7 @@ public interface ${targetClass} {
      */
     int remove${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} ${domainObjectParameter.domainObjectIdName});
 </#if>
-<#if removeDomainObjectsByIds.activated>
+<#if removeDomainObjectsByIds??>
 
     /**
      * 根据多个ID删除${domainObjectParameter.domainObjectTitle}
@@ -78,7 +78,6 @@ public interface ${targetClass} {
     int remove${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ${domainObjectParameter.domainObjectIdsName});
 </#if>
 <#list removeDomainObjectsByXxxMasterId?values as removeDomainObjectsByMasterId>
-<#if removeDomainObjectsByMasterId.activated>
 
     /**
      * 根据${removeDomainObjectsByMasterId.masterDomainObjectParameter.domainObjectTitle}ID删除${domainObjectParameter.domainObjectTitle}
@@ -86,73 +85,70 @@ public interface ${targetClass} {
      * @param ${removeDomainObjectsByMasterId.masterIdNameOfSlave}   - ${removeDomainObjectsByMasterId.masterDomainObjectParameter.domainObjectTitle}ID
      */
     int remove${domainObjectParameter.domainObjectsAlias}By${removeDomainObjectsByMasterId.upperMasterIdNameOfSlave}(${removeDomainObjectsByMasterId.masterDomainObjectParameter.domainObjectIdType} ${removeDomainObjectsByMasterId.masterIdNameOfSlave});
-</#if>
 </#list>
-<#if getDomainObjectById.activated>
+<#if getDomainObjectById??>
 
     /**
      * 根据ID获取${domainObjectParameter.domainObjectTitle}
      *
      * @param ${domainObjectParameter.domainObjectIdName}    - ID主键
-     * @return 返回完整的领域对象信息
+     * @return 返回完整的领域实体信息
      */
     ${domainObjectParameter.domainObjectName} get${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} ${domainObjectParameter.domainObjectIdName});
 </#if>
-<#if getDomainObjectsByIds.activated>
+<#if getDomainObjectsByIds??>
 
     /**
      * 根据多个ID获取${domainObjectParameter.domainObjectTitle}
      *
      * @param ${domainObjectParameter.domainObjectIdsName}   - ID主键列表
-     * @return 返回完整的领域对象信息列表
+     * @return 返回完整的领域实体列表
      */
     List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ${domainObjectParameter.domainObjectIdsName});
 </#if>
 <#list getDomainObjectsByXxxMasterId?values as getDomainObjectsByMasterId>
-<#if getDomainObjectsByMasterId.activated>
 
     /**
      * 根据${getDomainObjectsByMasterId.masterDomainObjectParameter.domainObjectTitle}ID获取${domainObjectParameter.domainObjectTitle}
      *
      * @param ${getDomainObjectsByMasterId.masterIdNameOfSlave}   - ${getDomainObjectsByMasterId.masterDomainObjectParameter.domainObjectTitle}ID
-     * @return 返回完整的领域对象信息
+     * @return 返回完整的领域实体信息
      */
     ${getDomainObjectsByMasterId.methodReturnType} get${domainObjectParameter.domainObjectsAlias}By${getDomainObjectsByMasterId.upperMasterIdNameOfSlave}(${getDomainObjectsByMasterId.masterDomainObjectParameter.domainObjectIdType} ${getDomainObjectsByMasterId.masterIdNameOfSlave});
-</#if>
 </#list>
 <#list getDomainObjectsByXxxMasterIds?values as getDomainObjectsByMasterIds>
-<#if getDomainObjectsByMasterIds.activated>
+<#if getDomainObjectsByMasterIds??>
 
     /**
      * 根据多个${getDomainObjectsByMasterIds.masterDomainObjectParameter.domainObjectTitle}ID获取${domainObjectParameter.domainObjectTitle}列表
      *
      * @param ${getDomainObjectsByMasterIds.masterIdsNameOfSlave}   - ${getDomainObjectsByMasterIds.masterDomainObjectParameter.domainObjectTitle}ID列表
-     * @return 返回完整的领域对象信息
+     * @return 返回完整的领域实体信息
      */
     ${getDomainObjectsByMasterIds.methodReturnType} get${domainObjectParameter.domainObjectsAlias}By${getDomainObjectsByMasterIds.upperMasterIdsNameOfSlave}(List<${getDomainObjectsByMasterIds.masterDomainObjectParameter.domainObjectIdType}> ${getDomainObjectsByMasterIds.masterIdsNameOfSlave});
 </#if>
 </#list>
-<#if getDomainObjectsByPage.activated>
+<#if getDomainObjectsByPage??>
 
     /**
      * 根据条件查询${domainObjectParameter.domainObjectTitle}列表(排序、分页)
      *
      * @param condition		- 查询条件
      * @param page			- 分页/排序参数
-     * @return 返回完整的领域对象列表
+     * @return 返回完整的领域实体列表
      */
     List<${domainObjectParameter.domainObjectName}> get${domainObjectParameter.domainObjectsAlias}ByPage(${domainObjectParameter.domainObjectName} condition, Page page);
 </#if>
-<#if getDomainObjectTotalCount.activated>
+<#if getDomainObjectTotalCount??>
 
     /**
      * 获取${domainObjectParameter.domainObjectTitle}总记录数
      *
-     * @return 返回领域对象总记录数
+     * @return 返回领域实体总记录数
      */
     int get${domainObjectParameter.domainObjectAlias}TotalCount();
 </#if>
-<#if forEachDomainObject1.activated>
+<#if forEachDomainObject1??>
 
     /**
      * 基于Mybatis游标操作，遍历所有${domainObjectParameter.domainObjectTitle}
@@ -168,7 +164,7 @@ public interface ${targetClass} {
      */
     void forEach${domainObjectParameter.domainObjectAlias}(Consumer<${domainObjectParameter.domainObjectName}> consumer);
 </#if>
-<#if forEachDomainObject2.activated>
+<#if forEachDomainObject2??>
 
     /**
      * 基于Mybatis游标操作，遍历所有${domainObjectParameter.domainObjectTitle}

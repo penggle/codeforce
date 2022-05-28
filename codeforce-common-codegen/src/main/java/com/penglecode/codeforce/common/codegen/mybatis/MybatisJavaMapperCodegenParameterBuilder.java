@@ -35,7 +35,6 @@ public class MybatisJavaMapperCodegenParameterBuilder extends CodegenParameterBu
         codegenParameter.setTargetExtends(String.format("%s<%s>", BaseEntityMapper.class.getSimpleName(), getDomainObjectConfig().getDomainEntityName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(getDomainObjectConfig().getGeneratedTargetName(getDomainObjectConfig().getDomainEntityName(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BaseEntityMapper.class.getName()));
-
         List<String> mapperAnnotations = new ArrayList<>();
         Set<CodegenAnnotationMeta> mapperAnnotationMetas = buildMapperAnnotations();
         for(CodegenAnnotationMeta mapperAnnotationMeta : mapperAnnotationMetas) {
