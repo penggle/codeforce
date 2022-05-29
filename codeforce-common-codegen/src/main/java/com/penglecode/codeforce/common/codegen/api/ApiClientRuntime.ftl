@@ -29,7 +29,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if><
 
     @Resource(name="${domainServiceBeanName}")
     private ${domainServiceName} ${domainServiceInstanceName};
-<#if createDomainObject.activated>
+<#if createDomainObject??>
 
     @Override
     public ${createDomainObject.methodReturnType} create${domainObjectParameter.domainObjectAlias}(${createDomainObject.inputApiModelName} createRequest) {
@@ -38,7 +38,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if><
     </#list>
     }
 </#if>
-<#if modifyDomainObjectById.activated>
+<#if modifyDomainObjectById??>
 
     @Override
     public ${modifyDomainObjectById.methodReturnType} modify${domainObjectParameter.domainObjectAlias}ById(${modifyDomainObjectById.inputApiModelName} modifyRequest) {
@@ -47,7 +47,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if><
     </#list>
     }
 </#if>
-<#if removeDomainObjectById.activated>
+<#if removeDomainObjectById??>
 
     @Override
     public ${removeDomainObjectById.methodReturnType} remove${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} id) {
@@ -56,7 +56,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if><
     </#list>
     }
 </#if>
-<#if removeDomainObjectsByIds.activated>
+<#if removeDomainObjectsByIds??>
 
     @Override
     public ${removeDomainObjectsByIds.methodReturnType} remove${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ids) {
@@ -65,7 +65,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if><
     </#list>
     }
 </#if>
-<#if getDomainObjectById.activated>
+<#if getDomainObjectById??>
 
     @Override
     public ${getDomainObjectById.methodReturnType} get${domainObjectParameter.domainObjectAlias}ById(${domainObjectParameter.domainObjectIdType} id<#if aggregateRoot>, Boolean cascade</#if>) {
@@ -74,7 +74,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if><
     </#list>
     }
 </#if>
-<#if getDomainObjectsByIds.activated>
+<#if getDomainObjectsByIds??>
 
     @Override
     public ${getDomainObjectsByIds.methodReturnType} get${domainObjectParameter.domainObjectsAlias}ByIds(List<${domainObjectParameter.domainObjectIdType}> ids<#if aggregateRoot>, Boolean cascade</#if>) {
@@ -83,7 +83,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if><
     </#list>
     }
 </#if>
-<#if getDomainObjectsByPage.activated>
+<#if getDomainObjectsByPage??>
 
     @Override
     public ${getDomainObjectsByPage.methodReturnType} get${domainObjectParameter.domainObjectsAlias}ByPage(${getDomainObjectsByPage.inputApiModelName} queryRequest<#if aggregateRoot>, Boolean cascade</#if>) {

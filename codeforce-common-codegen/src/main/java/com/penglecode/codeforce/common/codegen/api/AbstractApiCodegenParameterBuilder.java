@@ -1,14 +1,12 @@
 package com.penglecode.codeforce.common.codegen.api;
 
 import com.penglecode.codeforce.common.codegen.config.*;
-import com.penglecode.codeforce.common.codegen.support.ApiModelType;
-import com.penglecode.codeforce.common.codegen.support.CodegenContext;
-import com.penglecode.codeforce.common.codegen.support.CodegenParameterBuilder;
-import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
+import com.penglecode.codeforce.common.codegen.support.*;
 import com.penglecode.codeforce.common.model.PageResult;
 import com.penglecode.codeforce.common.model.Result;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * API接口代码生成参数Builder基类
@@ -16,7 +14,7 @@ import java.util.List;
  * @author pengpeng
  * @version 1.0
  */
-public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTargetConfig, D extends DomainObjectConfig, P extends AbstractApiCodegenParameter> extends CodegenParameterBuilder<ApiCodegenConfigProperties, T, D, P> {
+public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderConfig, D extends DomainObjectConfig, P extends AbstractApiCodegenParameter> extends CodegenParameterBuilder<ApiCodegenConfigProperties, T, D, P> {
 
     protected AbstractApiCodegenParameterBuilder(CodegenContext<ApiCodegenConfigProperties, T, D> codegenContext) {
         super(codegenContext);
@@ -40,13 +38,29 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
 
     @Override
     protected P setCustomCodegenParameter(P codegenParameter) {
-        codegenParameter.setCreateDomainObject(createDomainObject(codegenParameter));
-        codegenParameter.setModifyDomainObjectById(modifyDomainObjectById(codegenParameter));
-        codegenParameter.setRemoveDomainObjectsByIds(removeDomainObjectsByIds(codegenParameter));
-        codegenParameter.setRemoveDomainObjectById(removeDomainObjectById(codegenParameter));
-        codegenParameter.setGetDomainObjectById(getDomainObjectById(codegenParameter));
-        codegenParameter.setGetDomainObjectsByIds(getDomainObjectsByIds(codegenParameter));
-        codegenParameter.setGetDomainObjectsByPage(getDomainObjectsByPage(codegenParameter));
+        D domainObjectConfig = getDomainObjectConfig();
+        Set<ApiMethod> provideApiMethods = getTargetConfig().getApiProviders().get(domainObjectConfig.getDomainObjectName());
+        if(provideApiMethods.contains(ApiMethod.CREATE)) {
+            codegenParameter.setCreateDomainObject(createDomainObject(codegenParameter));
+        }
+        if(provideApiMethods.contains(ApiMethod.MODIFY_BY_ID)) {
+            codegenParameter.setModifyDomainObjectById(modifyDomainObjectById(codegenParameter));
+        }
+        if(provideApiMethods.contains(ApiMethod.REMOVE_BY_ID)) {
+            codegenParameter.setRemoveDomainObjectById(removeDomainObjectById(codegenParameter));
+        }
+        if(provideApiMethods.contains(ApiMethod.REMOVE_BY_IDS)) {
+            codegenParameter.setRemoveDomainObjectsByIds(removeDomainObjectsByIds(codegenParameter));
+        }
+        if(provideApiMethods.contains(ApiMethod.GET_BY_ID)) {
+            codegenParameter.setGetDomainObjectById(getDomainObjectById(codegenParameter));
+        }
+        if(provideApiMethods.contains(ApiMethod.GET_BY_IDS)) {
+            codegenParameter.setGetDomainObjectsByIds(getDomainObjectsByIds(codegenParameter));
+        }
+        if(provideApiMethods.contains(ApiMethod.GET_BY_PAGE)) {
+            codegenParameter.setGetDomainObjectsByPage(getDomainObjectsByPage(codegenParameter));
+        }
         return codegenParameter;
     }
 
@@ -72,7 +86,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
 
     protected ApiMethodParameter saveDomainObject(P codegenParameter, String methodName, String methodReturnType) {
         DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
-        ApiModelConfig apiModelConfig = getCodegenConfig().getApi().getModelConfig().withModelType(ApiModelType.SAVE_REQUEST);
+        ApiModelConfig apiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.SAVE_REQUEST);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
@@ -112,7 +126,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
      */
     protected ApiMethodParameter getDomainObjectById(P codegenParameter) {
         DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
-        ApiModelConfig apiModelConfig = getCodegenConfig().getApi().getModelConfig().withModelType(ApiModelType.QUERY_RESPONSE);
+        ApiModelConfig apiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.QUERY_RESPONSE);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
@@ -128,7 +142,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
      */
     protected ApiMethodParameter getDomainObjectsByIds(P codegenParameter) {
         DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
-        ApiModelConfig apiModelConfig = getCodegenConfig().getApi().getModelConfig().withModelType(ApiModelType.QUERY_RESPONSE);
+        ApiModelConfig apiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.QUERY_RESPONSE);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
@@ -145,8 +159,8 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
      */
     protected ApiMethodParameter getDomainObjectsByPage(P codegenParameter) {
         DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
-        ApiModelConfig reqApiModelConfig = getCodegenConfig().getApi().getModelConfig().withModelType(ApiModelType.QUERY_REQUEST);
-        ApiModelConfig resApiModelConfig = getCodegenConfig().getApi().getModelConfig().withModelType(ApiModelType.QUERY_RESPONSE);
+        ApiModelConfig reqApiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.QUERY_REQUEST);
+        ApiModelConfig resApiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.QUERY_RESPONSE);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(reqApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(resApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(PageResult.class.getName()));
@@ -157,6 +171,16 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends GenerableTarg
         apiMethod.setMethodReturnType(String.format("%s<List<%s>>", PageResult.class.getSimpleName(), apiMethod.getOutputApiModelName()));
         apiMethod.setMethodName("get" + codegenParameter.getDomainObjectParameter().getDomainObjectsAlias() + "ByPage");
         return apiMethod;
+    }
+
+    /**
+     * 获取API接口URL的前缀
+     * @param domainObjectAlias
+     * @return
+     */
+    protected String getApiPrefixUrl(String domainObjectAlias) {
+        String prefix = getCodegenConfig().getApi().getApiUrlPrefix();
+        return prefix.endsWith("/") ? prefix + domainObjectAlias : prefix + "/" + domainObjectAlias;
     }
 
 }

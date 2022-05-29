@@ -1,10 +1,14 @@
 package com.penglecode.codeforce.common.codegen.config;
 
-import com.penglecode.codeforce.common.codegen.support.ApiMethod;
 import com.penglecode.codeforce.common.codegen.support.ApiProtocol;
+import com.penglecode.codeforce.common.util.CollectionUtils;
+import com.penglecode.codeforce.common.util.StringUtils;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * API接口Client配置
@@ -12,13 +16,10 @@ import java.util.Set;
  * @author pengpeng
  * @version 1.0
  */
-public class ApiClientConfig extends GenerableTargetConfig {
+public class ApiClientConfig extends ApiProviderConfig {
 
     /** API接口协议,feign是必须的,dubbo是可选的 */
     private Set<ApiProtocol> apiProtocols;
-
-    /** API接口声明Map类型,[key=领域对象名称,value=接口方法名枚举] */
-    private Map<String,Set<ApiMethod>> apiProviders;
 
     /** API接口继承interface列表 */
     private Set<Class<?>> apiExtendsInterfaces;
@@ -27,16 +28,18 @@ public class ApiClientConfig extends GenerableTargetConfig {
         return apiProtocols;
     }
 
-    public void setApiProtocols(Set<ApiProtocol> apiProtocols) {
-        this.apiProtocols = apiProtocols;
-    }
-
-    public Map<String, Set<ApiMethod>> getApiProviders() {
-        return apiProviders;
-    }
-
-    public void setApiProviders(Map<String, Set<ApiMethod>> apiProviders) {
-        this.apiProviders = apiProviders;
+    public void setApiProtocols(String apiProtocols) {
+        Set<ApiProtocol> apiProtocolSet = null;
+        if(StringUtils.isNotBlank(apiProtocols)) {
+            apiProtocolSet = Stream.of(apiProtocols.split(",")).map(protocol -> {
+                try {
+                    return ApiProtocol.valueOf(protocol);
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            }).filter(Objects::nonNull).collect(Collectors.toSet());
+        }
+        this.apiProtocols = CollectionUtils.defaultIfEmpty(apiProtocolSet, Collections.singleton(ApiProtocol.FEIGN));
     }
 
     public Set<Class<?>> getApiExtendsInterfaces() {

@@ -35,7 +35,7 @@ public class ApiControllerRuntimeCodegenParameterBuilder<D extends DomainObjectC
         codegenParameter = super.setCommonCodegenParameter(codegenParameter);
         List<String> targetAnnotations = new ArrayList<>();
         targetAnnotations.add("@RestController");
-        targetAnnotations.add(String.format("@RequestMapping(\"/api/%s\")", codegenParameter.getDomainObjectParameter().getDomainObjectAlias().toLowerCase()));
+        targetAnnotations.add(String.format("@RequestMapping(\"%s\")", getApiPrefixUrl(codegenParameter.getDomainObjectParameter().getDomainObjectAlias().toLowerCase())));
         targetAnnotations.add(String.format("@Tag(name=\"%s\", description=\"%sAPI接口\")", codegenParameter.getTargetClass(), codegenParameter.getDomainObjectParameter().getDomainObjectTitle()));
         codegenParameter.setTargetAnnotations(targetAnnotations);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(RestController.class.getName()));

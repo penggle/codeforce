@@ -13,7 +13,19 @@ import java.util.Set;
  * @author pengpeng
  * @version 1.0
  */
-public class DomainCommonsConfig extends GenerableTargetLocation {
+public class DomainCommonsConfig {
+
+    /** 输出代码的作者 */
+    private String targetAuthor;
+
+    /** 输出代码的时间 */
+    private String targetVersion;
+
+    /** 代码输出的项目位置 */
+    private String targetProject;
+
+    /** 代码输出的包路径 */
+    private String targetPackage;
 
     /** 运行时数据源名称 */
     private String runtimeDataSource;
@@ -39,6 +51,38 @@ public class DomainCommonsConfig extends GenerableTargetLocation {
     public DomainCommonsConfig() {
         this.globalTypes = new HashMap<>();
         this.globalTypes.put(NamedDatabase.class.getSimpleName(), NamedDatabase.class.getName());
+    }
+
+    public String getTargetAuthor() {
+        return targetAuthor;
+    }
+
+    public void setTargetAuthor(String targetAuthor) {
+        this.targetAuthor = targetAuthor;
+    }
+
+    public String getTargetVersion() {
+        return targetVersion;
+    }
+
+    public void setTargetVersion(String targetVersion) {
+        this.targetVersion = targetVersion;
+    }
+
+    public String getTargetProject() {
+        return targetProject;
+    }
+
+    public void setTargetProject(String targetProject) {
+        this.targetProject = targetProject;
+    }
+
+    public String getTargetPackage() {
+        return targetPackage;
+    }
+
+    public void setTargetPackage(String targetPackage) {
+        this.targetPackage = targetPackage;
     }
 
     public String getRuntimeDataSource() {

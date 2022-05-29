@@ -15,8 +15,12 @@ public class ApiModelConfig extends GenerableTargetConfig {
 
     private final ApiModelType modelType;
 
-    public ApiModelConfig() {
-        this(null);
+    protected ApiModelConfig(ApiProviderConfig apiProviderConfig) {
+        this.modelType = null;
+        this.setTargetAuthor(apiProviderConfig.getTargetAuthor());
+        this.setTargetVersion(apiProviderConfig.getTargetVersion());
+        this.setTargetPackage(apiProviderConfig.getTargetPackage());
+        this.setTargetProject(apiProviderConfig.getTargetProject());
     }
 
     protected ApiModelConfig(ApiModelType modelType) {
@@ -35,11 +39,13 @@ public class ApiModelConfig extends GenerableTargetConfig {
         return (includePackage ? getTargetPackage() + "." : "") + domainObjectName + (includeSuffix ? ".java" : "");
     }
 
-    public ApiModelConfig withModelType(ApiModelType modelType) {
-        ApiModelConfig newModelConfig = new ApiModelConfig(modelType);
-        newModelConfig.setTargetPackage(getTargetPackage());
-        newModelConfig.setTargetProject(getTargetProject());
-        return newModelConfig;
+    public ApiModelConfig forModelType(ApiModelType modelType) {
+        ApiModelConfig apiModelConfig = new ApiModelConfig(modelType);
+        apiModelConfig.setTargetAuthor(getTargetAuthor());
+        apiModelConfig.setTargetVersion(getTargetVersion());
+        apiModelConfig.setTargetPackage(getTargetPackage());
+        apiModelConfig.setTargetProject(getTargetProject());
+        return apiModelConfig;
     }
 
 }

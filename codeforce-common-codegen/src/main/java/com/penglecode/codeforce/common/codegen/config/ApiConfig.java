@@ -6,10 +6,13 @@ package com.penglecode.codeforce.common.codegen.config;
  * @author pengpeng
  * @version 1.0
  */
-public class ApiConfig extends GenerableTargetLocation {
+public class ApiConfig {
 
-    /** API接口数据模型配置 */
-    private ApiModelConfig modelConfig;
+    /** API接口URL前缀 */
+    private String apiUrlPrefix = "/api";
+
+    /** API层的公共基础包,其下约定有子包：dto、request、response、service、controller五个子包 */
+    private String targetPackage;
 
     /** API接口客户端配置 */
     private ApiClientConfig clientConfig;
@@ -17,12 +20,20 @@ public class ApiConfig extends GenerableTargetLocation {
     /** API接口实现配置 */
     private ApiRuntimeConfig runtimeConfig;
 
-    public ApiModelConfig getModelConfig() {
-        return modelConfig;
+    public String getApiUrlPrefix() {
+        return apiUrlPrefix;
     }
 
-    public void setModelConfig(ApiModelConfig modelConfig) {
-        this.modelConfig = modelConfig;
+    public void setApiUrlPrefix(String apiUrlPrefix) {
+        this.apiUrlPrefix = apiUrlPrefix;
+    }
+
+    public String getTargetPackage() {
+        return targetPackage;
+    }
+
+    public void setTargetPackage(String targetPackage) {
+        this.targetPackage = targetPackage;
     }
 
     public ApiClientConfig getClientConfig() {

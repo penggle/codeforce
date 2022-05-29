@@ -80,7 +80,7 @@ public class SaveReqApiModelCodegenParameterBuilder<D extends DomainObjectConfig
         List<ObjectFieldParameter> inherentFields = new ArrayList<>();
         ApiModelType apiModelType = getTargetConfig().getModelType();
         DomainEntityConfig masterDomainEntityConfig = getCodegenConfig().getDomain().getDomainEntities().get(domainAggregateConfig.getAggregateMasterEntity());
-        ApiModelConfig dtoApiModelConfig = getTargetConfig().withModelType(ApiModelType.SAVE_DTO);
+        ApiModelConfig dtoApiModelConfig = getTargetConfig().forModelType(ApiModelType.SAVE_DTO);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(dtoApiModelConfig.getGeneratedTargetName(masterDomainEntityConfig.getDomainEntityAlias(), true, false)));
         Map<String, DomainAggregateFieldConfig> domainAggregateFieldConfigs = domainAggregateConfig.getDomainAggregateFields();
         for(Map.Entry<String,DomainAggregateFieldConfig> entry : domainAggregateFieldConfigs.entrySet()) {

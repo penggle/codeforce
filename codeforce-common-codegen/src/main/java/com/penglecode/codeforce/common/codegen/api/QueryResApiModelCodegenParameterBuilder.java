@@ -24,7 +24,7 @@ public class QueryResApiModelCodegenParameterBuilder<D extends DomainObjectConfi
     }
 
     protected boolean isGenerableField(DomainEntityFieldConfig domainEntityFieldConfig) {
-        //不是查询辅助字段
+        //不是查询场景入站辅助字段
         return !DomainObjectFieldGroup.DOMAIN_ENTITY_SUPPORTS_QUERY_INBOUND_FIELD.equals(domainEntityFieldConfig.getFieldGroup());
     }
 

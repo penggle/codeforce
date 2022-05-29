@@ -30,7 +30,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if> 
     @Resource(name="${domainServiceBeanName}")
     private ${domainServiceName} ${domainServiceInstanceName};
 
-<#if createDomainObject.activated>
+<#if createDomainObject??>
 
     /**
      * 创建${domainObjectParameter.domainObjectTitle}
@@ -45,7 +45,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if> 
     </#list>
     }
 </#if>
-<#if modifyDomainObjectById.activated>
+<#if modifyDomainObjectById??>
 
     /**
      * 根据ID修改${domainObjectParameter.domainObjectTitle}
@@ -60,7 +60,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if> 
     </#list>
     }
 </#if>
-<#if removeDomainObjectById.activated>
+<#if removeDomainObjectById??>
 
     /**
      * 根据ID删除${domainObjectParameter.domainObjectTitle}
@@ -75,7 +75,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if> 
     </#list>
     }
 </#if>
-<#if removeDomainObjectsByIds.activated>
+<#if removeDomainObjectsByIds??>
 
     /**
      * 根据多个ID删除${domainObjectParameter.domainObjectTitle}
@@ -90,7 +90,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if> 
     </#list>
     }
 </#if>
-<#if getDomainObjectById.activated>
+<#if getDomainObjectById??>
 
     /**
      * 根据ID获取${domainObjectParameter.domainObjectTitle}
@@ -109,7 +109,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if> 
     </#list>
     }
 </#if>
-<#if getDomainObjectsByIds.activated>
+<#if getDomainObjectsByIds??>
 
     /**
      * 根据多个ID获取${domainObjectParameter.domainObjectTitle}
@@ -128,7 +128,7 @@ public class ${targetClass}<#if targetExtends??> extends ${targetExtends}</#if> 
     </#list>
     }
 </#if>
-<#if getDomainObjectsByPage.activated>
+<#if getDomainObjectsByPage??>
 
     /**
      * 根据条件查询${domainObjectParameter.domainObjectTitle}列表(排序、分页)

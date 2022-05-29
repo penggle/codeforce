@@ -1,9 +1,9 @@
 package com.penglecode.codeforce.common.codegen.api;
 
-import com.penglecode.codeforce.common.codegen.support.CodegenContext;
 import com.penglecode.codeforce.common.codegen.config.ApiClientConfig;
 import com.penglecode.codeforce.common.codegen.config.ApiCodegenConfigProperties;
 import com.penglecode.codeforce.common.codegen.config.DomainObjectConfig;
+import com.penglecode.codeforce.common.codegen.support.CodegenContext;
 import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,7 +33,7 @@ public class ApiClientCodegenParameterBuilder<D extends DomainObjectConfig> exte
     protected ApiClientCodegenParameter setCommonCodegenParameter(ApiClientCodegenParameter codegenParameter) {
         codegenParameter = super.setCommonCodegenParameter(codegenParameter);
         List<String> targetAnnotations = new ArrayList<>();
-        targetAnnotations.add(String.format("@RequestMapping(\"/api/%s\")", codegenParameter.getDomainObjectParameter().getDomainObjectAlias().toLowerCase()));
+        targetAnnotations.add(String.format("@RequestMapping(\"%s\")", getApiPrefixUrl(codegenParameter.getDomainObjectParameter().getDomainObjectAlias().toLowerCase())));
         targetAnnotations.add(String.format("@Tag(name=\"%s\", description=\"%sAPI接口\")", codegenParameter.getTargetClass(), codegenParameter.getDomainObjectParameter().getDomainObjectTitle()));
         codegenParameter.setTargetAnnotations(targetAnnotations);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(RequestMapping.class.getName()));

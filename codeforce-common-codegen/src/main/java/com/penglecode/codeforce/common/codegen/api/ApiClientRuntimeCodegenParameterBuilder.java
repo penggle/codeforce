@@ -1,5 +1,6 @@
 package com.penglecode.codeforce.common.codegen.api;
 
+import com.penglecode.codeforce.common.codegen.support.ApiProtocol;
 import com.penglecode.codeforce.common.codegen.support.CodegenContext;
 import com.penglecode.codeforce.common.codegen.config.ApiClientConfig;
 import com.penglecode.codeforce.common.codegen.config.ApiCodegenConfigProperties;
@@ -31,12 +32,15 @@ public class ApiClientRuntimeCodegenParameterBuilder<D extends DomainObjectConfi
         codegenParameter = super.setCommonCodegenParameter(codegenParameter);
         codegenParameter.setTargetAnnotations(Collections.singletonList("@RestController"));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(RestController.class.getName()));
+        ApiClientConfig apiClientConfig = getCodegenConfig().getApi().getClientConfig();
+        DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
+        if(apiClientConfig.getApiProtocols().contains(ApiProtocol.DUBBO)) {
+            //TODO 添加@DubboService注解
+        }
         if(getTargetConfig().getApiExtendsClass() != null) {
             codegenParameter.setTargetExtends(getTargetConfig().getApiExtendsClass().getSimpleName());
             codegenParameter.addTargetImportType(new FullyQualifiedJavaType(getTargetConfig().getApiExtendsClass().getName()));
         }
-        ApiClientConfig apiClientConfig = getCodegenConfig().getApi().getClientConfig();
-        DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
         codegenParameter.setTargetImplements(Collections.singletonList(apiClientConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiClientConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         return codegenParameter;

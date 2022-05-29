@@ -26,7 +26,7 @@ import ${targetImport};
 ${targetAnnotation}
 </#list>
 public interface ${targetClass} {
-<#if createDomainObject.activated>
+<#if createDomainObject??>
 
     /**
      * 创建${domainObjectParameter.domainObjectTitle}
@@ -37,7 +37,7 @@ public interface ${targetClass} {
     @PostMapping(value="/create", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     ${createDomainObject.methodReturnType} create${domainObjectParameter.domainObjectAlias}(@RequestBody ${createDomainObject.inputApiModelName} createRequest);
 </#if>
-<#if modifyDomainObjectById.activated>
+<#if modifyDomainObjectById??>
 
     /**
      * 根据ID修改${domainObjectParameter.domainObjectTitle}
@@ -48,7 +48,7 @@ public interface ${targetClass} {
     @PostMapping(value="/modify", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     ${modifyDomainObjectById.methodReturnType} modify${domainObjectParameter.domainObjectAlias}ById(@RequestBody ${modifyDomainObjectById.inputApiModelName} modifyRequest);
 </#if>
-<#if removeDomainObjectById.activated>
+<#if removeDomainObjectById??>
 
     /**
      * 根据ID删除${domainObjectParameter.domainObjectTitle}
@@ -59,7 +59,7 @@ public interface ${targetClass} {
     @PostMapping(value="/remove/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
     ${removeDomainObjectById.methodReturnType} remove${domainObjectParameter.domainObjectAlias}ById(@PathVariable("id") ${domainObjectParameter.domainObjectIdType} id);
 </#if>
-<#if removeDomainObjectsByIds.activated>
+<#if removeDomainObjectsByIds??>
 
     /**
      * 根据多个ID删除${domainObjectParameter.domainObjectTitle}
@@ -70,7 +70,7 @@ public interface ${targetClass} {
     @PostMapping(value="/remove/ids", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     ${removeDomainObjectsByIds.methodReturnType} remove${domainObjectParameter.domainObjectsAlias}ByIds(@RequestBody List<${domainObjectParameter.domainObjectIdType}> ids);
 </#if>
-<#if getDomainObjectById.activated>
+<#if getDomainObjectById??>
 
     /**
      * 根据ID获取${domainObjectParameter.domainObjectTitle}
@@ -85,7 +85,7 @@ public interface ${targetClass} {
     @GetMapping(value="/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
     ${getDomainObjectById.methodReturnType} get${domainObjectParameter.domainObjectAlias}ById(@PathVariable("id") ${domainObjectParameter.domainObjectIdType} id<#if aggregateRoot>, @RequestParam(name="cascade", defaultValue="false") Boolean cascade</#if>);
 </#if>
-<#if getDomainObjectsByIds.activated>
+<#if getDomainObjectsByIds??>
 
     /**
      * 根据多个ID获取${domainObjectParameter.domainObjectTitle}
@@ -100,7 +100,7 @@ public interface ${targetClass} {
     @PostMapping(value="/ids", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
     ${getDomainObjectsByIds.methodReturnType} get${domainObjectParameter.domainObjectsAlias}ByIds(@RequestBody List<${domainObjectParameter.domainObjectIdType}> ids<#if aggregateRoot>, @RequestParam(name="cascade", defaultValue="false") Boolean cascade</#if>);
 </#if>
-<#if getDomainObjectsByPage.activated>
+<#if getDomainObjectsByPage??>
 
     /**
      * 根据条件查询${domainObjectParameter.domainObjectTitle}列表(排序、分页)
