@@ -34,7 +34,7 @@ public abstract class ApiProviderConfig extends GenerableTargetConfig {
             if(StringUtils.isNotBlank(methods) && !"ALL".equals(methods)) {
                 return Stream.of(methods.split(",")).map(method -> {
                     try {
-                        return ApiMethod.valueOf(method);
+                        return ApiMethod.valueOf(StringUtils.trim(method));
                     } catch (Exception e) {
                         return null;
                     }

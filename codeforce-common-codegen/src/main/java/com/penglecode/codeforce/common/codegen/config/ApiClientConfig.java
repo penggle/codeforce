@@ -33,8 +33,8 @@ public class ApiClientConfig extends ApiProviderConfig {
         if(StringUtils.isNotBlank(apiProtocols)) {
             apiProtocolSet = Stream.of(apiProtocols.split(",")).map(protocol -> {
                 try {
-                    return ApiProtocol.valueOf(protocol);
-                } catch (IllegalArgumentException e) {
+                    return ApiProtocol.valueOf(StringUtils.trim(protocol));
+                } catch (Exception e) {
                     return null;
                 }
             }).filter(Objects::nonNull).collect(Collectors.toSet());
