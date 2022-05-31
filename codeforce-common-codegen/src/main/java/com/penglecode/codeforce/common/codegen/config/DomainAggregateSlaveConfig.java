@@ -19,24 +19,14 @@ public class DomainAggregateSlaveConfig {
     private DomainMasterSlaveMapping masterSlaveMapping;
 
     /**
-     * 新建主要领域对象时是否也级联新建从属领域对象
+     * 保存主要领域对象时是否也级联保存从属领域对象
      */
-    private boolean cascadingOnInsert = true;
+    private boolean cascadingOnUpsert = true;
 
     /**
-     * 新建主要领域对象时是否校验从属领域对象不为空(仅在cascadingOnInsert=true时有效)
+     * 保存主要领域对象时是否校验从属领域对象不为空(仅在cascadingOnUpsert=true时有效)
      */
-    private boolean validateOnInsert = true;
-
-    /**
-     * 更新主要领域对象时是否也级联更新从属领域对象
-     */
-    private boolean cascadingOnUpdate = true;
-
-    /**
-     * 更新主要领域对象时是否校验从属领域对象不为空(仅在cascadingOnUpdate=true时有效)
-     */
-    private boolean validateOnUpdate = true;
+    private boolean validateOnUpsert = true;
 
     public String getAggregateSlaveEntity() {
         return aggregateSlaveEntity;
@@ -54,41 +44,20 @@ public class DomainAggregateSlaveConfig {
         this.masterSlaveMapping = DomainMasterSlaveMapping.parseMapping(masterSlaveMapping);
     }
 
-    public boolean isCascadingOnInsert() {
-        return cascadingOnInsert;
-    }
-
-    public void setCascadingOnInsert(boolean cascadingOnInsert) {
-        this.cascadingOnInsert = cascadingOnInsert;
-    }
-
-    public boolean isValidateOnInsert() {
-        return validateOnInsert;
-    }
-
-    public void setValidateOnInsert(boolean validateOnInsert) {
-        this.validateOnInsert = validateOnInsert;
-    }
-
-    public boolean isCascadingOnUpdate() {
-        return cascadingOnUpdate;
-    }
-
-    public void setCascadingOnUpdate(boolean cascadingOnUpdate) {
-        this.cascadingOnUpdate = cascadingOnUpdate;
-    }
-
-    public boolean isValidateOnUpdate() {
-        return validateOnUpdate;
-    }
-
-    public void setValidateOnUpdate(boolean validateOnUpdate) {
-        this.validateOnUpdate = validateOnUpdate;
+    public boolean isCascadingOnUpsert() {
+        return cascadingOnUpsert;
     }
 
     public void setCascadingOnUpsert(boolean cascadingOnUpsert) {
-        setCascadingOnInsert(cascadingOnUpsert);
-        setCascadingOnUpdate(cascadingOnUpsert);
+        this.cascadingOnUpsert = cascadingOnUpsert;
+    }
+
+    public boolean isValidateOnUpsert() {
+        return validateOnUpsert;
+    }
+
+    public void setValidateOnUpsert(boolean validateOnUpsert) {
+        this.validateOnUpsert = validateOnUpsert;
     }
 
     @Override

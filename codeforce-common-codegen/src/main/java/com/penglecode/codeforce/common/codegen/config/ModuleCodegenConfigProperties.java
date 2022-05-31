@@ -346,11 +346,8 @@ public abstract class ModuleCodegenConfigProperties implements InitializingBean 
         domainAggregateConfig.setTargetProject(StringUtils.defaultIfBlank(domainAggregateConfig.getTargetProject(), domain.getDomainCommons().getTargetProject()));
         domainAggregateConfig.setTargetPackage(StringUtils.defaultIfBlank(domainAggregateConfig.getTargetPackage(), domain.getDomainCommons().defaultModelPackage()));
         for(DomainAggregateSlaveConfig domainAggregateSlaveConfig : domainAggregateConfig.getAggregateSlaveEntities()) {
-            if(!domainAggregateSlaveConfig.isCascadingOnInsert()) {
-                domainAggregateSlaveConfig.setValidateOnInsert(false);
-            }
-            if(!domainAggregateSlaveConfig.isCascadingOnUpdate()) {
-                domainAggregateSlaveConfig.setValidateOnUpdate(false);
+            if(!domainAggregateSlaveConfig.isCascadingOnUpsert()) {
+                domainAggregateSlaveConfig.setValidateOnUpsert(false);
             }
             DomainEntityConfig slaveDomainEntityConfig = getDomain().getDomainEntities().get(domainAggregateSlaveConfig.getAggregateSlaveEntity());
             if(DomainMasterSlaveRelation.RELATION_11.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //添加1:1聚合关系下的字段

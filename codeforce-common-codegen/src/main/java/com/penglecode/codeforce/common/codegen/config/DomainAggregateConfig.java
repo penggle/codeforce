@@ -89,8 +89,8 @@ public class DomainAggregateConfig extends DomainObjectConfig {
         Map<String,DomainAggregateFieldConfig> domainAggregateFields = getDomainAggregateFields();
         for(Map.Entry<String,DomainAggregateFieldConfig> entry : domainAggregateFields.entrySet()) {
             DomainAggregateFieldConfig domainAggregateFieldConfig = entry.getValue();
-            if(("create".equals(operationType) && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isCascadingOnInsert() && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isValidateOnInsert())
-            || ("modify".equals(operationType) && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isCascadingOnUpdate() && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isValidateOnUpdate())) {
+            if(("create".equals(operationType) && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isCascadingOnUpsert() && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isValidateOnUpsert())
+            || ("modify".equals(operationType) && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isCascadingOnUpsert() && domainAggregateFieldConfig.getDomainAggregateSlaveConfig().isValidateOnUpsert())) {
                 String fieldName = domainAggregateFieldConfig.getFieldName();
                 String fieldType = domainAggregateFieldConfig.getFieldType().getFullyQualifiedNameWithoutTypeParameters();
                 validateFields.append(", ").append(getGeneratedTargetName(domainAggregateName, false, false)).append("::").append(CodegenUtils.getGetterMethodName(fieldName, fieldType));
