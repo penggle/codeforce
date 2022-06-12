@@ -282,7 +282,6 @@
             </activation>
             <build>
                 <!-- 发布所需插件 -->
-                <!--
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -332,7 +331,6 @@
                         </executions>
                     </plugin>
                 </plugins>
-                -->
             </build>
         </profile>
     </profiles>
