@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.penggle</groupId>
     <artifactId>codeforce-parent</artifactId>
-    <version>2.4</version>
+    <version>2.5</version>
     <packaging>pom</packaging>
     <name>codeforce-parent</name>
     <description>一个快速开发脚手架</description>
@@ -49,8 +49,8 @@
     </distributionManagement>
     
     <properties>
-        <springboot.version>2.4.5</springboot.version>
-        <codeforce.version>2.4</codeforce.version>
+        <springboot.version>2.5.14</springboot.version>
+        <codeforce.version>2.5</codeforce.version>
 
         <mybatis.version>3.5.7</mybatis.version>
         <mybatis-spring.version>2.0.6</mybatis-spring.version>

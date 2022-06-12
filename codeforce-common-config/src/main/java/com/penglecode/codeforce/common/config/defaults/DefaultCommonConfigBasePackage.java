@@ -6,5 +6,5 @@ package com.penglecode.codeforce.common.config.defaults;
  * @author pengpeng
  * @version 1.0
  */
-public class CommonDefaultConfigBasePackage {
+public class DefaultCommonConfigBasePackage {
 }
