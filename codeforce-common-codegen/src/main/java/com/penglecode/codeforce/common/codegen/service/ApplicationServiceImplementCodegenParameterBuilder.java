@@ -117,13 +117,13 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
         for(DomainServiceParameter slaveDomainServiceParameter : slaveDomainServiceParameters) {
             DomainAggregateFieldConfig domainAggregateSlaveFieldConfig = domainAggregateFieldConfigs.get(slaveDomainServiceParameter.getDomainEntityConfig().getDomainEntityName());
             DomainAggregateSlaveConfig domainAggregateSlaveConfig = domainAggregateSlaveFieldConfig.getDomainAggregateSlaveConfig();
-            if(domainAggregateSlaveConfig.isCascadingOnInsert()) { //级联保存?
+            if(domainAggregateSlaveConfig.isCascadingOnUpsert()) { //级联保存?
                 String relateFieldSetterOfSlave = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave(), null);
                 String relateFieldGetterOfMaster = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfMaster(), null);
                 if(DomainMasterSlaveRelation.RELATION_11.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { // 1:1关系?
                     //ProductExtraInfo productExtra = product.getProductExtra();
                     methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                    if(domainAggregateSlaveConfig.isValidateOnInsert()) { //存在数据校验?则去掉if判断
+                    if(domainAggregateSlaveConfig.isValidateOnUpsert()) { //存在数据校验?则去掉if判断
                         //productExtra.setProductId(product.getProductId());
                         methodBodyLines.add(String.format("%s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
                         //productExtraInfoService.createProductExtra(productExtra);
@@ -140,7 +140,7 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
                 } else if(DomainMasterSlaveRelation.RELATION_1N.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { //1:N关系?
                     //List<ProductSaleSpec> productSaleSpecs = product.getProductSaleSpecs();
                     methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                    if(domainAggregateSlaveConfig.isValidateOnInsert()) { //存在数据校验?则去掉if判断
+                    if(domainAggregateSlaveConfig.isValidateOnUpsert()) { //存在数据校验?则去掉if判断
                         //productSaleSpecs.forEach(item -> item.setProductId(product.getProductId()));
                         methodBodyLines.add(String.format("%s.forEach(item -> item.%s(%s.%s()));", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
                         //productSaleSpecService.batchCreateProductSaleSpec(productSaleSpecs);
@@ -184,13 +184,13 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
             DomainEntityConfig slaveDomainEntityConfig = slaveDomainServiceParameter.getDomainEntityConfig();
             DomainAggregateFieldConfig domainAggregateSlaveFieldConfig = domainAggregateFieldConfigs.get(slaveDomainEntityConfig.getDomainEntityName());
             DomainAggregateSlaveConfig domainAggregateSlaveConfig = domainAggregateSlaveFieldConfig.getDomainAggregateSlaveConfig();
-            if(domainAggregateSlaveConfig.isCascadingOnUpdate()) { //级联保存?
+            if(domainAggregateSlaveConfig.isValidateOnUpsert()) { //级联保存?
                 String relateFieldSetterOfSlave = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave(), null);
                 String relateFieldGetterOfMaster = CodegenUtils.getSetterMethodName(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfMaster(), null);
                 if(DomainMasterSlaveRelation.RELATION_11.equals(domainAggregateSlaveConfig.getMasterSlaveMapping().getMasterSlaveRelation())) { // 1:1关系?
                     //ProductExtraInfo productExtra = product.getProductExtra();
                     methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), domainAggregateSlaveFieldConfig.getFieldName(), domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                    if(domainAggregateSlaveConfig.isValidateOnUpdate()) { //存在数据校验?则去掉if判断
+                    if(domainAggregateSlaveConfig.isValidateOnUpsert()) { //存在数据校验?则去掉if判断
                         //productExtra.setProductId(product.getProductId());
                         methodBodyLines.add(String.format("%s.%s(%s.%s());", domainAggregateSlaveFieldConfig.getFieldName(), relateFieldSetterOfSlave, domainObjectVariableName, relateFieldGetterOfMaster));
                         //productExtraInfoService.modifyProductExtraById(productExtra);
@@ -209,7 +209,7 @@ public class ApplicationServiceImplementCodegenParameterBuilder extends Abstract
                     String persistedSlavesVariable = "persisted" + StringUtils.upperCaseFirstChar(domainAggregateSlaveFieldConfig.getFieldName());
                     //List<ProductSaleSpec> transientProductSaleSpecs = product.getProductSaleSpecs();
                     methodBodyLines.add(String.format("%s %s = %s.%s();", domainAggregateSlaveFieldConfig.getFieldType().getShortName(), transientSlavesVariable, domainObjectVariableName, domainAggregateSlaveFieldConfig.getFieldGetterName()));
-                    if(domainAggregateSlaveConfig.isValidateOnUpdate()) { //存在数据校验?则去掉if判断
+                    if(domainAggregateSlaveConfig.isValidateOnUpsert()) { //存在数据校验?则去掉if判断
                         ByMasterIdDomainServiceMethodParameter getByMasterIdDomainServiceMethod = slaveDomainServiceParameter.getDomainServiceCodegenParameter().getGetDomainObjectsByXxxMasterId().get(domainAggregateSlaveConfig.getMasterSlaveMapping().getRelateFieldNameOfSlave());
                         //List<ProductSaleSpec> persistedProductSaleSpecs = productSaleSpecService.getProductSaleSpecsByProductId(product.getProductId());
                         methodBodyLines.add(String.format("%s %s = %s.%s(%s.%s());", getByMasterIdDomainServiceMethod.getMethodReturnType(), persistedSlavesVariable, slaveDomainServiceParameter.getDomainServiceInstanceName(), getByMasterIdDomainServiceMethod.getMethodName(), domainObjectVariableName, relateFieldGetterOfMaster));
