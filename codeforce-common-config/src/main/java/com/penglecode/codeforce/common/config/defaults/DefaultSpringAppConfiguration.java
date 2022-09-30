@@ -1,14 +1,13 @@
 package com.penglecode.codeforce.common.config.defaults;
 
-import com.penglecode.codeforce.common.consts.ApplicationConstants;
+import com.penglecode.codeforce.common.config.AbstractSpringConfiguration;
 import com.penglecode.codeforce.common.consts.GlobalConstants;
 import com.penglecode.codeforce.common.initializer.DefaultSpringAppPostInitializer;
+import com.penglecode.codeforce.common.support.DefaultConversionService;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.penglecode.codeforce.common.config.AbstractSpringConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +15,6 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.format.FormatterRegistry;
 
 /**
  * 默认的SpringBoot应用配置
@@ -48,7 +46,7 @@ public class DefaultSpringAppConfiguration extends AbstractSpringConfiguration {
 		LOGGER.info(">>> 初始化Spring应用的全局国际化资源文件配置! messageSource = {}, messageSourceAccessor = {}", messageSource, messageSourceAccessor);
 		return messageSourceAccessor;
 	}
-	
+
 	/**
 	 * 全局默认的ResourcePatternResolver
 	 */
@@ -59,15 +57,14 @@ public class DefaultSpringAppConfiguration extends AbstractSpringConfiguration {
 		LOGGER.info(">>> 初始化Spring应用的默认文件资源解析器配置! resourcePatternResolver = {}", resourcePatternResolver);
 		return resourcePatternResolver;
 	}
-	
+
 	/**
 	 * 全局默认的ConversionService
 	 */
 	@Bean
 	@ConditionalOnMissingBean(name="defaultConversionService")
 	public static ConversionService defaultConversionService() {
-		ConversionService conversionService = ApplicationConversionService.getSharedInstance();
-		ApplicationConstants.DEFAULT_DATETIME_FORMATTER_REGISTRAR.registerFormatters((FormatterRegistry) conversionService);
+		ConversionService conversionService = new DefaultConversionService();
         LOGGER.info(">>> 初始化Spring应用的默认类型转换服务配置! conversionService = {}", conversionService.getClass());
         return conversionService;
 	}

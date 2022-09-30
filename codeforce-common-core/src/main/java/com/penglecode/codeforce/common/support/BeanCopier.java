@@ -1,6 +1,5 @@
 package com.penglecode.codeforce.common.support;
 
-import com.penglecode.codeforce.common.consts.ApplicationConstants;
 import com.penglecode.codeforce.common.domain.DomainObject;
 import com.penglecode.codeforce.common.model.BaseDTO;
 import com.penglecode.codeforce.common.util.JsonUtils;
@@ -10,12 +9,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.cglib.core.Converter;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
-import org.springframework.format.support.FormattingConversionService;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
@@ -41,7 +38,13 @@ public class BeanCopier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeanCopier.class);
 
-    private static final ConversionService CONVERSION_SERVICE = new DefaultConversionService();
+    private static final ConfigurableConversionService CONVERSION_SERVICE = new DefaultConversionService();
+
+    static {
+        CONVERSION_SERVICE.addConverter(new DefaultXXO2XXOConverter()); //XXO -> XXO
+        CONVERSION_SERVICE.addConverter(new DefaultXXO2StringConverter()); //XXO -> String
+        CONVERSION_SERVICE.addConverter(new DefaultString2XXOConverter()); //String -> XXO
+    }
 
     private static final ConcurrentMap<String, ImmutablePair<org.springframework.cglib.beans.BeanCopier,Converter>> BEAN_COPIER_CACHE = new ConcurrentHashMap<>();
 
@@ -179,26 +182,6 @@ public class BeanCopier {
                 propertySetterName = propertySetterName.substring(2);
             }
             return StringUtils.lowerCaseFirstChar(propertySetterName);
-        }
-
-    }
-
-    /**
-     * bean拷贝的默认ConversionService
-     */
-    static class DefaultConversionService extends FormattingConversionService {
-
-        public DefaultConversionService() {
-            super();
-            ApplicationConversionService.configure(this);
-            ApplicationConstants.DEFAULT_DATETIME_FORMATTER_REGISTRAR.registerFormatters(this);
-            addApplicationConverters();
-        }
-
-        protected void addApplicationConverters() {
-            addConverter(new DefaultXXO2XXOConverter()); //XXO -> XXO
-            addConverter(new DefaultXXO2StringConverter()); //XXO -> String
-            addConverter(new DefaultString2XXOConverter()); //String -> XXO
         }
 
     }
