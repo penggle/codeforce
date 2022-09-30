@@ -22,7 +22,7 @@ import java.util.List;
  * 默认的SpringBoot Servlet-Web应用的全局异常处理配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Configuration
 @ConditionalOnWebApplication(type=Type.SERVLET)

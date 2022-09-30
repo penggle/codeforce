@@ -12,7 +12,7 @@ import java.util.Map;
  * 专门用于生成领域服务/应用服务接口及其实现类的代码生成器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ServiceCodeGenerator extends ModuleCodeGenerator<ServiceCodegenConfigProperties> {
 

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * 领域实体配置，领域实体直接对应着数据库中的表
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainEntityConfig extends DomainObjectConfig {
 

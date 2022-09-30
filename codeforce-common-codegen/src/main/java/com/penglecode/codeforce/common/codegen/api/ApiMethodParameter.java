@@ -6,7 +6,7 @@ import com.penglecode.codeforce.common.codegen.support.CodegenMethodParameter;
  * API接口方法生成参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiMethodParameter extends CodegenMethodParameter {
 

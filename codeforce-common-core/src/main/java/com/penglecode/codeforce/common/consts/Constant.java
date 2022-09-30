@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  * 常量
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings("unchecked")
 public abstract class Constant<T> implements Supplier<T> {

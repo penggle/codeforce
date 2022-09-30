@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings("ConstantConditions")
 public class CollectionUtils extends org.springframework.util.CollectionUtils {

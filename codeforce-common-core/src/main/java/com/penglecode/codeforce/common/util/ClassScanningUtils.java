@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * 基于Spring类路径上类或接口的扫描工具类
  * 
  * @author 	pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ClassScanningUtils {
 

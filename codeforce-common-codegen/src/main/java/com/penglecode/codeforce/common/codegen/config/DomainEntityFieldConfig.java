@@ -8,7 +8,7 @@ import com.penglecode.codeforce.common.codegen.support.QueryConditionOperator;
  * 领域实体字段配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainEntityFieldConfig extends DomainObjectFieldConfig {
 

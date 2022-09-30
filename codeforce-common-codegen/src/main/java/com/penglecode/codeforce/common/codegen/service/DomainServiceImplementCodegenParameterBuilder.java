@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * 领域实体的领域服务实现代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainServiceImplementCodegenParameterBuilder extends AbstractDomainServiceCodegenParameterBuilder<ServiceImplementConfig, DomainServiceImplementCodegenParameter> {
 

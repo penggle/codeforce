@@ -28,7 +28,7 @@ import java.util.List;
  * 默认的SpringMVC的定制化配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Configuration
 @ConditionalOnWebApplication(type=Type.SERVLET)

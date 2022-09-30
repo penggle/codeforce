@@ -30,7 +30,7 @@ import java.util.function.Supplier;
  *         System.out.println(map);
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings("unchecked")
 public class MapLambdaBuilder<T> {

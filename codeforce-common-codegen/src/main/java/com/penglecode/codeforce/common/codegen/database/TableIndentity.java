@@ -6,7 +6,7 @@ import java.util.Objects;
  * 数据库表唯一身份
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class TableIndentity {
 

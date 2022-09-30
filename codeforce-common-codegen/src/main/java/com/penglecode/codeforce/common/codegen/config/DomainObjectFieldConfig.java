@@ -8,7 +8,7 @@ import com.penglecode.codeforce.common.codegen.util.CodegenUtils;
  * 领域对象字段配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class DomainObjectFieldConfig {
 

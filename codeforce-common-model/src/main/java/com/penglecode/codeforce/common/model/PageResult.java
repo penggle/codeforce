@@ -9,7 +9,7 @@ import java.util.Map;
  * 
  * @param <T>
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Schema(description="通用分页查询结果DTO")
 public class PageResult<T> extends Result<T> {
@@ -17,7 +17,6 @@ public class PageResult<T> extends Result<T> {
 	private static final long serialVersionUID = 1L;
 	
 	/** 当存在分页查询时此值为总记录数 */
-
 	@Schema(description="总记录数", defaultValue="0")
 	private int totalRowCount;
 

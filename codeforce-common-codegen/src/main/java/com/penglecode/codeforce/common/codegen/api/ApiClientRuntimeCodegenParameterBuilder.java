@@ -15,7 +15,7 @@ import java.util.Collections;
  * API接口的Client实现代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiClientRuntimeCodegenParameterBuilder<D extends DomainObjectConfig> extends ApiRuntimeCodegenParameterBuilder<D> {
 

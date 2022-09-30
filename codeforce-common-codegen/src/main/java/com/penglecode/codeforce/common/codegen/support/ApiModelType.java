@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.support;
  * API接口数据模型类型
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public enum ApiModelType {
 

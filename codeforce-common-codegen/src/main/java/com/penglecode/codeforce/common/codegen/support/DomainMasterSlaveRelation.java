@@ -5,7 +5,7 @@ package com.penglecode.codeforce.common.codegen.support;
  * 说明：多对多关系对于某一个领域对象来说其实就是一对多关系，所以我们要面对的仅仅是"一对一关系"和"一对多关系"两种
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public enum DomainMasterSlaveRelation {
 

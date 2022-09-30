@@ -10,7 +10,7 @@ import java.util.Map;
  * 对应{@link Result}的Map形式，用于全局异常处理
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public final class MapResult extends HashMap<String,Object> implements BaseDTO {
 

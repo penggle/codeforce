@@ -9,7 +9,7 @@ import java.util.function.Function;
  * 国际化消息Supplier
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public interface MessageSupplier extends Function<MessageSourceAccessor,String> {
 

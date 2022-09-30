@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.support;
  * 查询Where条件运算符
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public enum QueryConditionOperator {
 

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * 聚合根对应的应用服务实现代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApplicationServiceImplementCodegenParameterBuilder extends AbstractApplicationServiceCodegenParameterBuilder<ServiceImplementConfig, ApplicationServiceImplementCodegenParameter> {
 

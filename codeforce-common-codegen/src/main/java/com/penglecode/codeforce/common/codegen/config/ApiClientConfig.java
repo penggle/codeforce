@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * API接口Client配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiClientConfig extends ApiProviderConfig {
 

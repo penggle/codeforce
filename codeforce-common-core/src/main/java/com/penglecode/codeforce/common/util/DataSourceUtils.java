@@ -8,7 +8,7 @@ import javax.sql.DataSource;
  * 数据源工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DataSourceUtils {
 

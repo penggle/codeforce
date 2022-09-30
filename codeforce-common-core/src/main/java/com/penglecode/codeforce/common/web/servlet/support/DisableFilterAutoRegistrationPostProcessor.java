@@ -15,7 +15,7 @@ import java.util.Arrays;
  * 阻止SpringBoot自动注册Filter
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DisableFilterAutoRegistrationPostProcessor implements BeanFactoryPostProcessor {
 

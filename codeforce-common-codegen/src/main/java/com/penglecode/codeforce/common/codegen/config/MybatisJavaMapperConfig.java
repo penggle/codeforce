@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Mybatis Mapper接口配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class MybatisJavaMapperConfig extends GenerableTargetConfig {
 

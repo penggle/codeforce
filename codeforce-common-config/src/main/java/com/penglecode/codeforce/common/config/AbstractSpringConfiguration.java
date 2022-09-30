@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
  * springboot配置基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractSpringConfiguration implements EnvironmentAware, ApplicationContextAware, BeanFactoryAware {
 

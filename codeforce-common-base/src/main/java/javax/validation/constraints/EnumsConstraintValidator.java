@@ -10,7 +10,7 @@ import java.util.Set;
  * @Anyone自定义注解校验器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class EnumsConstraintValidator implements ConstraintValidator<Enums, Object> {
 

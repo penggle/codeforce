@@ -20,7 +20,7 @@ import java.util.Collections;
  * 打印SpringBoot自动注册的Filter的顺序
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class EnabledFilterRegistrationBeanLogger implements ApplicationListener<ContextRefreshedEvent> {
 

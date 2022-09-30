@@ -8,7 +8,7 @@ import com.penglecode.codeforce.common.codegen.config.ModuleCodegenConfigPropert
  * 代码生成上下文
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class CodegenContext<C extends ModuleCodegenConfigProperties, T extends GenerableTargetConfig, D extends DomainObjectConfig> {
 

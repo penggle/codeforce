@@ -12,7 +12,7 @@ import java.util.Set;
  * 反射工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings({"unchecked"})
 public class ReflectionUtils extends org.springframework.util.ReflectionUtils {

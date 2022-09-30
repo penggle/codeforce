@@ -16,7 +16,7 @@ import java.util.*;
  * 领域实体代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainEntityCodegenParameterBuilder extends CodegenParameterBuilder<DomainObjectCodegenConfigProperties, DomainEntityConfig, DomainEntityConfig, DomainEntityCodegenParameter> {
 

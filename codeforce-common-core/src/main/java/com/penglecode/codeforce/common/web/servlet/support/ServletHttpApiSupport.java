@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
  * Servlet API接口公共基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class ServletHttpApiSupport implements EnvironmentAware, ApplicationContextAware {
 

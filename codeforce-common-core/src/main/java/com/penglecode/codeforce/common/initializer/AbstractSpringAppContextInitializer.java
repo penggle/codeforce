@@ -7,7 +7,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * Spring应用程序上下文初始化基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractSpringAppContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 

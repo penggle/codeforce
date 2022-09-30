@@ -24,7 +24,7 @@ import java.util.Map;
  * Spring Bean工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings({"unchecked"})
 public class SpringUtils {

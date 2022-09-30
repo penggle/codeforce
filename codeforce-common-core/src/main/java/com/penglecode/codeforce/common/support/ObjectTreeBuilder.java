@@ -1,6 +1,6 @@
 package com.penglecode.codeforce.common.support;
 
-import org.apache.commons.lang3.StringUtils;
+import com.penglecode.codeforce.common.util.StringUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -14,12 +14,10 @@ import java.util.List;
  * 
  * @param <I>
  * @param <T>
- * @author pengpeng
- * @version 1.0
+ * @author 	pengpeng
+ * @version 	1.0.0
  */
 public abstract class ObjectTreeBuilder<I,T extends Comparable<T>> {
-
-	private static final String DEFAULT_TREE_PATH_DELIMITER = "/";
 
 	private final Integer defaultRootLevel;
 
@@ -192,7 +190,7 @@ public abstract class ObjectTreeBuilder<I,T extends Comparable<T>> {
 				parentPath = StringUtils.defaultIfEmpty(getTreeNodePath(parentTreeNode), "");
 			}
 		}
-		String currentPath = parentPath + DEFAULT_TREE_PATH_DELIMITER + getTreeNodeId(currentTreeNode);
+		String currentPath = parentPath + "/" + getTreeNodeId(currentTreeNode);
 		setTreeNodePath(currentTreeNode, currentPath);
 	}
 
@@ -278,7 +276,7 @@ public abstract class ObjectTreeBuilder<I,T extends Comparable<T>> {
 	 * @param <T>
 	 * @param <R>
 	 * @author 	pengpeng
-	 * @version 1.0
+	 * @version 1.0.0
 	 */
 	public interface TreeNodeConverter<T,R> {
 

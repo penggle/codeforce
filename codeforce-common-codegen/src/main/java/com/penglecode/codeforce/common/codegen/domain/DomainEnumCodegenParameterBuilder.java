@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * 领域枚举代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainEnumCodegenParameterBuilder extends CodegenParameterBuilder<DomainObjectCodegenConfigProperties, DomainEnumConfig, DomainEnumConfig, DomainEnumCodegenParameter> {
 

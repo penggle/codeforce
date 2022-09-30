@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.support;
  * ID生成策略
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public enum IdGenStrategy {
     //数据库自动生成(自增主键)

@@ -12,7 +12,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
  * 默认的javax.validation配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Configuration
 @ConditionalOnClass({HibernateValidator.class, LocalValidatorFactoryBean.class})

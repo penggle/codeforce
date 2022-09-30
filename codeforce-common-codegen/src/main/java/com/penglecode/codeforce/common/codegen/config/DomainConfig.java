@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * 领域对象代码生成配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainConfig {
 

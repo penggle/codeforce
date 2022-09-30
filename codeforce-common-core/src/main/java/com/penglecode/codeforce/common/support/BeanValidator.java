@@ -18,7 +18,7 @@ import java.util.Set;
  * 基于javax.validation.Validator的JavaBean校验辅助类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings("unchecked")
 public class BeanValidator {

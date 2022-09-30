@@ -22,7 +22,7 @@ import org.springframework.format.FormatterRegistry;
  * 默认的SpringBoot应用配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Configuration
 public class DefaultSpringAppConfiguration extends AbstractSpringConfiguration {

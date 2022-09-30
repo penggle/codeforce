@@ -9,7 +9,7 @@ import java.util.Map;
  * 领域实体对应的领域服务代码生成参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractDomainServiceCodegenParameter extends CodegenParameter {
 

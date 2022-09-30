@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * 字符串工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 

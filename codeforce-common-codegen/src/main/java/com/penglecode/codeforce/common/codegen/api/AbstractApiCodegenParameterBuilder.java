@@ -12,7 +12,7 @@ import java.util.Set;
  * API接口代码生成参数Builder基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderConfig, D extends DomainObjectConfig, P extends AbstractApiCodegenParameter> extends CodegenParameterBuilder<ApiCodegenConfigProperties, T, D, P> {
 

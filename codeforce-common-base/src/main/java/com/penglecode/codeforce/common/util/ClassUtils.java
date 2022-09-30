@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
  * Class工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings({"unchecked"})
 public class ClassUtils extends org.springframework.util.ClassUtils {

@@ -10,7 +10,7 @@ import java.util.*;
  * 代码生成Freemarker模板参数基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class CodegenParameter {
 

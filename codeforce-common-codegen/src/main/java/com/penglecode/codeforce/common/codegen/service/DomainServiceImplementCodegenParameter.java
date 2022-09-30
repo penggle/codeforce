@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.service;
  * 领域实体的领域服务实现代码生成参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainServiceImplementCodegenParameter extends AbstractDomainServiceCodegenParameter {
 

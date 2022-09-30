@@ -16,7 +16,7 @@ import java.util.UUID;
  * 其中需要在logback|log4j2的日志行PATTERN中加入traceId参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class HttpApiTraceFilter extends OncePerRequestFilter {
 

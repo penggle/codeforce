@@ -6,7 +6,7 @@ import com.penglecode.codeforce.common.enums.DbType;
  * 领域对象内省配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainIntrospectConfig {
 

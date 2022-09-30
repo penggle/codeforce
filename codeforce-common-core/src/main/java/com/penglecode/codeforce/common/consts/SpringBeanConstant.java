@@ -8,7 +8,7 @@ package com.penglecode.codeforce.common.consts;
  * 		public static final Supplier<MessageSourceAccessor> DEFAULT_MESSAGE_SOURCE_ACCESSOR = new SpringBeanConstant<MessageSourceAccessor>("defaultMessageSourceAccessor") {};
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class SpringBeanConstant<T> extends Constant<T> {
 	

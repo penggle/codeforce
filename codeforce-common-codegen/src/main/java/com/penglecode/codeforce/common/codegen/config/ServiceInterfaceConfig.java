@@ -6,7 +6,7 @@ import com.penglecode.codeforce.common.codegen.support.ServiceType;
  * Service接口配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ServiceInterfaceConfig extends GenerableTargetConfig {
 

@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
  * @DateTimePattern自定义注解校验器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DateTimeConstraintValidator implements ConstraintValidator<DateTime, String> {
 

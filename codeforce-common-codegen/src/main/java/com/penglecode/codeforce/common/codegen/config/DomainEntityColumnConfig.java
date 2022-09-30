@@ -8,7 +8,7 @@ import org.apache.ibatis.type.TypeHandler;
  * 领域实体对应的数据库表列配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @SuppressWarnings("rawtypes")
 public class DomainEntityColumnConfig {

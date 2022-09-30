@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
  * 错误码接口
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public interface ErrorCode {
 

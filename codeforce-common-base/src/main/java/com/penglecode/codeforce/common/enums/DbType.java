@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.enums;
  * 主流关系型数据库类型
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public enum DbType {
     MYSQL("mysql", "MySql数据库"),

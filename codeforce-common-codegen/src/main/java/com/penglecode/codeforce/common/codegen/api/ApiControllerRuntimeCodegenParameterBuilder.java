@@ -18,7 +18,7 @@ import java.util.List;
  * 注意此时生成的ApiController实现不会implements某个ApiClient接口，仅仅是一个SpringMVC的Controller提供HTTP接口服务
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiControllerRuntimeCodegenParameterBuilder<D extends DomainObjectConfig> extends ApiRuntimeCodegenParameterBuilder<D> {
 

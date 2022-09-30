@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * 代码生成工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  * @created 2021/1/22 13:01
  */
 public class CodegenUtils {

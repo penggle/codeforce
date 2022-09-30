@@ -7,7 +7,7 @@ import com.penglecode.codeforce.common.support.ErrorCode;
  * 应用异常基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class ApplicationException extends RuntimeException {
 

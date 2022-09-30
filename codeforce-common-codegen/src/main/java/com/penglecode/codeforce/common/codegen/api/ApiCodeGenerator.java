@@ -14,7 +14,7 @@ import java.util.Set;
  * API接口代码生成器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiCodeGenerator extends ModuleCodeGenerator<ApiCodegenConfigProperties> {
 

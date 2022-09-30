@@ -13,7 +13,7 @@ import com.penglecode.codeforce.common.util.StringUtils;
  * 代码生成模板参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class CodegenParameterBuilder<C extends ModuleCodegenConfigProperties, T extends GenerableTargetConfig, D extends DomainObjectConfig, P extends CodegenParameter> {
 

@@ -6,7 +6,7 @@ import java.util.List;
  * 对象字段
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ObjectFieldParameter {
 

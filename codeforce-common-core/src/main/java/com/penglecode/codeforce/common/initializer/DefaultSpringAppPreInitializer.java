@@ -29,7 +29,7 @@ import java.util.Objects;
  * 		context.initializer.classes=xyz.SpringAppPreBootingInitializer
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class DefaultSpringAppPreInitializer extends AbstractSpringAppContextInitializer {

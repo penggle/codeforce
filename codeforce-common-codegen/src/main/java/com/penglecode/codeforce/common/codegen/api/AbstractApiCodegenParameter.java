@@ -7,7 +7,7 @@ import com.penglecode.codeforce.common.codegen.support.DomainObjectParameter;
  * API接口代码生成参数基类
  *
  * @author  pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractApiCodegenParameter extends CodegenParameter {
 

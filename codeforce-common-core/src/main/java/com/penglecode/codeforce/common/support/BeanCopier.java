@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  *      2、深度拷贝的字段(自定义bean)必须实现{@link BaseDTO}或{@link DomainObject}标记接口
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class BeanCopier {
 

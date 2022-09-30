@@ -16,7 +16,7 @@ import java.util.Map;
  * 默认的SpringBoot应用上下文环境初始化
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Priority(0)
 @Order(Ordered.HIGHEST_PRECEDENCE)

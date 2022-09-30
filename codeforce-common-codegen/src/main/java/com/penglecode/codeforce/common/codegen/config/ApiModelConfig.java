@@ -9,7 +9,7 @@ import java.util.Collections;
  * API接口数据模型配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiModelConfig extends GenerableTargetConfig {
 

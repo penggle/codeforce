@@ -8,7 +8,7 @@ package com.penglecode.codeforce.common.consts;
  *  	public static final Constant<String> APP_CODE = new SpringEnvConstant<String>("spring.application.code") {};
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class SpringEnvConstant<T> extends Constant<T> {
 	

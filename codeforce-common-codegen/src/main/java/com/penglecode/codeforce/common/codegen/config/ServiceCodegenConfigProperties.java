@@ -6,7 +6,7 @@ import org.springframework.util.Assert;
  * Service代码生成配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ServiceCodegenConfigProperties extends MybatisCodegenConfigProperties {
 

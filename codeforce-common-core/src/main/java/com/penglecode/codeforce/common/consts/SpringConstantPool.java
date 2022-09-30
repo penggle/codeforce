@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * 基于Spring的常量池
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class SpringConstantPool<T> implements ConstantPool<T> {
 

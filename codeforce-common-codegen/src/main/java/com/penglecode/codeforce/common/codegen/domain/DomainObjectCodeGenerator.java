@@ -15,7 +15,7 @@ import java.util.Set;
  * 领域对象[值对象(枚举)、实体、聚合根]代码生成器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainObjectCodeGenerator extends ModuleCodeGenerator<DomainObjectCodegenConfigProperties> {
 

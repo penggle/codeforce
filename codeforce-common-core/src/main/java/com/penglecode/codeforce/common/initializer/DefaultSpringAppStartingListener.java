@@ -16,7 +16,7 @@ import java.util.Objects;
  * (在整个SpringBoot应用刚启动时做的操作)
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DefaultSpringAppStartingListener implements ApplicationListener<ApplicationStartingEvent> {
 

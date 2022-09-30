@@ -14,7 +14,7 @@ import java.nio.channels.SocketChannel;
  * 网络工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class NetUtils {
 

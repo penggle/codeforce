@@ -21,7 +21,7 @@ import java.util.Map;
  * (ApiModelType.SAVE_DTO|QUERY_DTO)API接口数据模型代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  * @created 2021/2/20 21:25
  */
 public abstract class DtoApiModelCodegenParameterBuilder extends AbstractApiModelCodegenParameterBuilder<DomainEntityConfig> {

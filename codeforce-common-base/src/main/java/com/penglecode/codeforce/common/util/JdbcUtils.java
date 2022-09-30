@@ -17,7 +17,7 @@ import java.util.Map;
  * JDBC工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class JdbcUtils {
 

@@ -18,7 +18,7 @@ import java.util.function.ObjIntConsumer;
  * 聚合根的应用服务代码生成参数Builder基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractApplicationServiceCodegenParameterBuilder<T extends GenerableTargetConfig, P extends AbstractApplicationServiceCodegenParameter> extends CodegenParameterBuilder<ServiceCodegenConfigProperties, T, DomainAggregateConfig, P> {
 

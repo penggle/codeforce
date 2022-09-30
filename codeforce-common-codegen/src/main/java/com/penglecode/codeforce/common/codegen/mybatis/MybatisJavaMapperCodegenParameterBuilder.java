@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 领域实体的Mybatis Java-Mapper代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class MybatisJavaMapperCodegenParameterBuilder extends CodegenParameterBuilder<MybatisCodegenConfigProperties, MybatisJavaMapperConfig, DomainEntityConfig, MybatisJavaMapperCodegenParameter> {
 

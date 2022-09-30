@@ -11,7 +11,7 @@ import com.penglecode.codeforce.common.codegen.config.DomainObjectConfig;
  * (ApiModelType.QUERY_RESPONSE)API接口数据模型代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class QueryResApiModelCodegenParameterBuilder<D extends DomainObjectConfig> extends SaveReqApiModelCodegenParameterBuilder<D> {
 

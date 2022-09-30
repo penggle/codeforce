@@ -22,7 +22,7 @@ import java.util.*;
  * 数据库自省器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DatabaseIntrospector {
 

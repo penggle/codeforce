@@ -6,7 +6,7 @@ import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
  * 自省表的列元数据
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class IntrospectedColumn {
 

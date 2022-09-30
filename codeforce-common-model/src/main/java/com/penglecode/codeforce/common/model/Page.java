@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * 通用分页DTO
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Schema(description="通用分页DTO")
 public class Page implements BaseDTO {

@@ -6,7 +6,7 @@ import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
  * JDBC类型信息
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class JdbcTypeInformation {
 

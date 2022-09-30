@@ -19,7 +19,7 @@ import java.lang.annotation.Annotation;
  * 该定制的ObjectMapper才去动态判断序列化/反序列化对象上是否有@JsonRootName注解，来解决这个蛋疼的问题
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  * @created 2021/5/15 14:02
  */
 @SuppressWarnings({"ResultOfMethodCallIgnored"})

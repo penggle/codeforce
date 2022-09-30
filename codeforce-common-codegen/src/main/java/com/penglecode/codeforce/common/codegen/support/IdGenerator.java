@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * 主键生成器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class IdGenerator {
 

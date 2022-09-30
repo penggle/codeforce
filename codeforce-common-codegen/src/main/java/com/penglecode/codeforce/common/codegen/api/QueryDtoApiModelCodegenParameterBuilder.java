@@ -11,7 +11,7 @@ import com.penglecode.codeforce.common.codegen.support.DomainObjectFieldGroup;
  * (ApiModelType.QUERY_DTO)API接口数据模型代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class QueryDtoApiModelCodegenParameterBuilder extends DtoApiModelCodegenParameterBuilder {
 

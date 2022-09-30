@@ -6,7 +6,7 @@ import org.springframework.util.CollectionUtils;
  * API接口实现配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiRuntimeConfig extends ApiProviderConfig {
 

@@ -16,7 +16,7 @@ import java.util.List;
  * API接口实现的代码生成参数Builder基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectConfig> extends AbstractApiCodegenParameterBuilder<ApiRuntimeConfig, D, ApiRuntimeCodegenParameter> {
 

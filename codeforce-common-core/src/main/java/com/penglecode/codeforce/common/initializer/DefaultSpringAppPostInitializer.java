@@ -1,5 +1,8 @@
 package com.penglecode.codeforce.common.initializer;
 
+import com.penglecode.codeforce.common.consts.Constant;
+import com.penglecode.codeforce.common.consts.ConstantPool;
+import com.penglecode.codeforce.common.consts.SpringConstantPool;
 import com.penglecode.codeforce.common.util.ReflectionUtils;
 import com.penglecode.codeforce.common.util.SpringUtils;
 import org.slf4j.Logger;
@@ -17,7 +20,7 @@ import java.util.Objects;
  * Spring应用启动完成时的初始化程序
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DefaultSpringAppPostInitializer implements ApplicationContextAware, EnvironmentAware {
 
@@ -32,6 +35,10 @@ public class DefaultSpringAppPostInitializer implements ApplicationContextAware,
 		Method method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setApplicationContext", ApplicationContext.class));
 		method.setAccessible(true);
 		ReflectionUtils.invokeMethod(method, null, applicationContext); //设置ApplicationContext
+
+		method = Objects.requireNonNull(ReflectionUtils.findMethod(Constant.class, "setConstantPool", ConstantPool.class));
+		method.setAccessible(true);
+		ReflectionUtils.invokeMethod(method, null, new SpringConstantPool<>()); //设置ConstantPool
 	}
 
 	/**

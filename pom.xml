@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.penggle</groupId>
     <artifactId>codeforce-parent</artifactId>
-    <version>2.5</version>
+    <version>2.5.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>codeforce-parent</name>
     <description>一个快速开发脚手架</description>
@@ -33,7 +33,7 @@
         <connection>https://github.com/penggle/codeforce.git</connection>
         <developerConnection>scm:git:https://github.com/penggle/codeforce.git</developerConnection>
         <url>https://github.com/penggle/codeforce</url>
-        <tag>v${codeforce.version}</tag>
+        <tag>v${project.version}</tag>
     </scm>
 
     <distributionManagement>
@@ -50,7 +50,6 @@
     
     <properties>
         <springboot.version>2.5.14</springboot.version>
-        <codeforce.version>2.5</codeforce.version>
 
         <mybatis.version>3.5.7</mybatis.version>
         <mybatis-spring.version>2.0.6</mybatis-spring.version>
@@ -82,35 +81,35 @@
             <dependency>
                 <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-base</artifactId>
-                <version>${codeforce.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- codeforce-common-model -->
             <dependency>
                 <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-model</artifactId>
-                <version>${codeforce.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- codeforce-common-domain -->
             <dependency>
                 <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-domain</artifactId>
-                <version>${codeforce.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- codeforce-common-core -->
             <dependency>
                 <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-core</artifactId>
-                <version>${codeforce.version}</version>
+                <version>${project.version}</version>
             </dependency>
 			
             <!-- codeforce-common-config -->
             <dependency>
                 <groupId>io.github.penggle</groupId>
                 <artifactId>codeforce-common-config</artifactId>
-                <version>${codeforce.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- commons-lang3 -->

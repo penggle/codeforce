@@ -17,7 +17,7 @@ import java.util.function.ObjIntConsumer;
  * 领域实体的领域服务代码生成参数Builder基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractDomainServiceCodegenParameterBuilder<T extends GenerableTargetConfig, P extends AbstractDomainServiceCodegenParameter> extends CodegenParameterBuilder<ServiceCodegenConfigProperties, T, DomainEntityConfig, P> {
 

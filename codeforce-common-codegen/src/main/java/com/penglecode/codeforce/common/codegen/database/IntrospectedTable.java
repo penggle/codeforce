@@ -9,7 +9,7 @@ import java.util.Map;
  * 自省数据库表元数据
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class IntrospectedTable extends TableIndentity {
 

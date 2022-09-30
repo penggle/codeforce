@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * 主要领域对象与从属领域对象的映射关系
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainMasterSlaveMapping {
 

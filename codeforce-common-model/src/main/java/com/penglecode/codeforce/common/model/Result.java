@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @param <T>
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Schema(description="通用结果DTO")
 public class Result<T> implements BaseDTO {

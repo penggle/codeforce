@@ -8,7 +8,7 @@ import java.util.List;
  * 领域枚举代码生成模板参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainEnumCodegenParameter extends CodegenParameter {
 

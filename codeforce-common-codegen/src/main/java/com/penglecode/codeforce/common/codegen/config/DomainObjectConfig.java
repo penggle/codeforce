@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.config;
  * 领域对象(实体、聚合根)配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class DomainObjectConfig extends GenerableTargetConfig {
 

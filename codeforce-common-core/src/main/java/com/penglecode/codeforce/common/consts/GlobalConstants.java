@@ -6,7 +6,7 @@ import java.util.Locale;
  * 全局共通常量
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class GlobalConstants {
 

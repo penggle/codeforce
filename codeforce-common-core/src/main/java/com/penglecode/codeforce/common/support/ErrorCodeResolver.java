@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
  * ErrorCode解析器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ErrorCodeResolver {
 

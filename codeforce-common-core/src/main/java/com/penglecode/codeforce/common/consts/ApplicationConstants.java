@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * 应用的全局常量,其中包括：Spring上下文对象、Servlet上下文对象、应用的上下文路径、应用系统默认字符集、默认Locale、默认日期格式等常量
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class ApplicationConstants {
 

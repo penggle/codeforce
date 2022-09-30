@@ -14,7 +14,7 @@ import java.util.Map;
  * 专门用于生成指定bizModule模块下的Mybatis代码(如XxxMpper.java、XxxMapper.xml)
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class MybatisCodeGenerator extends ModuleCodeGenerator<MybatisCodegenConfigProperties> {
 

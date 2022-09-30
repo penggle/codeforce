@@ -10,7 +10,7 @@ import java.util.List;
  * API接口数据模型代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class AbstractApiModelCodegenParameterBuilder<D extends DomainObjectConfig> extends CodegenParameterBuilder<ApiCodegenConfigProperties, ApiModelConfig, D, ApiModelCodegenParameter> {
 

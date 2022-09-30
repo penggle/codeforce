@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.config;
  * 领域服务/应用服务配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ServiceConfig {
 

@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
  * 基于JAVA8方法引用的Getter方法自省器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class BeanIntrospector {
 

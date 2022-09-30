@@ -13,7 +13,7 @@ import java.util.Map;
  * 基于Spring SPEL的模板工具类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class TemplateUtils {
 

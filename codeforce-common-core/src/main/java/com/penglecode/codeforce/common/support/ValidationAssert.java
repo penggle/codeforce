@@ -11,7 +11,7 @@ import java.util.Map;
  * 数据验证的Assert,所有抛出异常均为{@code ApplicationValidationException}
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ValidationAssert {
 

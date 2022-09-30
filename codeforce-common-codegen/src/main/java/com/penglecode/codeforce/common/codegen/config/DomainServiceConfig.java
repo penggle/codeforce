@@ -6,7 +6,7 @@ import com.penglecode.codeforce.common.codegen.support.ServiceType;
  * 领域服务代码生成配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainServiceConfig {
 

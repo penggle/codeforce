@@ -25,7 +25,7 @@ import java.util.List;
  *      2、如果Result.app为空则为其设置app字段值
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DelegateHttpMessageConverter implements HttpMessageConverter<Object> {
 

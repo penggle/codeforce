@@ -12,7 +12,7 @@ import java.util.Set;
  * (如果定义了聚合对象，则后端会生成对应的{domainAggregateName}AppService)
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainAggregateConfig extends DomainObjectConfig {
 

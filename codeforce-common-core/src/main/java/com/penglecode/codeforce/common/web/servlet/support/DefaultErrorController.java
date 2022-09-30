@@ -26,7 +26,7 @@ import java.util.Map;
  * 默认全局请求出错处理器
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DefaultErrorController extends BasicErrorController {
 

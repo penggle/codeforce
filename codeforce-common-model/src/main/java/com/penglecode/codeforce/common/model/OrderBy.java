@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
  * 通用排序DTO
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Schema(description="通用排序DTO")
 public class OrderBy implements BaseDTO {

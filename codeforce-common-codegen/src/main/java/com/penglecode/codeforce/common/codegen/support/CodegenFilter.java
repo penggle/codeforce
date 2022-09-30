@@ -8,7 +8,7 @@ import com.penglecode.codeforce.common.codegen.config.ModuleCodegenConfigPropert
  * 代码自动生成过滤条件，用于动态过滤/跳过哪些代码生成
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @FunctionalInterface
 public interface CodegenFilter {

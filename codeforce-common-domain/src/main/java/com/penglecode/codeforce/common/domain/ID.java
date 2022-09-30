@@ -12,7 +12,7 @@ import java.util.Map;
  * 联合主键
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ID extends LinkedHashMap<String,Object> {
 

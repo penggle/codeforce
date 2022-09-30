@@ -6,7 +6,7 @@ import java.util.Set;
  * 代码生产注解元数据
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class CodegenAnnotationMeta {
 

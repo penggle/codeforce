@@ -14,7 +14,7 @@ import java.util.List;
  * 并且效率较高，经测试，snowflake每秒能够产生26万ID左右，完全满足需要。
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class SnowflakeIdGenerator implements IdGenerator<Long> {
 

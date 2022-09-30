@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.exception;
  * 应用数据校验异常
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApplicationValidationException extends ApplicationException {
 

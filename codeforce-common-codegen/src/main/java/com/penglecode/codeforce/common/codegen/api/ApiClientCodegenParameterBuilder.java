@@ -17,7 +17,7 @@ import java.util.List;
  * API接口Client代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiClientCodegenParameterBuilder<D extends DomainObjectConfig> extends AbstractApiCodegenParameterBuilder<ApiClientConfig, D, ApiClientCodegenParameter> {
 

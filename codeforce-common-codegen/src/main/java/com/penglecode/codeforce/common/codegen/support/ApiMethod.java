@@ -9,7 +9,7 @@ import java.util.Collections;
  * API接口方法枚举
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public enum ApiMethod {
 

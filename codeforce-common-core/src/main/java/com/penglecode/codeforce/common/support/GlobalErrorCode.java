@@ -16,7 +16,7 @@ package com.penglecode.codeforce.common.support;
  *  5、操作权限校验类归属到ERR403下
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public enum GlobalErrorCode implements ErrorCode {
 

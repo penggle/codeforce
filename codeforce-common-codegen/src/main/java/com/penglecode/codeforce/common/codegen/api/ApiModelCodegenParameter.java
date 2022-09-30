@@ -9,7 +9,7 @@ import java.util.List;
  * API接口数据模型代码生成参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiModelCodegenParameter extends CodegenParameter {
 

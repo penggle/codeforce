@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.support;
  * 领域对象参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainObjectParameter {
 

@@ -12,7 +12,7 @@ import java.util.*;
  * 领域聚合根代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainAggregateCodegenParameterBuilder extends CodegenParameterBuilder<DomainObjectCodegenConfigProperties, DomainAggregateConfig, DomainAggregateConfig, DomainAggregateCodegenParameter> {
 

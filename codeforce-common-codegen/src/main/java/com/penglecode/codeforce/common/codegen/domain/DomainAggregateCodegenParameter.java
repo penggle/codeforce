@@ -9,7 +9,7 @@ import java.util.List;
  * 领域聚合根代码生成参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainAggregateCodegenParameter extends CodegenParameter {
 

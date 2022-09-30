@@ -7,7 +7,7 @@ import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
  * 领域聚合对象字段配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainAggregateFieldConfig extends DomainObjectFieldConfig {
 

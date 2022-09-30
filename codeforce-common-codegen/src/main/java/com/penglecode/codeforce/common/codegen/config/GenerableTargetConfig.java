@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.config;
  * 能自动生成的目标配置
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class GenerableTargetConfig {
 

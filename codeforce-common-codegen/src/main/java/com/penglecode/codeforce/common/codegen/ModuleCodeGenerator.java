@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * 模块化的代码生成器基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class ModuleCodeGenerator<C extends ModuleCodegenConfigProperties> {
 

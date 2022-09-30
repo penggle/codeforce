@@ -9,7 +9,7 @@ import com.penglecode.codeforce.common.codegen.support.CodegenContext;
  * 领域实体的领域服务接口代码生成参数Builder
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DomainServiceInterfaceCodegenParameterBuilder extends AbstractDomainServiceCodegenParameterBuilder<ServiceInterfaceConfig, DomainServiceInterfaceCodegenParameter> {
 

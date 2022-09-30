@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.support;
  * 默认的ErrorCode实现
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class DefaultErrorCode implements ErrorCode {
 

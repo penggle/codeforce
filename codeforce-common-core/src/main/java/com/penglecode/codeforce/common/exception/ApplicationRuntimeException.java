@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.exception;
  * 应用运行时异常
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApplicationRuntimeException extends ApplicationException {
 

@@ -4,7 +4,7 @@ package com.penglecode.codeforce.common.codegen.api;
  * API接口实现的代码生成参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class ApiRuntimeCodegenParameter extends AbstractApiCodegenParameter {
 

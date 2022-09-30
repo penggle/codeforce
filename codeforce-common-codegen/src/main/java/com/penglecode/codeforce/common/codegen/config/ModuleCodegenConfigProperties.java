@@ -23,7 +23,7 @@ import java.util.stream.Stream;
  * 分模块的代码自动生成配置基类
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public abstract class ModuleCodegenConfigProperties implements InitializingBean {
 

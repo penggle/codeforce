@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * 默认的swagger配置(基于springdoc + knife4j)
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 @Configuration
 @ConditionalOnClass({OpenAPI.class, GroupedOpenApi.class})

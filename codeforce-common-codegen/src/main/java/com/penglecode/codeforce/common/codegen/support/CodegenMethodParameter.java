@@ -7,7 +7,7 @@ import java.util.List;
  * 领域服务/应用服务/接口服务方法生成参数
  *
  * @author pengpeng
- * @version 1.0
+ * @version 1.0.0
  */
 public class CodegenMethodParameter {
 
