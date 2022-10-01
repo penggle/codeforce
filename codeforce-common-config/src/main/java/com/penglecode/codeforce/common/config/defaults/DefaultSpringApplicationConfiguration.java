@@ -65,7 +65,7 @@ public class DefaultSpringApplicationConfiguration extends AbstractSpringConfigu
 	@ConditionalOnMissingBean(name="defaultConversionService")
 	public static ConversionService defaultConversionService() {
 		ConversionService conversionService = new DefaultConversionService();
-        LOGGER.info(">>> 初始化Spring应用的默认类型转换服务配置! conversionService = {}", conversionService);
+        LOGGER.info(">>> 初始化Spring应用的默认类型转换服务配置! conversionService = {}", conversionService.getClass());
         return conversionService;
 	}
 
