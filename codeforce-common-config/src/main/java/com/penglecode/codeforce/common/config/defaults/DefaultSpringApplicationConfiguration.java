@@ -23,9 +23,9 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  * @version 1.0.0
  */
 @Configuration
-public class DefaultSpringAppConfiguration extends AbstractSpringConfiguration {
+public class DefaultSpringApplicationConfiguration extends AbstractSpringConfiguration {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpringAppConfiguration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultSpringApplicationConfiguration.class);
 
 	/**
 	 * Spring应用启动完成时的初始化程序
@@ -65,7 +65,7 @@ public class DefaultSpringAppConfiguration extends AbstractSpringConfiguration {
 	@ConditionalOnMissingBean(name="defaultConversionService")
 	public static ConversionService defaultConversionService() {
 		ConversionService conversionService = new DefaultConversionService();
-        LOGGER.info(">>> 初始化Spring应用的默认类型转换服务配置! conversionService = {}", conversionService.getClass());
+        LOGGER.info(">>> 初始化Spring应用的默认类型转换服务配置! conversionService = {}", conversionService);
         return conversionService;
 	}
 
