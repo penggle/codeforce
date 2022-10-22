@@ -1,5 +1,6 @@
 package com.penglecode.codeforce.common.support;
 
+import com.penglecode.codeforce.common.consts.ApplicationConstants;
 import com.penglecode.codeforce.common.domain.DomainObject;
 import com.penglecode.codeforce.common.model.BaseDTO;
 import com.penglecode.codeforce.common.util.JsonUtils;
@@ -38,15 +39,9 @@ public class BeanCopier {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeanCopier.class);
 
-    private static final ConfigurableConversionService CONVERSION_SERVICE = new DefaultConversionService();
+    private static final ConcurrentMap<String, ImmutablePair<org.springframework.cglib.beans.BeanCopier,Converter>> BEAN_COPIER_CACHE = new ConcurrentHashMap<>(256);
 
-    static {
-        CONVERSION_SERVICE.addConverter(new DefaultXXO2XXOConverter()); //XXO -> XXO
-        CONVERSION_SERVICE.addConverter(new DefaultXXO2StringConverter()); //XXO -> String
-        CONVERSION_SERVICE.addConverter(new DefaultString2XXOConverter()); //String -> XXO
-    }
-
-    private static final ConcurrentMap<String, ImmutablePair<org.springframework.cglib.beans.BeanCopier,Converter>> BEAN_COPIER_CACHE = new ConcurrentHashMap<>();
+    private static volatile ConfigurableConversionService defaultConversionService;
 
     private BeanCopier() {}
 
@@ -140,6 +135,24 @@ public class BeanCopier {
     }
 
     /**
+     * 获取ConfigurableConversionService
+     */
+    protected static ConfigurableConversionService getDefaultConversionService() {
+        if(defaultConversionService == null) {
+            synchronized (BeanCopier.class) {
+                if(defaultConversionService == null) {
+                    ConfigurableConversionService providedConversionService = ApplicationConstants.DEFAULT_CONVERSION_SERVICE.get();
+                    providedConversionService.addConverter(new DefaultXXO2XXOConverter()); //XXO -> XXO
+                    providedConversionService.addConverter(new DefaultXXO2StringConverter()); //XXO -> String
+                    providedConversionService.addConverter(new DefaultString2XXOConverter()); //String -> XXO
+                    defaultConversionService = providedConversionService;
+                }
+            }
+        }
+        return defaultConversionService;
+    }
+
+    /**
      * 默认的CGLIB-BeanCopier的Converter
      */
     static class DefaultCglibConverter implements Converter {
@@ -164,8 +177,8 @@ public class BeanCopier {
                     if (sourcePropertyField != null && targetPropertyField != null) {
                         TypeDescriptor sourceTypeDescriptor = new TypeDescriptor(sourcePropertyField);
                         TypeDescriptor targetTypeDescriptor = new TypeDescriptor(targetPropertyField);
-                        if (CONVERSION_SERVICE.canConvert(sourceTypeDescriptor, targetTypeDescriptor)) {
-                            return CONVERSION_SERVICE.convert(sourcePropertyValue, sourceTypeDescriptor, targetTypeDescriptor);
+                        if (getDefaultConversionService().canConvert(sourceTypeDescriptor, targetTypeDescriptor)) {
+                            return getDefaultConversionService().convert(sourcePropertyValue, sourceTypeDescriptor, targetTypeDescriptor);
                         }
                     }
                 } catch (Exception e) {

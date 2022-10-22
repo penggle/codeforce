@@ -1,5 +1,7 @@
 package com.penglecode.codeforce.common.consts;
 
+import java.util.function.Supplier;
+
 /**
  * 基于Spring上下文环境变量的常量
  *
@@ -13,11 +15,15 @@ package com.penglecode.codeforce.common.consts;
 public abstract class SpringEnvConstant<T> extends Constant<T> {
 	
 	protected SpringEnvConstant(String name) {
-		this(name, null);
+		this(name, (T) null);
 	}
 
 	protected SpringEnvConstant(String name, T defaultValue) {
 		super(name, defaultValue);
+	}
+
+	protected SpringEnvConstant(String name, Supplier<T> defaultValue) {
+		super(name, defaultValue.get());
 	}
 	
 }

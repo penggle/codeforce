@@ -27,7 +27,7 @@ public class DefaultSpringAppStartingListener implements ApplicationListener<App
         SpringApplication springApplication = event.getSpringApplication();
         LOGGER.info(">>> SpringBoot应用程序启动! springApplication = {}", springApplication);
         Method method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setSpringApplication", SpringApplication.class));
-        method.setAccessible(true);
+        ReflectionUtils.makeAccessible(method);
         ReflectionUtils.invokeMethod(method, null, springApplication);
     }
 

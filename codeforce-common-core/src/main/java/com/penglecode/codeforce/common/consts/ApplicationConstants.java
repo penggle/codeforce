@@ -1,12 +1,12 @@
 package com.penglecode.codeforce.common.consts;
 
+import com.penglecode.codeforce.common.support.DefaultConversionService;
 import com.penglecode.codeforce.common.util.SpringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.convert.ApplicationConversionService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -55,7 +55,7 @@ public abstract class ApplicationConstants {
 	/**
 	 * 应用默认的ConversionService
 	 */
-	public static final Supplier<ConversionService> DEFAULT_CONVERSION_SERVICE = new SpringBeanConstant<ConversionService>("defaultConversionService", ApplicationConversionService.getSharedInstance()) {};
+	public static final Supplier<ConfigurableConversionService> DEFAULT_CONVERSION_SERVICE = new SpringBeanConstant<ConfigurableConversionService>("defaultConversionService", new DefaultConversionService()) {};
 
 	/**
 	 * Spring的资源解析器

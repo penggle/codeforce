@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.penggle</groupId>
     <artifactId>codeforce-parent</artifactId>
-    <version>2.5.1-SNAPSHOT</version>
+    <version>2.5.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>codeforce-parent</name>
     <description>一个快速开发脚手架</description>

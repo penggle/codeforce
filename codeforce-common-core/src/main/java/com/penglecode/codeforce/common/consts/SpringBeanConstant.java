@@ -1,5 +1,7 @@
 package com.penglecode.codeforce.common.consts;
 
+import java.util.function.Supplier;
+
 /**
  * 基于Spring上下文中的bean的常量
  *
@@ -13,15 +15,19 @@ package com.penglecode.codeforce.common.consts;
 public abstract class SpringBeanConstant<T> extends Constant<T> {
 	
 	protected SpringBeanConstant() {
-		this(null, null);
+		this(null, (T) null);
 	}
 
 	protected SpringBeanConstant(String name) {
-		this(name, null);
+		this(name, (T) null);
 	}
 
 	protected SpringBeanConstant(String name, T defaultValue) {
 		super(name, defaultValue);
+	}
+
+	protected SpringBeanConstant(String name, Supplier<T> defaultValue) {
+		super(name, defaultValue.get());
 	}
 	
 }

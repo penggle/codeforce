@@ -46,15 +46,15 @@ public class DefaultSpringAppPreInitializer extends AbstractSpringAppContextInit
 	public void doInitialize(ConfigurableApplicationContext applicationContext) {
 		LOGGER.info(">>> Spring 应用启动前置初始化程序! applicationContext = {}", applicationContext);
 		Method method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setApplicationContext", ApplicationContext.class));
-		method.setAccessible(true);
+		ReflectionUtils.makeAccessible(method);
 		ReflectionUtils.invokeMethod(method, null, applicationContext); //设置ApplicationContext
 
 		method = Objects.requireNonNull(ReflectionUtils.findMethod(SpringUtils.class, "setEnvironment", Environment.class));
-		method.setAccessible(true);
+		ReflectionUtils.makeAccessible(method);
 		ReflectionUtils.invokeMethod(method, null, applicationContext.getEnvironment()); //设置Environment
 
 		method = Objects.requireNonNull(ReflectionUtils.findMethod(Constant.class, "setConstantPool", ConstantPool.class));
-		method.setAccessible(true);
+		ReflectionUtils.makeAccessible(method);
 		ReflectionUtils.invokeMethod(method, null, new SpringConstantPool<>()); //设置ConstantPool
 	}
 
