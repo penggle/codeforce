@@ -1,9 +1,8 @@
 package com.penglecode.codeforce.common.web.servlet.support;
 
 import com.penglecode.codeforce.common.model.Result;
-import com.penglecode.codeforce.common.support.DefaultErrorCode;
+import com.penglecode.codeforce.common.support.CustomErrorCode;
 import com.penglecode.codeforce.common.support.ErrorCode;
-import com.penglecode.codeforce.common.support.ErrorCodeResolver;
 import com.penglecode.codeforce.common.web.MapResult;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,9 +10,9 @@ import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
+import org.springframework.boot.web.error.ErrorAttributeOptions.Include;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -47,14 +46,14 @@ public class DefaultErrorController extends BasicErrorController {
 	@RequestMapping
 	public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
 		Throwable exception = errorAttributes.getError(new ServletWebRequest(request));
-		Map<String, Object> defaultErrorAttributes = getErrorAttributes(request, isIncludeStackTrace(request, MediaType.ALL) ? ErrorAttributeOptions.of(ErrorAttributeOptions.Include.STACK_TRACE) : ErrorAttributeOptions.defaults());
+		Map<String, Object> defaultErrorAttributes = getErrorAttributes(request, ErrorAttributeOptions.of(Include.EXCEPTION, Include.MESSAGE));
 		HttpStatus status = getStatus(request);
 		
 		ErrorCode errorCode;
 		if(exception != null) {
-			errorCode = ErrorCodeResolver.resolveErrorCode(exception, status);
+			errorCode = ErrorCode.resolve(exception, status);
 		} else {
-			errorCode = new DefaultErrorCode(String.valueOf(status.value()), StringUtils.defaultIfEmpty((String) defaultErrorAttributes.get("error"), status.getReasonPhrase()));
+			errorCode = new CustomErrorCode(String.valueOf(status.value()), StringUtils.defaultIfEmpty((String) defaultErrorAttributes.get("error"), status.getReasonPhrase()));
 		}
 		//重新设置status,保持其与errorCode中的一致
 		status = ObjectUtils.defaultIfNull(errorCode.getStatus(), status);

@@ -31,14 +31,6 @@ public final class MapResult extends HashMap<String,Object> implements BaseDTO {
         put("success", success);
     }
 
-    public String getApp() {
-        return (String) get("app");
-    }
-
-    public void setApp(String app) {
-        put("app", app);
-    }
-
     public String getCode() {
         return (String) get("code");
     }

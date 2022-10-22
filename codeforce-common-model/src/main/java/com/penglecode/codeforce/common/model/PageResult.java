@@ -36,16 +36,16 @@ public class PageResult<T> extends Result<T> {
 	}
 
 	public static PageBuilder success() {
-		return new PageBuilder(Boolean.TRUE, null, "200", "OK");
+		return new PageBuilder(Boolean.TRUE, "200", "OK");
 	}
 
 	public static PageBuilder failure() {
-		return new PageBuilder(Boolean.FALSE, null, "500", "Internal Server Error");
+		return new PageBuilder(Boolean.FALSE, "500", "Internal Server Error");
 	}
 
 	@Override
 	public String toString() {
-		return "PagedResult [success=" + isSuccess() + ", app=" + getApp() + ", code=" + getCode() + ", message="
+		return "PagedResult [success=" + isSuccess() + ", code=" + getCode() + ", message="
 				+ getMessage() + ", data=" + getData() + ", totalRowCount=" + getTotalRowCount() + "]";
 	}
 
@@ -60,18 +60,13 @@ public class PageResult<T> extends Result<T> {
 
 		private int totalRowCount = 0;
 
-		PageBuilder(boolean success, String app, String code, String message) {
-			super(success, app, code, message);
+		PageBuilder(boolean success, String code, String message) {
+			super(success, code, message);
 		}
 
 		public PageBuilder totalRowCount(int totalRowCount) {
 			this.totalRowCount = totalRowCount;
 			return this;
-		}
-
-		@Override
-		public PageBuilder app(String app) {
-			return (PageBuilder) super.app(app);
 		}
 
 		@Override

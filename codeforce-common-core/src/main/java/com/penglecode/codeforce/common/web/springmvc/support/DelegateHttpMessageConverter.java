@@ -1,10 +1,8 @@
 package com.penglecode.codeforce.common.web.springmvc.support;
 
-import com.penglecode.codeforce.common.consts.GlobalConstants;
-import com.penglecode.codeforce.common.web.MapResult;
 import com.penglecode.codeforce.common.model.Result;
 import com.penglecode.codeforce.common.support.ErrorCode;
-import org.apache.commons.lang3.StringUtils;
+import com.penglecode.codeforce.common.web.MapResult;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.HttpStatus;
@@ -22,7 +20,6 @@ import java.util.List;
  * 所有HttpMessageConverter的代理Wrapper
  * 用于统一处理响应结果：
  *      1、保证HTTP的状态码与Result.code一致
- *      2、如果Result.app为空则为其设置app字段值
  *
  * @author pengpeng
  * @version 1.0.0
@@ -72,21 +69,15 @@ public class DelegateHttpMessageConverter implements HttpMessageConverter<Object
             HttpStatus status;
             if(t instanceof Result) {
                 Result<Object> result = (Result<Object>) t;
-                status = ErrorCode.defaultStatus(result.getCode());
+                status = ErrorCode.resolve(result.getCode());
                 if(status != null) { //1、保证HTTP的状态码与Result.code一致
                     serverHttpResponse.setStatusCode(status);
-                }
-                if(StringUtils.isBlank(result.getApp())) { //2、如果Result.app为空则为其设置app字段值
-                    result.setApp(GlobalConstants.APP_CODE.get());
                 }
             } else if(t instanceof MapResult) {
                 MapResult result = (MapResult) t;
-                status = ErrorCode.defaultStatus(result.getCode());
+                status = ErrorCode.resolve(result.getCode());
                 if(status != null) { //1、保证HTTP的状态码与Result.code一致
                     serverHttpResponse.setStatusCode(status);
-                }
-                if(StringUtils.isBlank(result.getApp())) { //2、如果Result.app为空则为其设置app字段值
-                    result.setApp(GlobalConstants.APP_CODE.get());
                 }
             }
 
