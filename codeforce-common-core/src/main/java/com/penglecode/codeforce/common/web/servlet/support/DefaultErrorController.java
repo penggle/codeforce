@@ -1,9 +1,9 @@
 package com.penglecode.codeforce.common.web.servlet.support;
 
-import com.penglecode.codeforce.common.model.Result;
+import com.penglecode.codeforce.common.model.DefaultResponse;
 import com.penglecode.codeforce.common.support.CustomErrorCode;
 import com.penglecode.codeforce.common.support.ErrorCode;
-import com.penglecode.codeforce.common.web.MapResult;
+import com.penglecode.codeforce.common.web.MapResponse;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
@@ -57,8 +57,8 @@ public class DefaultErrorController extends BasicErrorController {
 		}
 		//重新设置status,保持其与errorCode中的一致
 		status = ObjectUtils.defaultIfNull(errorCode.getStatus(), status);
-		Result<Object> result = Result.failure().code(errorCode.getCode()).message(errorCode.getMessage()).build();
-		return new ResponseEntity<>(new MapResult(result.asMap()), status);
+		DefaultResponse<Object> result = DefaultResponse.error().code(errorCode.getCode()).message(errorCode.getMessage()).build();
+		return new ResponseEntity<>(new MapResponse(result.asMap()), status);
 	}
 
 	protected ErrorAttributes getErrorAttributes() {

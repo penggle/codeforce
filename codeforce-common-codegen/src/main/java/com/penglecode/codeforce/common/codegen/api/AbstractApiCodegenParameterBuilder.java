@@ -2,8 +2,8 @@ package com.penglecode.codeforce.common.codegen.api;
 
 import com.penglecode.codeforce.common.codegen.config.*;
 import com.penglecode.codeforce.common.codegen.support.*;
-import com.penglecode.codeforce.common.model.PageResult;
-import com.penglecode.codeforce.common.model.Result;
+import com.penglecode.codeforce.common.model.DefaultResponse;
+import com.penglecode.codeforce.common.model.PageResponse;
 
 import java.util.List;
 import java.util.Set;
@@ -15,6 +15,7 @@ import java.util.Set;
  * @version 1.0.0
  */
 public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderConfig, D extends DomainObjectConfig, P extends AbstractApiCodegenParameter> extends CodegenParameterBuilder<ApiCodegenConfigProperties, T, D, P> {
+
 
     protected AbstractApiCodegenParameterBuilder(CodegenContext<ApiCodegenConfigProperties, T, D> codegenContext) {
         super(codegenContext);
@@ -70,7 +71,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
      */
     protected ApiMethodParameter createDomainObject(P codegenParameter) {
         String methodName = "create" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias();
-        String methodReturnType = String.format("%s<%s>", Result.class.getSimpleName(), codegenParameter.getDomainObjectParameter().getDomainObjectIdType());
+        String methodReturnType = String.format("%s<%s>", DefaultResponse.class.getSimpleName(), codegenParameter.getDomainObjectParameter().getDomainObjectIdType());
         return saveDomainObject(codegenParameter, methodName, methodReturnType);
     }
 
@@ -80,7 +81,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
      */
     protected ApiMethodParameter modifyDomainObjectById(P codegenParameter) {
         String methodName = "modify" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias() + "ById";
-        String methodReturnType = String.format("%s<%s>", Result.class.getSimpleName(), "Void");
+        String methodReturnType = String.format("%s<%s>", DefaultResponse.class.getSimpleName(), "Void");
         return saveDomainObject(codegenParameter, methodName, methodReturnType);
     }
 
@@ -88,7 +89,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
         DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
         ApiModelConfig apiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.SAVE_REQUEST);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DefaultResponse.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
         apiMethod.setMethodReturnType(methodReturnType);
         apiMethod.setMethodName(methodName);
@@ -102,7 +103,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
      */
     protected ApiMethodParameter removeDomainObjectById(P codegenParameter) {
         ApiMethodParameter apiMethod = new ApiMethodParameter();
-        apiMethod.setMethodReturnType(String.format("%s<%s>", Result.class.getSimpleName(), "Void"));
+        apiMethod.setMethodReturnType(String.format("%s<%s>", DefaultResponse.class.getSimpleName(), "Void"));
         apiMethod.setMethodName("remove" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias() + "ById");
         return apiMethod;
     }
@@ -114,7 +115,7 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
     protected ApiMethodParameter removeDomainObjectsByIds(P codegenParameter) {
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
-        apiMethod.setMethodReturnType(String.format("%s<%s>", Result.class.getSimpleName(), "Void"));
+        apiMethod.setMethodReturnType(String.format("%s<%s>", DefaultResponse.class.getSimpleName(), "Void"));
         apiMethod.setMethodName("remove" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias() + "ByIds");
         return apiMethod;
     }
@@ -128,10 +129,10 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
         DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
         ApiModelConfig apiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.QUERY_RESPONSE);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DefaultResponse.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
         apiMethod.setOutputApiModelName(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
-        apiMethod.setMethodReturnType(String.format("%s<%s>", Result.class.getSimpleName(), apiMethod.getOutputApiModelName()));
+        apiMethod.setMethodReturnType(String.format("%s<%s>", DefaultResponse.class.getSimpleName(), apiMethod.getOutputApiModelName()));
         apiMethod.setMethodName("get" + codegenParameter.getDomainObjectParameter().getDomainObjectAlias() + "ById");
         return apiMethod;
     }
@@ -144,11 +145,11 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
         DomainObjectConfig domainObjectConfig = getDomainObjectConfig();
         ApiModelConfig apiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.QUERY_RESPONSE);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(Result.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(DefaultResponse.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
         apiMethod.setOutputApiModelName(apiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
-        apiMethod.setMethodReturnType(String.format("%s<List<%S>>", Result.class.getSimpleName(), apiMethod.getOutputApiModelName()));
+        apiMethod.setMethodReturnType(String.format("%s<List<%S>>", DefaultResponse.class.getSimpleName(), apiMethod.getOutputApiModelName()));
         apiMethod.setMethodName("get" + codegenParameter.getDomainObjectParameter().getDomainObjectsAlias() + "ByIds");
         return apiMethod;
     }
@@ -163,12 +164,12 @@ public abstract class AbstractApiCodegenParameterBuilder<T extends ApiProviderCo
         ApiModelConfig resApiModelConfig = getTargetConfig().getApiModelConfig().forModelType(ApiModelType.QUERY_RESPONSE);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(reqApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(resApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), true, false)));
-        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(PageResult.class.getName()));
+        codegenParameter.addTargetImportType(new FullyQualifiedJavaType(PageResponse.class.getName()));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(List.class.getName()));
         ApiMethodParameter apiMethod = new ApiMethodParameter();
         apiMethod.setInputApiModelName(reqApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
         apiMethod.setOutputApiModelName(resApiModelConfig.getGeneratedTargetName(domainObjectConfig.getDomainObjectAlias(), false, false));
-        apiMethod.setMethodReturnType(String.format("%s<List<%s>>", PageResult.class.getSimpleName(), apiMethod.getOutputApiModelName()));
+        apiMethod.setMethodReturnType(String.format("%s<%s>", PageResponse.class.getSimpleName(), apiMethod.getOutputApiModelName()));
         apiMethod.setMethodName("get" + codegenParameter.getDomainObjectParameter().getDomainObjectsAlias() + "ByPage");
         return apiMethod;
     }

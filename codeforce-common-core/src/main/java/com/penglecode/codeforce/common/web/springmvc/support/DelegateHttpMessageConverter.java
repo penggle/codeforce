@@ -1,8 +1,8 @@
 package com.penglecode.codeforce.common.web.springmvc.support;
 
-import com.penglecode.codeforce.common.model.Result;
+import com.penglecode.codeforce.common.model.BaseResponse;
 import com.penglecode.codeforce.common.support.ErrorCode;
-import com.penglecode.codeforce.common.web.MapResult;
+import com.penglecode.codeforce.common.web.MapResponse;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.HttpStatus;
@@ -67,14 +67,14 @@ public class DelegateHttpMessageConverter implements HttpMessageConverter<Object
         if(outputMessage instanceof ServerHttpResponse) {
             ServerHttpResponse serverHttpResponse = (ServerHttpResponse) outputMessage;
             HttpStatus status;
-            if(t instanceof Result) {
-                Result<Object> result = (Result<Object>) t;
+            if(t instanceof BaseResponse) {
+                BaseResponse<Object> result = (BaseResponse<Object>) t;
                 status = ErrorCode.resolve(result.getCode());
                 if(status != null) { //1、保证HTTP的状态码与Result.code一致
                     serverHttpResponse.setStatusCode(status);
                 }
-            } else if(t instanceof MapResult) {
-                MapResult result = (MapResult) t;
+            } else if(t instanceof MapResponse) {
+                MapResponse result = (MapResponse) t;
                 status = ErrorCode.resolve(result.getCode());
                 if(status != null) { //1、保证HTTP的状态码与Result.code一致
                     serverHttpResponse.setStatusCode(status);

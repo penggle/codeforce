@@ -1,25 +1,25 @@
 package com.penglecode.codeforce.common.web;
 
 import com.penglecode.codeforce.common.model.BaseDTO;
-import com.penglecode.codeforce.common.model.Result;
+import com.penglecode.codeforce.common.model.BaseResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 对应{@link Result}的Map形式，用于全局异常处理
+ * 对应{@link BaseResponse}的Map形式，用于全局异常处理
  *
  * @author pengpeng
  * @version 1.0.0
  */
-public final class MapResult extends HashMap<String,Object> implements BaseDTO {
+public final class MapResponse extends HashMap<String,Object> implements BaseDTO {
 
     private static final long serialVersionUID = 1L;
 
-    public MapResult() {
+    public MapResponse() {
     }
 
-    public MapResult(Map<? extends String, ?> m) {
+    public MapResponse(Map<String,?> m) {
         super(m);
     }
 

@@ -2,21 +2,18 @@ package com.penglecode.codeforce.common.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 通用分页DTO
+ * 通用分页结果DTO
  *
  * @author pengpeng
  * @version 1.0.0
  */
-@Schema(description="通用分页DTO")
+@Schema(description="通用分页结果DTO")
 public class Page implements BaseDTO {
 
 	private static final long serialVersionUID = 1L;
@@ -24,35 +21,30 @@ public class Page implements BaseDTO {
 	/**
 	 * 当前页码
 	 */
-	@NotNull(message="当前页码(pageIndex)不能为空!")
-	@Min(value=1, message="当前页码(pageIndex)不能小于1")
 	@Schema(description="当前页码(默认1)", defaultValue="1", example="1")
-	private Integer pageIndex = 1;
+	private int pageIndex = 1;
 
 	/**
 	 * 每页显示条数
 	 */
-	@NotNull(message="每页显示条数(pageSize)不能为空!")
-	@Min(value=1, message="每页显示条数(pageSize)不能小于1")
 	@Schema(description="每页显示条数(默认10)", defaultValue="10", example="10")
-	private Integer pageSize = 10;
+	private int pageSize = 10;
 
 	/**
 	 * 总记录数
 	 */
-	@Schema(description="总记录数(默认0)", hidden=true)
-	private Integer totalRowCount = 0;
+	@Schema(description="总记录数(默认0)")
+	private int totalRowCount;
 
 	/**
 	 * 总分页数
 	 */
-	@Schema(description="总分页数(默认0)", hidden=true)
-	private Integer totalPageCount = 0;
+	@Schema(description="总分页数(默认0)")
+	private int totalPageCount;
 
 	/**
 	 * 分页排序列表
 	 */
-	@Valid
 	@Schema(description="分页排序列表")
 	private List<OrderBy> orderBys = new ArrayList<>();
 	
@@ -60,47 +52,45 @@ public class Page implements BaseDTO {
 		super();
 	}
 
-	protected Page(Integer pageIndex, Integer pageSize) {
+	protected Page(int pageIndex, int pageSize) {
 		super();
-		if(pageIndex != null && pageIndex > 0){
+		if(pageIndex > 0){
 			this.pageIndex = pageIndex;
 		}
-		if(pageSize != null && pageSize > 0){
+		if(pageSize > 0){
 			this.pageSize = pageSize;
 		}
 	}
 
-	protected Page(Integer pageIndex, Integer pageSize, List<OrderBy> orderBys) {
+	protected Page(int pageIndex, int pageSize, List<OrderBy> orderBys) {
 		this(pageIndex, pageSize);
 		if(orderBys != null){
 			this.orderBys = orderBys;
 		}
 	}
 
-	protected Page(Integer pageIndex, Integer pageSize, Integer totalRowCount) {
+	protected Page(int pageIndex, int pageSize, int totalRowCount) {
 		this(pageIndex, pageSize);
-		if(totalRowCount != null){
-			this.setTotalRowCount(totalRowCount);
-		}
+		this.setTotalRowCount(totalRowCount);
 	}
 
 	public static Page ofDefault() {
 		return new Page();
 	}
 
-	public static Page of(Integer pageIndex, Integer pageSize) {
+	public static Page of(int pageIndex, int pageSize) {
 		return new Page(pageIndex, pageSize);
 	}
 	
-	public static Page of(Integer pageIndex, Integer pageSize, Integer totalRowCount) {
+	public static Page of(int pageIndex, int pageSize, int totalRowCount) {
 		return new Page(pageIndex, pageSize, totalRowCount);
 	}
 
-	public static Page of(Integer pageIndex, Integer pageSize, OrderBy... orderBys) {
+	public static Page of(int pageIndex, int pageSize, OrderBy... orderBys) {
 		return new Page(pageIndex, pageSize, Stream.of(orderBys).collect(Collectors.toList()));
 	}
 
-	public static Page of(Integer pageIndex, Integer pageSize, List<OrderBy> orderBys) {
+	public static Page of(int pageIndex, int pageSize, List<OrderBy> orderBys) {
 		return new Page(pageIndex, pageSize, orderBys);
 	}
 
@@ -113,27 +103,27 @@ public class Page implements BaseDTO {
 		return newPage;
 	}
 	
-	public Integer getPageIndex() {
+	public int getPageIndex() {
 		return pageIndex;
 	}
 
-	public void setPageIndex(Integer pageIndex) {
+	public void setPageIndex(int pageIndex) {
 		this.pageIndex = pageIndex;
 	}
 
-	public Integer getPageSize() {
+	public int getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(Integer pageSize) {
+	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
 
-	public Integer getTotalRowCount() {
+	public int getTotalRowCount() {
 		return totalRowCount;
 	}
 
-	public void setTotalRowCount(Integer totalRowCount) {
+	public void setTotalRowCount(int totalRowCount) {
 		this.totalRowCount = totalRowCount;
 		calcTotalPageCount(); //计算totalPageCount
 	}
@@ -150,15 +140,15 @@ public class Page implements BaseDTO {
 		this.orderBys.add(orderBy);
 	}
 
-	public Integer getTotalPageCount() {
+	public int getTotalPageCount() {
 		return totalPageCount;
 	}
 
-	public Integer offset() {
+	public int offset() {
 		return (pageIndex - 1) * pageSize;
 	}
 	
-	public Integer limit() {
+	public int limit() {
 		return getPageSize();
 	}
 
@@ -171,9 +161,9 @@ public class Page implements BaseDTO {
 	}
 
 	public String toString() {
-		return "Page [pageIndex=" + pageIndex + ", pageSize=" + pageSize
+		return "{pageIndex=" + pageIndex + ", pageSize=" + pageSize
 				+ ", totalRowCount=" + totalRowCount + ", totalPageCount="
-				+ totalPageCount + ", orderBys=" + orderBys + "]";
+				+ totalPageCount + ", orderBys=" + orderBys + "}";
 	}
 
 }

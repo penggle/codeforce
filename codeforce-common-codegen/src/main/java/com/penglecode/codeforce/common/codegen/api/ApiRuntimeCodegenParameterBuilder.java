@@ -3,9 +3,9 @@ package com.penglecode.codeforce.common.codegen.api;
 import com.penglecode.codeforce.common.codegen.config.*;
 import com.penglecode.codeforce.common.codegen.support.CodegenContext;
 import com.penglecode.codeforce.common.codegen.support.FullyQualifiedJavaType;
+import com.penglecode.codeforce.common.model.DefaultResponse;
 import com.penglecode.codeforce.common.model.Page;
-import com.penglecode.codeforce.common.model.PageResult;
-import com.penglecode.codeforce.common.model.Result;
+import com.penglecode.codeforce.common.model.PageResponse;
 import com.penglecode.codeforce.common.support.BeanCopier;
 import com.penglecode.codeforce.common.util.StringUtils;
 
@@ -20,11 +20,11 @@ import java.util.List;
  */
 public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectConfig> extends AbstractApiCodegenParameterBuilder<ApiRuntimeConfig, D, ApiRuntimeCodegenParameter> {
 
-    public ApiRuntimeCodegenParameterBuilder(CodegenContext<ApiCodegenConfigProperties, ApiRuntimeConfig, D> codegenContext) {
+    protected ApiRuntimeCodegenParameterBuilder(CodegenContext<ApiCodegenConfigProperties, ApiRuntimeConfig, D> codegenContext) {
         super(codegenContext);
     }
 
-    public ApiRuntimeCodegenParameterBuilder(ApiCodegenConfigProperties codegenConfig, ApiRuntimeConfig targetConfig, D domainObjectConfig) {
+    protected ApiRuntimeCodegenParameterBuilder(ApiCodegenConfigProperties codegenConfig, ApiRuntimeConfig targetConfig, D domainObjectConfig) {
         super(codegenConfig, targetConfig, domainObjectConfig);
     }
 
@@ -54,7 +54,7 @@ public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectCo
         List<String> methodBodyLines = new ArrayList<>();
         methodBodyLines.add(String.format("%s %s = %s.copy(createRequest, %s::new);", domainObjectName, domainObjectVariableName, BeanCopier.class.getSimpleName(), domainObjectName));
         methodBodyLines.add(String.format("%s.create%s(%s);", codegenParameter.getDomainServiceInstanceName(), codegenParameter.getDomainObjectParameter().getDomainObjectAlias(), domainObjectVariableName));
-        methodBodyLines.add(String.format("return %s.success().data(%s.%s()).build();", Result.class.getSimpleName(), domainObjectVariableName, codegenParameter.getDomainObjectParameter().getDomainObjectIdGetterName()));
+        methodBodyLines.add(String.format("return %s.success().data(%s.%s()).build();", DefaultResponse.class.getSimpleName(), domainObjectVariableName, codegenParameter.getDomainObjectParameter().getDomainObjectIdGetterName()));
         apiMethodParameter.setMethodBodyLines(methodBodyLines);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(getDomainObjectConfig().getGeneratedTargetName(domainObjectName, true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BeanCopier.class.getName()));
@@ -69,7 +69,7 @@ public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectCo
         List<String> methodBodyLines = new ArrayList<>();
         methodBodyLines.add(String.format("%s %s = %s.copy(modifyRequest, %s::new);", domainObjectName, domainObjectVariableName, BeanCopier.class.getSimpleName(), domainObjectName));
         methodBodyLines.add(String.format("%s.modify%sById(%s);", codegenParameter.getDomainServiceInstanceName(), codegenParameter.getDomainObjectParameter().getDomainObjectAlias(), domainObjectVariableName));
-        methodBodyLines.add(String.format("return %s.success().build();", Result.class.getSimpleName()));
+        methodBodyLines.add(String.format("return %s.success().build();", DefaultResponse.class.getSimpleName()));
         apiMethodParameter.setMethodBodyLines(methodBodyLines);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(getDomainObjectConfig().getGeneratedTargetName(domainObjectName, true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BeanCopier.class.getName()));
@@ -81,7 +81,7 @@ public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectCo
         ApiMethodParameter apiMethodParameter = super.removeDomainObjectById(codegenParameter);
         List<String> methodBodyLines = new ArrayList<>();
         methodBodyLines.add(String.format("%s.remove%sById(id);", codegenParameter.getDomainServiceInstanceName(), codegenParameter.getDomainObjectParameter().getDomainObjectAlias()));
-        methodBodyLines.add(String.format("return %s.success().build();", Result.class.getSimpleName()));
+        methodBodyLines.add(String.format("return %s.success().build();", DefaultResponse.class.getSimpleName()));
         apiMethodParameter.setMethodBodyLines(methodBodyLines);
         return apiMethodParameter;
     }
@@ -91,7 +91,7 @@ public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectCo
         ApiMethodParameter apiMethodParameter = super.removeDomainObjectsByIds(codegenParameter);
         List<String> methodBodyLines = new ArrayList<>();
         methodBodyLines.add(String.format("%s.remove%sByIds(id);", codegenParameter.getDomainServiceInstanceName(), codegenParameter.getDomainObjectParameter().getDomainObjectAlias()));
-        methodBodyLines.add(String.format("return %s.success().build();", Result.class.getSimpleName()));
+        methodBodyLines.add(String.format("return %s.success().build();", DefaultResponse.class.getSimpleName()));
         apiMethodParameter.setMethodBodyLines(methodBodyLines);
         return apiMethodParameter;
     }
@@ -104,7 +104,7 @@ public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectCo
         List<String> methodBodyLines = new ArrayList<>();
         methodBodyLines.add(String.format("%s %s = %s.get%sById(id%s);", domainObjectName, domainObjectVariableName, codegenParameter.getDomainServiceInstanceName(), codegenParameter.getDomainObjectParameter().getDomainObjectAlias(), codegenParameter.getAggregateRoot() ? ", cascade" : ""));
         methodBodyLines.add(String.format("%s queryResponse = %s.copy(%s, %s::new);", apiMethodParameter.getOutputApiModelName(), BeanCopier.class.getSimpleName(), domainObjectVariableName, apiMethodParameter.getOutputApiModelName()));
-        methodBodyLines.add(String.format("return %s.success().data(queryResponse).build();", Result.class.getSimpleName()));
+        methodBodyLines.add(String.format("return %s.success().data(queryResponse).build();", DefaultResponse.class.getSimpleName()));
         apiMethodParameter.setMethodBodyLines(methodBodyLines);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(getDomainObjectConfig().getGeneratedTargetName(domainObjectName, true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BeanCopier.class.getName()));
@@ -119,7 +119,7 @@ public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectCo
         List<String> methodBodyLines = new ArrayList<>();
         methodBodyLines.add(String.format("List<%s> %s = %s.get%sByIds(ids%s);", domainObjectName, domainObjectVariablesName, codegenParameter.getDomainServiceInstanceName(), codegenParameter.getDomainObjectParameter().getDomainObjectsAlias(), codegenParameter.getAggregateRoot() ? ", cascade" : ""));
         methodBodyLines.add(String.format("List<%s> queryResponses = %s.copy(%s, %s::new);", apiMethodParameter.getOutputApiModelName(), BeanCopier.class.getSimpleName(), domainObjectVariablesName, apiMethodParameter.getOutputApiModelName()));
-        methodBodyLines.add(String.format("return %s.success().data(queryResponses).build();", Result.class.getSimpleName()));
+        methodBodyLines.add(String.format("return %s.success().data(queryResponses).build();", DefaultResponse.class.getSimpleName()));
         apiMethodParameter.setMethodBodyLines(methodBodyLines);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(getDomainObjectConfig().getGeneratedTargetName(domainObjectName, true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BeanCopier.class.getName()));
@@ -136,7 +136,7 @@ public abstract class ApiRuntimeCodegenParameterBuilder<D extends DomainObjectCo
         methodBodyLines.add(String.format("%s page = %s.copyOf(queryRequest);", Page.class.getSimpleName(), Page.class.getSimpleName()));
         methodBodyLines.add(String.format("List<%s> %s = %s.get%sByPage(condition, page%s);", domainObjectName, domainObjectVariablesName, codegenParameter.getDomainServiceInstanceName(), codegenParameter.getDomainObjectParameter().getDomainObjectsAlias(), codegenParameter.getAggregateRoot() ? ", cascade" : ""));
         methodBodyLines.add(String.format("List<%s> queryResponses = %s.copy(%s, %s::new);", apiMethodParameter.getOutputApiModelName(), BeanCopier.class.getSimpleName(), domainObjectVariablesName, apiMethodParameter.getOutputApiModelName()));
-        methodBodyLines.add(String.format("return %s.success().data(queryResponses).totalRowCount(page.getTotalRowCount()).build();", PageResult.class.getSimpleName()));
+        methodBodyLines.add(String.format("return %s.success().data(queryResponses).page(page).build();", PageResponse.class.getSimpleName()));
         apiMethodParameter.setMethodBodyLines(methodBodyLines);
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(getDomainObjectConfig().getGeneratedTargetName(domainObjectName, true, false)));
         codegenParameter.addTargetImportType(new FullyQualifiedJavaType(BeanCopier.class.getName()));
